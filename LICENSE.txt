@@ -1,5 +1,5 @@
 Copyright 2013, 2014 Cezary Kluczyński,
-http://cezarykluczynski.gitbub.io/simone/docs/index.html
+http://cezarykluczynski.github.io/simone/docs/index.html
 
 Released under MIT License: http://opensource.org/licenses/MIT
 

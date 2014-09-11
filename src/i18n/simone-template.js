@@ -16,7 +16,7 @@
    https://github.com/cezarykluczynski/simone/issues
    and provide the kind of information required to fix the problem, or make
    a pull request on GitHub:
-   http://cezarykluczynski.gitbub.io/simone/docs/code.html
+   http://cezarykluczynski.github.io/simone/docs/code.html
 
    Edit the following line of comments - and don't remove it.
    Change LanuageName to an English name of file you're providing.
@@ -31,8 +31,8 @@
  * Version: @simone-main-version
  * Released under the MIT license.
  *
- * http://cezarykluczynski.gitbub.io/simone/docs/documentation.html
- * http://cezarykluczynski.gitbub.io/simone/docs/nonTechnicalContributions.html#translations
+ * http://cezarykluczynski.github.io/simone/docs/documentation.html
+ * http://cezarykluczynski.github.io/simone/docs/nonTechnicalContributions.html#translations
  */
 ;(function ( $ ) {
 /* Start by copying this file to new localization and renaming it.
@@ -182,6 +182,6 @@ $.extend( true, $.simone.taskbar.prototype.options.localization[ langCode ], {
    You have two options for submitting your work.
    You can either send this file to Simone's author or one
    of the maintainers listed here:
-   http://cezarykluczynski.gitbub.io/simone/docs/index.html
+   http://cezarykluczynski.github.io/simone/docs/index.html
    or you can make a pull request on GitHub:
-   http://cezarykluczynski.gitbub.io/simone/docs/code.html */
+   http://cezarykluczynski.github.io/simone/docs/code.html */

@@ -5,8 +5,8 @@
  * Version: @simone-main-version
  * Released under the MIT license.
  *
- * http://cezarykluczynski.gitbub.io/simone/docs/documentation.html
- * http://cezarykluczynski.gitbub.io/simone/docs/taskbar.html
+ * http://cezarykluczynski.github.io/simone/docs/documentation.html
+ * http://cezarykluczynski.github.io/simone/docs/taskbar.html
  */
 ;(function ( $, undefined ) {
 "use strict";

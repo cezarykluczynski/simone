@@ -29,9 +29,9 @@
 			"url": "https://github.com/cezarykluczynski"
 		}
 	],
-	"download": "http://cezarykluczynski.gitbub.io/simone/docs/download.html",
-	"homepage": "http://cezarykluczynski.gitbub.io/simone/docs/index.html",
-	"docs": "http://cezarykluczynski.gitbub.io/simone/docs/index.html",
+	"download": "http://cezarykluczynski.github.io/simone/docs/download.html",
+	"homepage": "http://cezarykluczynski.github.io/simone/docs/index.html",
+	"docs": "http://cezarykluczynski.github.io/simone/docs/index.html",
 	"bugs": "https://github.com/cezarykluczynski/simone/issues",
 	"dependencies": {
 		"jquery": ">=1.8.0",
