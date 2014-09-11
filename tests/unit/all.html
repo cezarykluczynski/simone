@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Simone unit test suite</title>
+<script src="../common/libs.all.js"></script>
+
+<script>
+(function() {
+	QUnit.testSuites("Taskbar", [
+		{ name: "Buttons and icons",          path: "taskbarButtonsIcons.html" },
+		{ name: "Position and dimensions",    path: "taskbarPositionDimensions.html" },
+		{ name: "Events",                     path: "taskbarEvents.html" },
+		{ name: "Methods",                    path: "taskbarMethods.html" },
+	]);
+
+	QUnit.testSuites( "Window", [
+		{ name: "jQuery UI Dialog tests",     path: "windowDialog.html" },
+		{ name: "Events",                     path: "windowEvents.html" },
+		{ name: "Methods",                    path: "windowMethods.html" },
+		{ name: "Options",                    path: "windowOptions.html" },
+	]);
+
+	QUnit.testSuites( "Shared", [
+		{ name: "Debug",                      path: "debug.html" },
+		{ name: "Languages and localization", path: "languagesLocalization.html" }
+	]);
+})();
+</script>
+</head>
+<body class="all">
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Change left side of the title to match that what you're showing -->
+	<title>Template - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body><!-- To remove top bar from demo, add class "no-top-bar" to body -->
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$( ".taskbar" ).taskbar();
+
+	// your code goes here; try to keep lines under 80 chars (4 spaces for tab),
+	// so vertical scrollbars won't appear on window holding demo code
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+/* add CSS if needed, remove the entire tag otherwise */
+</style>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		<!-- Add demo description.
+		     Window from div.demo is created in common.js. -->
+		...
+	</div>
+
+	<!-- If some action required logging feedback, for example from event
+	     firing keep div.log and use demo.log() function for logging. -->
+	<div class="log"></div>
+</div>
+</div>
+
+<!-- Add your new demo to file.manifest.json in ./demos directory. -->
+<!-- Last but not least, when you're done, remove the template comments. -->
+</body>
+</html>

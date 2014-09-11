@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar system buttons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// cache taskbar
+	var $taskbar = $( ".taskbar" );
+
+	// turn on all native widgets - "maximizeAll" is on by default
+	$taskbar.taskbar({
+		languageSelect: true,
+		clock: true,
+		networkMonitor: true,
+		toggleFullscreen: true
+	});
+
+	// clicking this button wil shuffle system buttons order
+	$( ".shuffle-order" ).on( "click", function () {
+		// get current order
+		var systemButtonsOrder = $taskbar
+			.taskbar( "option", "systemButtonsOrder" );
+
+		// very basic array shuffle - we don't need nothing fancy
+		systemButtonsOrder.sort(function() {
+			return .5 - Math.random();
+		});
+
+		// set shuffled buttons order to taskbar
+		$taskbar .taskbar( "option", "systemButtonsOrder", systemButtonsOrder );
+	}).button();
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows all system buttons, and also makes use of
+		"<a href="../../docs/taskbar.html#option-systemButtonsOrder">systemButtonsOrder</a>"
+		option to change their order.
+	</div>
+
+	<button class="shuffle-order">
+		Shuffle system buttons order
+	</button>
+</div>
+</div>
+
+</body>
+</html>

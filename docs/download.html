@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Download | Simone</title>
+
+<meta charset="UTF-8">
+<!-- jQuery -->
+<script src="../libs/jquery/jquery.js"></script>
+
+<!-- Foundation -->
+<link href="../libs/foundation/all/css/foundation.min.css" rel="stylesheet">
+<script src="../libs/foundation/all/js/foundation.min.js"></script>
+
+<!-- Prism -->
+<link href="../libs/prism/prism.css" rel="stylesheet">
+<script src="../libs/prism/prism.js"></script>
+
+<!-- zip.js -->
+<script src="../libs/zip.js/zip.js"></script>
+<script src="../libs/zip.js/deflate.js"></script>
+
+<!-- common -->
+<link href="common/common.css" rel="stylesheet">
+<script src="common/common.js"></script>
+
+<!-- Uglify-JS -->
+<script src="../libs/uglify-js/uglify-js.js"></script>
+
+<!-- CSSO -->
+<script src="../libs/csso/csso.web.js"></script>
+
+<!-- FileSaver.js -->
+<script src="../libs/FileSaver.js/FileSaver.js"></script>
+
+<script>
+	dontLoadLanguages = true;
+
+	// fake taskbar object for translations eval()
+	$.simone = {
+		taskbar: {
+			prototype: {
+				options: {
+					localization: {}
+				}
+			}
+		}
+	};
+</script>
+<script src="../src/i18n/simone-all.js"></script>
+<style>
+	.row.padding {
+		margin-top: 20px;
+	}
+
+	.loading p {
+		margin-bottom: 0px;
+	}
+
+	input[type="checkbox"] + label {
+		max-width: 80%;
+		vertical-align: middle;
+	}
+
+	body main {
+		margin: 2rem;
+		margin-top: -webkit-calc(2rem + 45px);
+		margin-top:    -moz-calc(2rem + 45px);
+		margin-top:         calc(2rem + 45px);
+	}
+
+	input[type=radio] {
+		cursor: pointer;
+	}
+
+	.downloads > .row {
+		max-width: 100%;
+	}
+
+	.zip .progress {
+		display: none;
+		height: 2.2rem;
+		position: relative;
+		padding: 0;
+		border: 1px solid #43ac6a;
+	}
+
+	.zip .progress .progress-info {
+		position: absolute;
+		width: 100%;
+		line-height: 2rem;
+		text-align: center;
+		font-size: 1em;
+		color: #333;
+	}
+
+	.zip .progress .meter {
+		-webkit-transition: width 0.1s;
+		   -moz-transition: width 0.1s;
+		    -ms-transition: width 0.1s;
+		     -o-transition: width 0.1s;
+		        transition: width 0.1s;
+	}
+
+	.zip .progress.visible {
+		display: block;
+	}
+
+	.translations-list {
+		list-style-type: none;
+	}
+
+	.translations-list li {
+		padding: .3em;
+	}
+
+	.translations-list li input {
+		margin: 0 .6em 0 0;
+		vertical-align: text-top;
+	}
+
+	.pull-right {
+		float: right;
+	}
+
+	.pull-left {
+		float: left;
+	}
+
+	.translations-buttons .button {
+		display: block;
+		margin-right: 1rem;
+	}
+
+	.notice {
+		float: left;
+		font-size: 12px;
+		margin: 0 15px 1em;
+	}
+
+	.zip-markup.zip-markup {
+		margin-bottom: 2em;
+	}
+
+	@media only screen and (max-width: 64.063em) {
+		[class*="fixed-height"] {
+			height: auto !important;
+		}
+	}
+</style>
+<script>
+	$( document ).ready( function () {
+		$( ".js-off" ).hide();
+
+		try {
+			var isFileSaverSupported = !!new Blob( [ "" ], { type: "text/css" } );
+			$( ".blob-not-supported" ).hide();
+		} catch ( e ) {
+			return;
+		}
+
+		$( ".loading" ).show();
+
+		var blobsJS = {};
+		var blobsTranslations = {};
+		var blobsCSS = {};
+		var stopAjax = false;
+		var fileProtocolError = false;
+		var timeout = 100;
+		var mainVersion;
+
+		zip.workerScriptsPath = "../libs/zip.js/";
+
+		var onWebError = function ( error, path ) {
+			var msg;
+
+			if ( error.status === 404 ) {
+				msg = "File missing: " + path;
+			} else {
+				stopAjax = true;
+
+				if ( location.protocol === "file:" ) {
+					if ( fileProtocolError ) {
+						return;
+					}
+
+					msg = "This page require web server to work"
+						+ " and will not work with file: protocol.";
+
+					fileProtocolError = true;
+				} else {
+					msg = "Unkown error.";
+				}
+			}
+
+			$( ".alert-box" )
+				.removeClass( "info" )
+				.addClass( "alert" )
+				.children( "p:last" )
+				.append( "<br>" + msg );
+		};
+
+		var compressFiles = function ( options ) {
+			var compressors = [];
+
+			var count = 0;
+			var iteration = 0;
+
+			$.each( options.blobs, function ( index, data ) {
+				var compressor = function () {
+					index = Object.keys( options.blobs )[ count ];
+					data = options.blobs[ index ];
+					if ( options.engine === "js" ) {
+						options.blobs[ index + "Min" ] = compressJS( data );
+					} else if ( options.engine === "css" ) {
+						options.blobs[ index + "Min" ] = compressCSS( data );
+					}
+
+					++count;
+
+					if ( count < iteration ) {
+						if ( options.onNext ) {
+							options.onNext.call( this, count );
+						}
+					}
+
+					setTimeout( function () {
+						if ( count === iteration ) {
+							if ( options.onDone ) {
+								options.onDone.call( this );
+							}
+						} else {
+							compressors[ count ]();
+						}
+					}, timeout );
+				}
+
+				compressors[ iteration ] = compressor;
+
+				++iteration;
+
+				if ( iteration === Object.keys( options.blobs ).length ) {
+					if ( options.onNext ) {
+						options.onNext.call( this, 0 );
+					}
+
+					setTimeout( function () {
+						compressors[ 0 ]();
+					}, timeout )
+				}
+			});
+
+		};
+
+		var compressJS = function ( data ) {
+			// get comment, Uglify does not respect comments
+			// starting with "/*!""
+			var comments = data.match(/\/\*![\s\S]*?\*\//);
+			var comment = comments ? comments[ 0 ] : "";
+
+			ast = UglifyJS.parse(data);
+			// compressor needs figure_out_scope too
+			ast.figure_out_scope();
+			compressor = UglifyJS.Compressor({
+				sequences     : true,  // join consecutive statemets with the “comma operator”
+				properties    : true,  // optimize property access: a["foo"] → a.foo
+				dead_code     : true,  // discard unreachable code
+				drop_debugger : true,  // discard “debugger” statements
+				unsafe        : false, // some unsafe optimizations (see below)
+				conditionals  : true,  // optimize if-s and conditional expressions
+				comparisons   : true,  // optimize comparisons
+				evaluate      : true,  // evaluate constant expressions
+				booleans      : true,  // optimize boolean expressions
+				loops         : true,  // optimize loops
+				unused        : true,  // drop unused variables/functions
+				hoist_funs    : true,  // hoist function declarations
+				hoist_vars    : false, // hoist variable declarations
+				if_return     : true,  // optimize if-s followed by return/continue
+				join_vars     : true,  // join var declarations
+				cascade       : true,  // try to cascade `right` into `left` in sequences
+				side_effects  : true,  // drop side-effect-free statements
+				warnings      : true,  // warn about potentially dangerous optimizations/code
+				global_defs   : {}     // global definitions
+			});
+			ast = ast.transform(compressor);
+
+			// need to figure out scope again so mangler works optimally
+			ast.figure_out_scope();
+			ast.compute_char_frequency();
+			ast.mangle_names();
+
+			data = ast.print_to_string(); // get compressed code
+
+			return comment + data;
+		};
+
+		var compressCSS = function( data ) {
+			var compressor = new CSSOCompressor(),
+			translator = new CSSOTranslator();
+			data = translator.translate(cleanInfo(compressor.compress(srcToCSSP(data, 'stylesheet', true))));
+
+			return data;
+		};
+
+		var downloadVersion = function () {
+			$.ajax({
+					method  : "get",
+					cache   : false,
+					dataType: "json",
+					url     : "../simone.jquery.json",
+					success : function ( data ) {
+						mainVersion = data.version;
+
+						$( "[data-json-key=version]" ).text( mainVersion );
+
+						$( ".loading" ).append(
+							'<p class="css-downloads">Downloading CSS files... '
+							+ '(<span class="count">0</span>/<span class="total">2</span>)</p>'
+						);
+
+						setTimeout( buildFilesCSS, timeout );
+					},
+					error   : function ( error ) {
+						onWebError.call( this, error, path );
+					}
+				});
+		}
+
+		var buildFilesJS = function( options ) {
+			var files;
+
+			var buildsTotal = Object.keys( options.pathsJS ).length;
+			var buildsDone = 0;
+
+			$.each( options.pathsJS, function ( index, path ) {
+				$.ajax({
+					method  : "get",
+					cache   : false,
+					dataType: "html",
+					url     : path,
+					success : function ( data ) {
+						options.blobs[ index ] = add_version_to_string( data );
+						++buildsDone;
+
+						if ( options.onLoad ) {
+							options.onLoad.call( this, data, index, buildsDone );
+						}
+
+						if ( buildsDone === buildsTotal ) {
+							if ( options.onDone ) {
+								options.onDone.call( this );
+							}
+						}
+					},
+					error   : function ( error ) {
+						onWebError.call( this, error, path );
+					}
+				});
+			});
+		};
+
+		var buildMainJSFiles = function () {
+			buildFilesJS({
+				blobs: blobsJS,
+				pathsJS: {
+					taskbar: "../src/simone.taskbar.js",
+					window : "../src/simone.window.js"
+				},
+				onLoad: function ( data, index, done ) {
+					$( ".js-downloads .count" ).text( done );
+				},
+				onDone : function () {
+					$( ".loading" ).append(
+						'<p class="js-count">Minifying JS files... (<span>0</span>/'
+							+ Object.keys( blobsJS ).length +')</p>'
+					);
+
+					setTimeout( function () {
+						compressFiles({
+							blobs: blobsJS,
+							engine: "js",
+							onDone: function () {
+								recalculateTotalsJS();
+
+								buildLangJSFiles();
+							},
+							onNext: function( count ) {
+								$( ".js-count span" ).text( count + 1 );
+							}
+						});
+
+					}, timeout );
+				}
+			});
+		};
+
+		var buildLangJSFiles = function () {
+			var pathsJS = {};
+
+			if ( availableTaskbarWindowLanguages ) {
+				for( var l = 0; l < availableTaskbarWindowLanguages.length; l++ ) {
+					var lang = availableTaskbarWindowLanguages[ l ];
+
+					pathsJS[ lang ] = "../src/i18n/simone-" + lang + ".js";
+				}
+			}
+
+			$( ".loading" ).append(
+				'<p class="translations-downloads">Downloading translations... ' +
+				'(<span class="count">0</span>/<span class="total">' +
+				Object.keys( availableTaskbarWindowLanguages ).length +
+				'</span>)</p>'
+			);
+
+			buildFilesJS({
+				pathsJS: pathsJS,
+				blobs: blobsTranslations,
+				onStart: function ( total ) {
+					$( ".translations-downloads .total" ).text( total );
+				},
+				onLoad : function ( data, name, done ) {
+					// prepend translations to fake taskbar prototype created before
+					eval( data );
+
+					var langName = $.simone.taskbar.prototype.options.localization[ name ].name;
+
+					$( ".translations-list" ).append(
+						$( "<li></li>" )
+							.prepend(
+								$( "<label></label>" )
+									.text( langName )
+									.attr( "for", name )
+									.prepend(
+										$( "<input>" )
+											.attr( "type", "checkbox" )
+											.attr( "id", name )
+											.attr( "name", name )
+									)
+							)
+					);
+
+					$( ".translations-downloads .count" ).text( done );
+				},
+				onDone : function () {
+					$( ".loading" ).append(
+						'<p class="translations-count">Minifying translations... (<span>0</span>/'
+						+ Object.keys( blobsTranslations ).length + ')</p>'
+					);
+
+
+					setTimeout( function () {
+						compressFiles({
+							blobs: blobsTranslations,
+							engine: "js",
+							onDone: function () {
+								setTimeout( function () {
+									finishPage();
+								}, 100 );
+							},
+							onNext: function( count ) {
+								$( ".translations-count span" ).text( count + 1 );
+							}
+						});
+
+					}, timeout );
+				}
+			});
+		};
+
+		var buildFilesCSS = function () {
+			var files;
+
+			var pathsCSS = {
+				taskbar   : "../src/simone.taskbar.css",
+				window    :"../src/simone.window.css"
+			};
+
+			var buildsTotal = Object.keys( pathsCSS ).length;
+			var buildsDone = 0;
+
+			$.each( pathsCSS, function ( index, path ) {
+				if ( stopAjax ) {
+					return false;
+				}
+
+				$.ajax({
+					method  : "get",
+					cache   : false,
+					dataType: "html",
+					url     : path,
+					success : function ( data ) {
+						blobsCSS[ index ] = add_version_to_string( data );
+						++buildsDone;
+
+						$( ".css-downloads .count" ).text( buildsDone );
+
+						if ( buildsDone === buildsTotal ) {
+							$( ".loading" ).append(
+								'<p class="css-count">Minifying CSS files... (<span>0</span>/'
+									+ Object.keys( blobsCSS ).length + ')</p>'
+								);
+
+							setTimeout( function () {
+								compressFiles({
+									blobs: blobsCSS,
+									engine: "css",
+									onDone: function () {
+										recalculateTotalsCSS();
+
+										$( ".loading" ).append(
+											'<p class="js-downloads">Downloading JS files... ' +
+											'(<span class="count">0</span>/<span class="total">2</span>)</p>'
+										);
+
+										setTimeout(function () {
+											buildMainJSFiles();
+										}, timeout );
+									},
+									onNext: function( count ) {
+										$( ".css-count span" ).text( count + 1 );
+									}
+								});
+							}, timeout );
+						}
+					},
+					error   : function ( error ) {
+						onWebError.call( this, error, path );
+					}
+				});
+			});
+		}
+
+		var minJS = function () {
+			return $( ".js .production" ).is( ":checked" ) ? "Min" : "";
+		};
+
+		var minTranslations = function () {
+			return $( ".translations .production" ).is( ":checked" ) ? "Min" : "";
+		};
+
+		var minCSS = function () {
+			return $( ".css .production" ).is( ":checked" ) ? "Min" : "";
+		}
+
+		var customBuild = function ( blobs, type ) {
+			var keys = [ "taskbar", "window" ];
+
+			if ( type === "translations" ) {
+				keys = availableTaskbarWindowLanguages;
+				counts.translations = 0;
+			}
+
+			var min = {
+				js          : minJS(),
+				css         : minCSS(),
+				translations: minTranslations()
+			}[ type ];
+
+			var customBuild = {};
+
+			$.each( keys, function ( index, key ) {
+				if ( shouldInclude( key, type ) ) {
+					if ( type === "translations" ) {
+						++counts.translations;
+					}
+
+					customBuild[ key + min ] = blobs[ key + min ];
+				}
+			});
+
+			return customBuild;
+		};
+
+		var mergeFiles = function ( blobs, options, type ) {
+			var merged = {};
+
+			var min = {
+				js          : minJS(),
+				css         : minCSS(),
+				translations: minTranslations()
+			}[ type ];
+
+			merged[ "simone" + min ] =  "";
+
+			$.each( blobs, function ( index, data ) {
+				merged[ "simone" + min ] += data + ( min.length ? "" : "\r\n\r\n" );
+			});
+
+			return merged;
+		};
+
+		var startDownload = function ( options, blobs, type ) {
+			var build = customBuild( blobs, type );
+
+			if ( ! options.separately ) {
+				build = mergeFiles( build, options, type );
+			}
+
+			var returnArray = {};
+
+			$.each( build, function ( index, data ) {
+				var blobType = type === "css"
+					? "text/css;charset=utf-8"
+					: "application/javascript;charset=utf-8",
+				    blob;
+
+				try {
+					blob = new Blob([ data ], {
+						type: blobType
+					});
+				} catch ( e ) {
+					window.BlobBuilder = window.BlobBuilder
+						|| window.WebKitBlobBuilder
+						|| window.MozBlobBuilder
+						|| window.MSBlobBuilder;
+
+					if ( e.name === 'TypeError' && window.BlobBuilder ) {
+						var bb = new BlobBuilder();
+						bb.append( data );
+						blob = bb.getBlob( blobType );
+					}
+				}
+
+				var noMinKey = index.substr( 0, index.length - 3 ) + ".min";
+
+				var filename = type === "js"
+					? minJS().length ? noMinKey : index
+					: minCSS().length ? noMinKey : index;
+
+				filename += "." + type;
+
+				if ( type === "translations" ) {
+					var allChecked = $( ".translations-list input").length === $( ".translations-list input:checked" ).length;
+
+					filename =
+						"i18n/simone"
+						+ ( options.separately ? "." + index.replace( "Min", "" ) : ( allChecked ? ".all" : "" ) )
+						+ ( minTranslations().length ? ".min" : "" )
+						+ (
+							allChecked
+								? ""
+								: options.separately ? "" : ".custom"
+						)
+						+ ".js";
+				}
+
+				// in case there's no translation files selected,
+				// no empty file will be generated
+				if ( type === "translations" && ! options.separately && ! counts.translations ) {
+					return true;
+				}
+
+				var prefix = options.separately && type !== "translations" ? "simone." : "";
+
+				if ( ! options.returnValue ) {
+					saveAs( blob, prefix + filename );
+				} else {
+					returnArray[ prefix + filename ] = blob;
+				}
+			});
+
+			if ( options.returnValue ) {
+				return returnArray;
+			}
+		}
+
+		var startDownloadJS = function ( options ) {
+			startDownload( options, blobsJS, "js" );
+		};
+
+		var startDownloadCSS = function( options ) {
+			startDownload( options, blobsCSS, "css" );
+		};
+
+		var startDownloadTranslations = function( options ) {
+			startDownload( options, blobsTranslations, "translations" );
+		};
+
+		var shouldInclude = function ( index, type ) {
+			index = index.replace( "Min", "" );
+			if ( type === "translations" ) {
+				return $( "#" + index ).is( ":checked" );
+			}
+
+			return true;
+		};
+
+		var recalculateTotals = function( blobs, type ) {
+			var build   = customBuild( blobs, type );
+			var len     = 0;
+			var counter = 0;
+
+
+			$.each( build, function ( index, data ) {
+				if ( shouldInclude ( index, type ) ) {
+					len += data.length;
+					++counter;
+				}
+			});
+
+			return {
+				len: Math.ceil( len / 1024 ),
+				counter: counter,
+				lenb: len
+			};
+		}
+
+		var recalculateTotalsJS = function() {
+			var result = recalculateTotals( blobsJS, "js" );
+
+			lengths.js = result.lenb;
+
+			$( ".js .download .size" ).text( result.len );
+			$( ".js .download .counter" ).text( result.counter );
+
+			recalculateZipButtons();
+		};
+
+		var recalculateTotalsCSS = function () {
+			var result = recalculateTotals( blobsCSS, "css" );
+
+			lengths.css = result.lenb;
+
+			$( ".css .download .size" ).text( result.len );
+			$( ".css .download .counter" ).text( result.counter );
+
+			recalculateZipButtons();
+		};
+
+		var recalculateTotalsTranslations = function () {
+			var result = recalculateTotals( blobsTranslations, "translations" );
+
+			lengths.translations = result.lenb;
+
+			$( ".translations .download .size" ).text( result.len );
+			$( ".translations .download .counter" ).text( result.counter );
+
+			$( ".translations .plural" ).css( "display", result.len === 1 ? "none" : "initial" );
+
+			$( ".translations .button.download" ).prop( "disabled", result.len === 0 );
+
+			recalculateZipButtons();
+		};
+
+		var add_version_to_string = function ( string ) {
+			return string
+				.replace( "@simone-main-version", mainVersion )
+				.replace( "@simone-main-version", mainVersion );
+		}
+
+		var $package  = $( ".zip.download-package" );
+		var $separate = $( ".zip.download-separately" );
+
+		$package.on( "click", function () {
+			buildZipArchive({
+				separately: false
+			});
+		});
+
+		$separate.on( "click", function () {
+			buildZipArchive({
+				separately: true
+			});
+		});
+
+		var getZipFiles = function( options ) {
+			var files = {};
+
+			$.each( options.order || [ "js", "css", "translations" ], function ( index, type ) {
+				if ( type === "js" ) {
+					blobs = blobsJS;
+				} else if ( type === "css" ) {
+					blobs = blobsCSS;
+				} else if ( type === "translations" ) {
+					blobs = blobsTranslations;
+				}
+
+				$.extend( files, startDownload({
+					separately: options.separately,
+					returnValue: true,
+				}, blobs, type ));
+			});
+
+			return files;
+		};
+
+		var buildZipArchive = function( options ) {
+			var files = getZipFiles( options );
+
+			var counter = 0;
+
+			var filesTotal = Object.keys( files ).length;
+
+			var $progress = $( ".zip-" + ( options.separately ? "separately" : "package" ) + " .progress" );
+			var $meter    = $progress.children( ".meter" );
+
+			$meter.css( "width", "0%" );
+			$progress.addClass( "visible" );
+
+			zip.createWriter(new zip.BlobWriter("application/zip"), function( zipWriter ) {
+				var pointer = Object.keys( files )[ 0 ];
+
+				var addNext = function () {
+					var filename = pointer;
+					if ( filename.indexOf( "simone-" ) > -1 ) {
+						filename = "i18n/" + filename;
+					}
+
+					$meter.css( "width", ( counter / filesTotal * 100 ) + "%" );
+
+					// add directory
+					filename = "simone/" + filename;
+
+					zipWriter.add( filename, new zip.BlobReader( files[ pointer ] ), function () {
+						++ counter;
+						var keys = Object.keys( files );
+						if ( keys[ counter ] ) {
+							pointer = keys[ counter ];
+							setTimeout( function () {
+								addNext();
+							}, timeout );
+						} else {
+							$meter.css( "width", "100%" );
+
+							setTimeout( function () {
+								$progress.removeClass( "visible" );
+
+								zipWriter.close(function ( blob ) {
+									saveAs( blob, "simone.zip" );
+								});
+							}, timeout );
+						}
+					});
+				};
+
+				addNext();
+			}, $.noop );
+		};
+
+		var recalculateZipButtons = function () {
+			$package
+				.find( ".count" )
+				. text( 2 + ( counts.translations ? 1 : 0 ) );
+
+			$separate
+				.find( ".count" )
+				.text( 4 + counts.translations );
+
+			var namesSeparates = Object.keys(getZipFiles({
+				separately: true,
+				order: [ "css", "js", "translations" ]
+			}));
+
+			var namesPackages = Object.keys(getZipFiles({
+				separately: false,
+				order: [ "css", "js", "translations" ]
+			}));
+
+			$( ".zip-markup.download-separately code" )
+				.text( buildZipMarkup( namesSeparates ) );
+
+			$( ".zip-markup.download-package code" )
+				.text( buildZipMarkup( namesPackages ) );
+
+			Prism.highlightAll();
+		};
+
+		var buildZipMarkup = function ( names ) {
+			var markup = [ "\n\n" ];
+
+			$.each( names, function ( index, name ) {
+				if ( name.substr( -3 ) === ".js" ) {
+					if ( name.indexOf( ".simone-" ) > -1 ) {
+						name = "i18n/" + name;
+					}
+					markup.push( "<script src=\"simone/" + name + "\"><\/script>\n" );
+				} else if ( name.substr( -4 ) === ".css" ) {
+					markup.push( "<link href=\"simone/" + name + "\" rel=\"stylesheet\">\n" );
+				};
+			});
+
+			return markup.join( "" );
+		};
+
+		var finishPage = function () {
+			$( ".translations-select-all" ).trigger( "click" );
+
+			$( ".translations-list input" ).on( "change", function () {
+				recalculateTotalsTranslations();
+			});
+
+			recalculateTotalsTranslations();
+
+			$( ".loading" ).hide();
+			$( ".downloads" ).show();
+
+
+			$.each( [ "fixed-height", "fixed-height-2" ], function ( index, className ) {
+				var height = 0;
+
+				$elems = $( "." + className );
+
+				$elems.each( function () {
+					var $this = $( this );
+
+					height = Math.max( height, $this.outerHeight() );
+				});
+
+				$elems.css( "height", height );
+			});
+		};
+
+		var lengths = {
+			css         : 0,
+			js          : 0,
+			translations: 0
+		};
+
+		var counts = {
+			css         : 2,
+			js          : 2,
+			translations: 0
+		};
+
+		$( ".js .production, .js .development").on( "change", function () {
+			recalculateTotalsJS();
+		});
+
+		$( ".css .production, .css .development").on( "change", function () {
+			recalculateTotalsCSS();
+		});
+
+		$( ".translations .production, .translations .development").on( "change", function () {
+			recalculateTotalsTranslations();
+		});
+
+		$( ".js .download" ).on( "click", function () {
+			startDownloadJS({
+				separately: $( this ).hasClass( "download-separately" )
+			});
+		});
+
+		$( ".css .download" ).on( "click", function () {
+			startDownloadCSS({
+				separately: $( this ).hasClass( "download-separately" )
+			});
+		});
+
+		$( ".translations .download" ).on( "click", function () {
+			startDownloadTranslations({
+				separately: $( this ).hasClass( "download-separately" )
+			});
+		});
+
+		$( ".translations-select-all" ).on( "click", function () {
+			$( ".translations-list input[type=checkbox]" ).prop( "checked", true );
+
+			recalculateTotalsTranslations();
+		});
+
+		$( ".translations-select-none" ).on( "click", function () {
+			$( ".translations-list input[type=checkbox]" ).prop( "checked", false );
+
+			recalculateTotalsTranslations();
+		});
+
+		$( ".translations-invert-selection" ).on( "click", function () {
+			$( ".translations-list input[type=checkbox]" ).each( function () {
+				var $this = $( this );
+
+				$this.prop( "checked", ! $this.is( ":checked" ) );
+			});
+
+			recalculateTotalsTranslations();
+		});
+
+		setTimeout( downloadVersion, timeout );
+	});
+</script>
+</head>
+
+<body>
+
+<main>
+	<div data-alert class="alert-box alert radius js-off">
+		JavaScript is turned off. Please turn on JavaScript to use this page.
+	</div>
+
+	<div data-alert class="alert-box alert radius blob-not-supported">
+		It seems that your browser does not support blobs. Please install the newest version of your browser to use this page.
+	</div>
+
+	<div  class="alert-box info radius loading" style="display:none;">
+		<p><strong>Preparing files...</strong></p>
+		<p>Getting current version...</p>
+	</div>
+
+	<div class="downloads" style="display:none;">
+		<div class="row">
+			<div class="small-12 large-12 column">
+
+				<span id="introduction" class="anchor-fix"></span>
+				<h2>Introduction</h2>
+
+				<p>
+					This page let's you <strong>download Simone</strong> version <strong data-json-key="version"></strong>.
+				</p>
+				<p>
+					Download a <a href="#separate-files">separate files</a> or a <a href="#zip-archives">ZIP archive</a>. Choose between compressed and uncompressed versions of JavaScript, CSS, and translations. Add only those translations that you really need, or download all available translations. What you see in the embed codes is what you'll get in ZIP archives.
+				</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="small-12 large-12 columns">
+
+				<span id="separate-files" class="anchor-fix"></span>
+				<h2>Download files</h2>
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="small-12 large-4 columns js">
+
+				<h3>JavaScript</h3>
+
+				<div class="row padding fixed-height">
+					<div>
+						<input type="radio" name="js-version" value="production" id="js-production" class="production" checked>
+						<label for="js-production">Production, compressed version</label>
+					</div>
+
+					<div>
+						<input type="radio" name="js-version" value="development" id="js-development" class="development">
+						<label for="js-development">Development, uncompressed version</label>
+					</div>
+				</div>
+
+				<div class="row padding fixed-height-2">
+					<div class="notice">
+						<strong>Note</strong>: <a href="https://github.com/mishoo/UglifyJS">UglifyJS</a> is used for JavaScript minification. If you prefer other tool, download uncompressed version of JavaScript and build production version using your prefered tool.
+					</div>
+				</div>
+
+				<div class="row padding">
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-package">
+							Download single JS file, <span class="size"></span> KB<br>
+							<small>recommended</small>
+						</button>
+					</div>
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-separately">
+							Download <span class="counter"></span> JS files,<span class="size"></span> KB total<br>
+							<small>taskbar and window in a separate files</small>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="small-12 large-4 columns css">
+
+				<h3>CSS</h3>
+
+				<div class="row padding fixed-height">
+					<div>
+						<input type="radio" name="css-version" value="production" id="css-production" class="production" checked>
+						<label for="css-production">Production, compressed version</label>
+					</div>
+
+					<div>
+						<input type="radio" name="css-version" value="development" id="css-development" class="development">
+						<label for="css-development">Development, uncompressed version</label>
+					</div>
+				</div>
+
+				<div class="row padding fixed-height-2">
+					<div class="notice">
+						<strong>Note</strong>: <a href="https://github.com/css/csso">CSSO</a> is used for CSS minification. If you prefer other tool, download uncompressed version of CSS and build production version using your prefered tool.
+					</div>
+				</div>
+
+				<div class="row padding">
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-package">
+							Download single CSS file, <span class="size"></span> KB<br>
+							<small>recommended</small>
+						</button>
+					</div>
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-separately">
+							Download <span class="counter"></span> CSS files,<span class="size"></span> KB total<br>
+							<small>taskbar and window in a separate files</small>
+						</button>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="small-12 large-4 columns translations">
+
+				<h3>Localizations</h3>
+
+				<div class="row padding fixed-height">
+					<div>
+						<input type="radio" name="translations-version" value="production" id="translations-production" class="production" checked>
+						<label for="translations-production">Production, compressed version</label>
+					</div>
+
+					<div>
+						<input type="radio" name="translations-version" value="development" id="translations-development" class="development">
+						<label for="translations-development">Development, uncompressed version</label>
+					</div>
+
+					<div class="pull-right translations-buttons">
+						<div class="button tiny translations-select-all">Select all</div>
+						<div class="button tiny translations-select-none">Select none</div>
+						<div class="button tiny translations-invert-selection">Invert selection</div>
+					</div>
+
+					<div class="pull-left">
+						<ul class="translations-list"></ul>
+					</div>
+				</div>
+
+				<div class="row padding fixed-height-2">
+					<div class="notice">
+						<strong>Note</strong>: Having at least one translation files is mandatory. If your desired language is not on the list, <a href="nonTechnicalContributions.html#translations">an instruction for adding a translation is available</a>.
+					</div>
+				</div>
+
+				<div class="row padding">
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-package">
+							Download single JS file, <span class="size"></span> KB<br>
+							<small>all selected languages together</small>
+						</button>
+					</div>
+					<div class="small-6 large-12 columns">
+						<button class="button expand download download-separately">
+							Download <span class="counter"></span> JS file<span class="plural">s</span>, <span class="size"></span> KB total<br>
+							<small>each language in a separate file</small>
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row">
+
+			<span id="zip-archives" class="anchor-fix"></span>
+			<h2>Download ZIP archives</h2>
+
+			<div class="columns small-12 large-4 zip zip-package">
+				<button class="button large success expand zip download-package">
+					Download selected files as ZIP<br>
+					<small>single files, <span class="count"></span> files total (recommended)</small>
+				</button>
+
+				<div class="progress success">
+					<span class="progress-info">Adding files to archive...</span>
+					<span class="meter"></span>
+				</div>
+			</div>
+
+			<div class="columns small-12 large-8 zip zip-package">
+				<div class="panel">
+					Include files from this ZIP archive into your project (see <a href="../docs/installation.html#installing-files">installation instruction</a> too):
+				</div>
+
+				<pre class="zip-markup download-package">
+					<code class="language-markup"></code>
+				</pre>
+			</div>
+
+			<div class="columns small-12 large-4 zip zip-separately">
+				<button class="button large success expand zip download-separately">
+					Download selected files as ZIP<br>
+					<small>separate files, <span class="count"></span> files total</small>
+				</button>
+
+				<div class="progress success">
+					<span class="progress-info">Adding files to archive...</span>
+					<span class="meter"></span></div>
+			</div>
+
+			<div class="columns small-12 large-8 zip zip-separately">
+				<div class="panel">
+					Include files from this ZIP archive into your project (see <a href="../docs/installation.html#installing-files">installation instruction</a> too):
+				</div>
+
+				<pre class="zip-markup download-separately">
+					<code class="language-markup"></code>
+				</pre>
+			</div>
+
+		</div>
+	</div>
+</main>
+
+</body>

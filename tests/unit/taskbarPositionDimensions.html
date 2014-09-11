@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar position and dimensions | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+		test( "Test \"orientation\", \"horizontalStick\", and \"verticalStick\" options.", function ( assert ) {
+			expect( 6 );
+
+			$taskbar.taskbar( "option", "horizontalStick", "top right" );
+
+
+			assert.equal(
+				$taskbar.css( "top" ),
+				"0px",
+				"Moved to top edge."
+			);
+
+			$taskbar.taskbar( "option", "orientation", "vertical" );
+			$taskbar.taskbar( "option", "verticalStick", "top right" );
+
+			assert.equal(
+				$taskbar.css( "right" ),
+				"0px",
+				"Moved to right edge."
+			);
+
+			$taskbar.taskbar( "option", "verticalStick", "top left" );
+
+			assert.equal(
+				$taskbar.css( "left" ),
+				"0px",
+				"Moved to left edge."
+			);
+
+			$taskbar.taskbar( "option", "orientation", "horizontal" );
+			$taskbar.taskbar( "option", "horizontalStick", "bottom right" );
+
+			assert.deepEqual(
+				[ $taskbar.css( "bottom" ), $taskbar.css( "right" ) ],
+				[ "0px", "0px" ],
+				"Moved to bottom edge."
+			);
+
+			$taskbar.taskbar( "destroy" );
+			// rebuild to reset options
+			$taskbar.taskbar();
+
+			$taskbar.taskbar( "option", "horizontalWidth", "70%" );
+			$taskbar.taskbar( "option", "verticalHeight", "70%" );
+
+			var $windowCopy = instance.$windowCopy;
+
+			assert.ok(
+				$taskbar.outerWidth() < instance.$windowCopy.outerWidth() * .71
+				&& $taskbar.outerWidth() > instance.$windowCopy.outerWidth() * .69,
+				"Set \"horizontalWidth\" to 70%."
+			);
+
+			$taskbar.taskbar( "option", "orientation", "vertical" );
+
+			assert.ok(
+				$taskbar.outerHeight() < instance.$windowCopy.outerHeight() * .71
+				&& $taskbar.outerHeight() > instance.$windowCopy.outerHeight() * .69,
+				"Set \"verticalHeight\" to 70%."
+			);
+		});
+
+		test( "Test \"horizontalRows\", \"horizontalRowsMin\", and \"horizontalRowsMax\" options.", function ( assert ) {
+			expect( 3 );
+
+			$taskbar.taskbar( "option", {
+				orientation    : "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight : "100%"
+			});
+
+			var height = $taskbar.outerHeight();
+
+			$taskbar.taskbar( "option", "horizontalRows", 2 );
+
+			function heightInRange() {
+				return height * 2  >= $taskbar.outerHeight() * .9 && height * 2 <= $taskbar.outerHeight() * 1.1;
+			}
+
+			assert.ok(
+				heightInRange(),
+				"Height doubled when \"horizontalRows\" was changed from 1 to 2."
+			);
+
+			$taskbar.taskbar( "option", {
+				horizontalRowsMax: 2,
+				horizontalRows   : 4
+			});
+
+			assert.ok(
+				heightInRange(),
+				"Height stayed the same when when \"horizontalRowsMax\" was changed from 2 and \"horizontalRows\" was change to 4."
+			);
+
+			$taskbar.taskbar( "option", {
+				horizontalRowsMin: 2,
+				horizontalRows   : 1
+			});
+
+			assert.ok(
+				heightInRange(),
+				"Height stayed the same when when \"horizontalRowsMin\" was changed from 2 and \"horizontalRows\" was change to 1."
+			);
+
+		});
+
+		test( "Test \"verticalColumns\", \"horizontalRowsMin\", and \"horizontalRowsMax\" options.", function ( assert ) {
+			expect( 3 );
+
+			$taskbar.taskbar( "option", {
+				orientation    : "vertical",
+				verticalColumns: 1
+			});
+
+			var width = $taskbar.outerWidth();
+
+			function widthInRange() {
+				return width * 2  >= $taskbar.outerWidth() * .9 && width * 2 <= $taskbar.outerWidth() * 1.1;
+			}
+
+			$taskbar.taskbar( "option", "verticalColumns", 2 );
+
+			assert.ok(
+				widthInRange(),
+				"Width doubled when \"verticalColumns\" was changed from 1 to 2."
+			);
+
+			$taskbar.taskbar( "option", {
+				verticalColumnsMax: 2,
+				verticalColumns   : 4
+			});
+
+			assert.ok(
+				widthInRange(),
+				"Width stayed the same when when \"verticalColumnsMax\" was changed from 2 and \"verticalColumns\" was change to 4."
+			);
+
+			$taskbar.taskbar( "option", {
+				verticalColumnsMin: 2,
+				verticalColumns   : 1
+			});
+
+			assert.ok(
+				widthInRange(),
+				"Width stayed the same when when \"verticalColumnMin\" was changed from 2 and \"verticalColumns\" was change to 1."
+			);
+		})
+
+		test( "Test \"horizontalRowHeight\" and \"verticalColumnWidth\" options.", function ( assert ) {
+			expect( 2 );
+
+			$taskbar.taskbar( "option", {
+				orientation        : "horizontal",
+				horizontalRows     : 1,
+				horizontalRowsMin  : defaults.horizontalRowsMin,
+				horizontalRowsMax  : defaults.horizontalRowsMax,
+				horizontalRowHeight: 20,
+			});
+
+			var height = $taskbar.outerHeight();
+
+			assert.equal(
+				height,
+				20,
+				"\"horizontalRowHeight\" set to 20, outerHeight equals 20."
+			);
+
+			$taskbar.taskbar( "option", {
+				orientation        : "vertical",
+				verticalColumns    : 1,
+				verticalColumnsMin : defaults.verticalColumnsMin,
+				verticalColumnsMax : defaults.verticalColumnsMax,
+				verticalColumnWidth: 95,
+			});
+
+			var width = $taskbar.outerWidth();
+
+			assert.equal(
+				width,
+				95,
+				"\"verticalColumnWidth\" set to 95, outerHeight equals 95."
+			);
+		});
+
+		test( "\"viewportMargins\" with non-zero values", function () {
+
+			$.each( [ "viewport", "visible" ], function ( index, containment ) {
+				$taskbar.taskbar( "option", "windowsContainment", containment );
+
+				ok( true, "Set taskbar \"windowsContainment\" to \"" + containment + "\"." );
+
+				var $window;
+
+				$window = $( "<div></div>" )
+					.window({
+						position: {
+							at: "left top",
+							my: "left top",
+						}
+					});
+
+				var moveWindowToCorner = function() {
+					$window
+						.parent()
+						.find( ".ui-dialog-titlebar" )
+						.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+							dy: - $( window ).innerHeight(),
+							dx: - $( window ).innerWidth()
+						}));
+				}
+
+				var moveWindowBack = function ( initial, correct ) {
+					$taskbar.taskbar( "option", "viewportMargins.top", [ 0, correct || "correct" ] );
+
+					moveWindowToCorner();
+
+					ok (
+						true,
+						"Move window " + ( initial ? "" : "back " ) + "to top left corner."
+						+ ( ! initial ? " Correct set to \"" + ( correct || "correct" ) + "\"." : "" )
+					);
+				}
+
+				var visibleContainmentCorrect = function( value, $window ) {
+					var instance = $window
+						.data( dataPrefix + "window" );
+
+					var correct = Math.round( instance._getVisibleContainmentArray()[ 1 ] );
+
+					if ( instance._getRealContainment() === "viewport" ) {
+						return value;
+					}
+
+					return correct;
+				}
+
+				moveWindowBack( true );
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 50, "correctNone" ] );
+
+				equal(
+					$window.parent().offset().top,
+					visibleContainmentCorrect ( 50, $window ),
+					"Set \"viewportMargins.top\" to [ 50, \"correct\" ],"
+					+ " window top === " + visibleContainmentCorrect( 50, $window ) + "."
+				);
+
+				moveWindowBack();
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 50, "correctDown" ] );
+
+				equal(
+					$window.parent().offset().top,
+					visibleContainmentCorrect( 50, $window ),
+					"Set \"viewportMargins.top\" to [ 50, \"correctDown\" ],"
+					+ " window top === 50."
+				);
+
+				moveWindowBack( false, "correctNone" );
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 50, "correctDown" ] );
+
+				$taskbar2.taskbar({
+					horizontalStick: "top left"
+				});
+
+				moveWindowToCorner();
+
+				equal(
+					Math.round( $window.parent().offset().top ),
+					visibleContainmentCorrect( Math.round( $taskbar2.outerHeight() ), $window ),
+					"Create taskbar on top edge. Window top equal to taskbar 2 height"
+					+ ( containment === "visible" ? " (minus whats corrected by containment)" : "") + "."
+				);
+
+				moveWindowBack( false, "correctNone" );
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 20, "correctNone" ] );
+
+				equal(
+					$window.parent().offset().top,
+					visibleContainmentCorrect( 20, $window ),
+					"Set \"viewportMargins.top\" to [ 20, \"correctNone\" ],"
+					+ " window top === " + visibleContainmentCorrect( 20, $window ) + "."
+				);
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 50, "correctDown" ] );
+
+				equal(
+					Math.round( $window.parent().offset().top ),
+					visibleContainmentCorrect( Math.round( $taskbar2.outerHeight() ), $window ),
+					"Set \"viewportMargins.top\" to [ 50, \"correctDown\" ]."
+					+ "Window top equal to taskbar 2 height"
+					+ ( containment === "visible" ? " (minus whats corrected by containment)" : "") + "."
+				);
+
+				moveWindowBack( false, "correctNone" );
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 20, "correctDown" ] );
+
+				equal(
+					Math.round( $window.parent().offset().top ),
+					visibleContainmentCorrect( 20, $window ),
+					"Set \"viewportMargins.top\" to [ 20, \"correctDown\" ],"
+					+ " window top === " + visibleContainmentCorrect( 20, $window ) + "."
+				);
+
+				moveWindowBack( false, "correctNone" );
+
+				$taskbar.taskbar( "option", "viewportMargins.top", [ 50, "correct" ] );
+
+				equal(
+					Math.round( $window.parent().offset().top ),
+					visibleContainmentCorrect( Math.round( $taskbar2.outerHeight() ), $window ),
+					"Set \"viewportMargins.top\" to [ 50, \"correct\" ]."
+					+ "Window top equal to taskbar 2 height"
+					+ ( containment === "visible" ? " (minus whats corrected by containment)" : "") + "."
+				);
+
+				// teardown
+				$taskbar2.taskbar( "destroy" );
+				$window.window( "close" );
+			});
+
+		});
+	});
+</script>
+
+</body>
+</html>

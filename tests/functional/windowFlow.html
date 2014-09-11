@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Windows flow | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		test( "\"maximize\", \"restore\": containment" , function () {
+			var $window;
+
+			var prev = $taskbar.taskbar( "option", "horizontalRowHeight" );
+
+			$window = $( "<div></div>" ).lorem({
+				amount: 10
+			}).window({
+				maximizable: true,
+				durations: {
+					maximize: false,
+					restore: false
+				}
+			});
+
+			$window.window( "maximize" );
+
+			var height = $window.parent().outerHeight();
+			var width  = $window.parent().outerWidth();
+
+			equal(
+				$window.parent().outerHeight(),
+				$( ".simone-taskbar-windows-containment" ).outerHeight(),
+				"Maximize window. Height equal to viewport height."
+			);
+
+			equal(
+				$window.parent().outerWidth(),
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				"Width equal to viewport width."
+			);
+
+			var viewportHeight = $( ".simone-taskbar-windows-containment" ).outerHeight();
+
+			$taskbar.taskbar( "option", "horizontalRowHeight", 50.52 );
+
+			notEqual(
+				$( ".simone-taskbar-windows-containment" ).outerHeight(),
+				viewportHeight,
+				"Resize vieport by changing taskbar height. Viewport resized."
+			);
+
+			equal(
+				$window.parent().outerHeight(),
+				$( ".simone-taskbar-windows-containment" ).outerHeight(),
+				"Height equal to viewport height."
+			);
+
+			equal(
+				$window.parent().outerWidth(),
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				"Width equal to viewport width."
+			);
+
+			var viewportWidth = $( ".simone-taskbar-windows-containment" ).outerWidth();
+
+			$taskbar2.taskbar({
+				orientation: "vertical",
+				horizontalStick: "top right"
+			});
+
+			notEqual(
+				viewportWidth,
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				"Create second horizontal taskbar. Viewport resized."
+			);
+
+			equal(
+				$window.parent().outerWidth(),
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				"Width equal to viewport width."
+			);
+
+			viewportWidth = $( ".simone-taskbar-windows-containment" ).outerWidth();
+
+			$taskbar2.taskbar( "option", "verticalColumnWidth", 107.53 );
+
+			notEqual(
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				viewportWidth,
+				"Resize vieport by changing second taskbar width. Viewport resized."
+			);
+
+			equal(
+				$window.parent().outerWidth(),
+				$( ".simone-taskbar-windows-containment" ).outerWidth(),
+				"Width equal to viewport height."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "horizontalRowHeight", prev );
+			$taskbar2.taskbar( "destroy" );
+		});
+
+		test( "Windows order", function () {
+			var $window;
+			var $window2;
+			var $window3;
+
+			$window = $( "<div></div>" ).window();
+			$window2 = $( "<div></div>" ).window();
+			$window3 = $( "<div></div>" ).window();
+
+			deepEqual(
+				[ $window3.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Window 3 is on top. One window is on top."
+			);
+
+			$window2.simulate( "mousedown" );
+
+			deepEqual(
+				[ $window2.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Trigger mousedown on window 2. Window 2 is on top. One window is on top."
+			);
+
+			$window.simulate( "mousedown", {
+				which: 3
+			});
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Trigger mousedown on window 1. Window 1 is on top. One window is on top."
+			);
+
+			$window.window( "minimize", false );
+
+			deepEqual(
+				[ $window2.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Minimize window 1. Window 2 is on top. One window is on top."
+			);
+
+			$window.window( "show", false );
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Show window 1. Window 1 is on top. One window is on top."
+			);
+
+			$window2.window( "maximize", false );
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Maximize window 2. Window 1 is on top. One window is on top."
+			);
+
+			$window3.window( "moveToTop" );
+
+			deepEqual(
+				[ $window3.parent().hasClass( "simone-window-top"),  $( ".simone-window-top").length ],
+				[ true,  1 ],
+				"Move window 3 to top via API. Window 3 is on top. One window is on top."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+			$window3.window( "close" );
+		});
+
+		asyncTest( "Crosstest window flow with \"show\", \"restore\", \"minimize\", and \"maximize\" methods, and resizable and draggable during window animation", function () {
+			var $window;
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			$window = $( "<div></div>" ).window({
+				durations: {
+					maximize: 500,
+					minimize: 500,
+					restore : 500,
+					show    : 500
+				}
+			});
+
+			var all = 0;
+			var bad = 0;
+
+			QUnit.log(function ( r ) {
+				++all;
+
+				// console.log( all );
+
+				if ( all > 104 ) {
+					// debugger;
+				}
+
+				if ( all === 8 || all === 9 || all === 10 ) {
+					// debugger;
+				}
+			});
+
+			var initialPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			var dragTest = function ( $window, animation ) {
+				var $handle      = $window.parent().find( ".ui-dialog-titlebar" );
+				var $resizableNW = $window.parent().find( ".ui-resizable-nw" );
+				var $resizableSE = $window.parent().find( ".ui-resizable-se" );
+
+				var prevPosition;
+				var currentPosition;
+
+				// draggable
+				prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight(),
+						dx:   $( window ).innerWidth()
+					}));
+
+				currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				deepEqual(
+					prevPosition,
+					currentPosition,
+					"Draging titlebar doesn't change position during " + animation + "."
+				);
+
+				// resizable NW
+				prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				$resizableNW
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight(),
+						dx: - $( window ).innerWidth()
+					}));
+
+				currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				deepEqual(
+					prevPosition,
+					currentPosition,
+					"Draging NW resizable handle doesn't change position during " + animation + "."
+				);
+
+				// resizable SW
+				prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				$resizableSE
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: $( window ).innerHeight(),
+						dx: $( window ).innerWidth()
+					}));
+
+				currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+				deepEqual(
+					prevPosition,
+					currentPosition,
+					"Draging SE resizable handle doesn't change position during " + animation + "."
+				);
+			}
+
+			var methodsTest = function( $window, animation ) {
+				var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+				var $elem = $window.parent();
+
+				var actions = {
+					show    : "showing",
+					restore : "restoring",
+					minimize: "minimizing",
+					maximize: "maximizing"
+				};
+
+				$.each( actions, function ( action, progress ) {
+					if ( animation !== action ) {
+						$window.window( action );
+
+						var all = [ animation, action ].sort();
+						var shouldChange;
+						shouldChange = all[ 0 ] === "maximize" && all[ 1 ] === "restore";
+						var has = $elem.hasClass( "simone-window-" + progress );
+
+						var isOk = ! has || ( has && shouldChange );
+
+						ok(
+							isOk,
+							"Method \"" + action + "\" does"
+							+ ( has && shouldChange ? "" : "n't" )
+							+ " change position during " + animation + "."
+						);
+					}
+				});
+			}
+
+			var timeout = 0,
+			    prevAction;
+
+			$.each( [
+				// minimize
+				"minimize",
+				"show",
+				"minimize",
+				"maximize",
+				"minimize",
+				"restore",
+				// maximize
+				// "minimize" + "maximize" covered in "maximize",
+				"maximize",
+				"show",
+				"maximize",
+				"restore",
+				// restore
+				"restore",
+				"maximize",
+				"restore",
+				"show",
+				"restore",
+				"minimize",
+				// show
+				// "show" + "minimize" covered in "minimize",
+				// "show" + "maximize" covered in "maximize",
+				// "show" + "restore" covered in "restore",
+			], function ( index, action ) {
+				// minimize before show, otherwise we wouldn't have animation
+
+				setTimeout( function () {
+					if ( action === "show" ) {
+						$window.window( "minimize", false );
+					}
+
+					$window.window( action );
+
+					ok( true, action + " window" );
+
+					start();
+					stop();
+				}, timeout );
+
+				setTimeout( function () {
+					dragTest.call( this, $window, action );
+
+					start();
+					stop();
+				}, timeout + 50 );
+
+				setTimeout( function () {
+					methodsTest.call( this, $window, action );
+
+					prevAction = action;
+
+					start();
+					stop();
+				}, timeout + 200 );
+
+				timeout+= 1000;
+			});
+
+			setTimeout( function () {
+				start();
+				$window.window( "close" );
+			}, timeout );
+
+		});
+
+		asyncTest( "\"show\", \"restore\", \"minimize\", and \"maximize\" methods cross check with methods \"quick\" parameter", function () {
+			var $window;
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			$window = $( "<div></div>" ).window({
+				durations: {
+					maximize: 500,
+					minimize: 500,
+					restore : 500,
+					show    : 500
+				}
+			});
+
+			var timeout = 0;
+
+			var actions = [
+				"minimize",
+				"maximize",
+				"show",
+				"restore",
+			];
+
+			$.each( actions, function( index, animation ) {
+				$.each( actions, function( index, stopper ) {
+					if ( animation !== stopper ) {
+						setTimeout( function () {
+							if ( animation === "show" ) {
+								$window.window( "minimize", false );
+							}
+
+							$window.window( animation );
+
+							ok( true, animation + " window" );
+
+							start();
+							stop();
+						}, timeout );
+
+						timeout+= 100;
+
+						setTimeout( function () {
+							var $elem = $window.parent();
+
+							var bef = $elem.css( "top" );
+
+							$window.window( stopper, false );
+
+							var isOk =
+								   ! $elem.hasClass( "simone-window-showing" )
+								&& ! $elem.hasClass( "simone-window-minimizing" )
+								&& ! $elem.hasClass( "simone-window-restoring" )
+								&& ! $elem.hasClass( "simone-window-maximizing" );
+
+							ok( isOk, "call \"" + stopper + "\" window with parameter false: no animation in progress" );
+
+							start();
+							stop();
+						}, timeout );
+
+						timeout+= 200;
+					}
+				});
+
+				timeout+= 1000;
+
+				// if ( animation === "show" ) {
+				// 	return false;
+				// }
+			});
+
+			setTimeout( function () {
+				start();
+
+				$window.window( "close" );
+			}, timeout );
+		});
+
+		asyncTest( "Maximized window stay maximized", function () {
+			expect( 8 );
+
+			var $window;
+			var $button;
+
+			var prev = $taskbar.taskbar( "option", "windowsContainment" );
+
+			var timeout = 0;
+
+			$.each( [ "visible", "viewport" ], function ( index, containment ) {
+				setTimeout( function () {
+					$taskbar.taskbar( "option", "windowsContainment", containment );
+
+					$window = $( "<div></div>" )
+						.window({
+							durations: {
+								maximize: 100,
+								minimize: 100,
+								restore : 100,
+								show    : 100
+							}
+						});
+
+					$button = $window.window( "button" );
+
+					var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+					$window.parent().find( "[data-button-name=maximize]" ).trigger( "click" );
+
+					start();
+
+					ok( true, "\"containment\" set to \"" + containment + "\"" );
+
+					stop();
+				}, timeout );
+
+				timeout+= 600;
+
+				setTimeout( function() {
+					start();
+
+					var $windowParent = $window.parent();
+					var $containment = $( ".simone-taskbar-windows-containment" );
+
+					deepEqual(
+						[ $windowParent.outerWidth(), $windowParent.outerHeight() ],
+						[ $containment.outerWidth() , $containment.outerHeight() ],
+						"Maximize window by triggering click on maximize button. Window is maximized."
+					);
+
+					$window.parent().find( "[data-button-name=minimize]" ).trigger( "click" );
+
+					stop();
+				}, timeout );
+
+				timeout+= 600;
+
+				setTimeout( function() {
+					start();
+
+					deepEqual(
+						[ $window.parent().hasClass( "simone-window-minimized" ), $window.parent().is( ":visible" ) ],
+						[ true, false ],
+						"Minimize window by triggering click on minimize button. Window is minimized."
+					);
+
+					$button.trigger( "click" );
+
+					stop();
+				}, timeout );
+
+				timeout+= 600;
+
+				setTimeout( function() {
+					start();
+
+					var $windowParent = $window.parent();
+					var $containment = $( ".simone-taskbar-windows-containment" );
+
+					deepEqual(
+						[ $windowParent.outerWidth(), $windowParent.outerHeight() ],
+						[ $containment.outerWidth() , $containment.outerHeight() ],
+						"Maximize window by triggering click on window button. Window is maximized."
+					);
+
+					if ( containment !== "viewport" ) {
+						stop();
+					}
+
+					// teardown
+					$window.window( "close" );
+				}, timeout );
+
+				timeout+= 600;
+			});
+
+			// teardown
+			$taskbar.taskbar( "option", "windowsContainment", prev );
+		});
+
+		var methodsSets = {
+			maximize    : {
+				method  : "maximize",
+				done    : "maximized",
+				progress: "maximizing"
+			},
+			minimize    : {
+				method  : "minimize",
+				done    : "minimized",
+				progress: "minimizing"
+			},
+			restore     : {
+				method  : "restore",
+				done    : "restored",
+				progress: "restoring"
+			},
+			show        : {
+				method  : "show",
+				done    : "shown",
+				progress: "showing"
+			}
+		};
+
+		asyncTest( "methods \"maximize\" vs \"maximized\" and \"maximing\", \"minimize\" vs \"minimized\" and \"minimizing\", \"restore\" vs \"restored\" and \"restoring\", \"show\" vs \"shown\" and \"showing\"", function () {
+			expect( 40 );
+
+			var $window;
+
+			var setsCount = Object.keys( methodsSets ).length;
+			var count     = 0;
+			var timeout   = 10;
+
+			$.each( methodsSets, function ( setName, methods ) {
+				setTimeout( function () {
+					start();
+
+					$window = $( "<div></div>" ).window({
+						durations: {
+							minimize: 300,
+							maximize: 300,
+							restore : 300,
+							show    : 300
+						}
+					});
+
+					// set initial state so the method could change anything
+					if ( setName === "show" ) {
+						$window.window( "minimize", false );
+					}
+
+					// set initial state so the method could change anything
+					if ( setName === "restore" ) {
+						$window.window( "maximize" , false );
+					}
+
+					$window.window( methods.method );
+
+					ok( true, "Trigger method \"" + methods.method + "\"." );
+
+					stop();
+				}, timeout );
+
+				timeout += 150;
+
+				setTimeout( function () {
+					$.each( methodsSets, function ( setNameInner, methodsInner ) {
+						var result = setName === setNameInner;
+
+						equal(
+							$window.window( methodsInner.progress ),
+							result,
+							"Method \"" + methodsInner.progress + "\" returns " + result + "."
+						);
+					});
+				}, timeout );
+
+				timeout += 450;
+
+				setTimeout( function () {
+					start();
+
+					ok( true, "Method \"" + methods.method + "\" finished." );
+
+					$.each( methodsSets, function ( setNameInner, methodsInner ) {
+						var result = setName === setNameInner
+							|| ( setNameInner === "show" && setName !== "minimize" )
+							|| ( setNameInner === "restore" && setName === "show" );
+
+						equal(
+							$window.window( methodsInner.done ),
+							result,
+							"Method \"" + methodsInner.done + "\" returns " + result + "."
+						);
+					});
+
+					count++;
+
+					if ( count !== setsCount ) {
+						stop();
+					}
+
+					$window.window( "destroy" );
+				}, timeout );
+
+				timeout += 500;
+			});
+		});
+
+		asyncTest( "methods \"maximize\", \"minimize\", \"restore\", and \"show\" with optional parameters", function () {
+			expect( 76 );
+
+			var $window;
+
+			var setsCount = Object.keys( methodsSets ).length;
+			var count     = 0;
+			var timeout   = 10;
+			var durations = [ undefined, 100, 900,  "slow", false ];
+			var timeouts1 = [ 200,       50,  600,  400,    100 ];
+			var timeouts2 = [ 600,       300, 1200, 800,    200 ];
+			var testCount = setsCount * durations.length;
+
+			$.each( methodsSets, function ( setName, methods ) {
+				$.each( durations, function( index, duration ) {
+					setTimeout( function () {
+						start();
+
+						ok(
+							true,
+							"Initialize window width \"durations\" = "
+							+ "{ minimize: 300, maximize: 300,restore: 300, show 300 }"
+						);
+
+						$window = $( "<div></div>" ).window({
+							durations: {
+								minimize: 300,
+								maximize: 300,
+								restore : 300,
+								show    : 300
+							}
+						});
+
+						// set initial state so the method could change anything
+						if ( setName === "show" ) {
+							$window.window( "minimize", false );
+						}
+
+						// set initial state so the method could change anything
+						if ( setName === "restore" ) {
+							$window.window( "maximize" , false );
+						}
+
+						$window.window( methods.method, duration );
+
+						ok( true,
+							"Trigger method \"" + methods.method
+							+ "\" with optional duration " + duration + "."
+						);
+
+						stop();
+					}, timeout );
+
+					timeout += timeouts1[ index ];
+
+					setTimeout( function () {
+						start();
+
+						// if duration is false,
+						// it means this assert would fail,
+						// because there is no animation
+						if ( duration !== false ) {
+							deepEqual(
+								[ $window.window( methods.done ), $window.window( methods.progress ) ],
+								[ false, true ],
+								"Method \"" + methods.done + "\" returns false, method \""
+								+ methods.progress + "\" return true after " + timeouts1[ index ] + "ms."
+							);
+						}
+
+						stop();
+					}, timeout );
+
+					timeout += timeouts2[ index ];
+
+					setTimeout( function () {
+						start();
+
+						deepEqual(
+							[ $window.window( methods.done ), $window.window( methods.progress ) ],
+							[ true, false ],
+							"Method \"" + methods.done + "\" returns true, method \""
+							+ methods.progress + "\" returns false after " + timeouts2[ index ] + "ms."
+						);
+
+						count++;
+
+						if ( count !== testCount ) {
+							stop();
+						}
+
+						$window.window( "destroy" );
+					}, timeout );
+
+					timeout += 500;
+				});
+			});
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+/*!
+ * Simone - taskbar widget, CSS
+ *
+ * Copyright 2014 Cezary Kluczyński and other authors
+ * Version: @simone-main-version
+ * Released under the MIT license.
+ *
+ * http://cezarykluczynski.gitbub.io/simone/docs/documentation.html
+ * http://cezarykluczynski.gitbub.io/simone/docs/taskbar.html
+ */
+.simone-taskbar {
+	text-align: left;
+}
+
+.simone-taskbar,
+.simone-taskbar-droppable {
+	position: fixed;
+	z-index: 10000;
+}
+
+.simone-taskbar,
+.simone-taskbar-droppable,
+.simone-taskbar-separator {
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+.simone-taskbar * {
+	-webkit-box-sizing: content-box;
+	   -moz-box-sizing: content-box;
+	        box-sizing: content-box;
+}
+
+.simone-taskbar-droppable,
+.simone-taskbar-button-tooltip.ui-tooltip,
+.simone-taskbar-with-opened-elements,
+.simone-taskbar-resizing {
+	z-index: 10001;
+}
+
+.simone-taskbar-droppable.simone-taskbar-vertical,
+.simone-taskbar-helper {
+	min-width: 4em;
+}
+
+.simone-taskbar-droppable.simone-taskbar-horizontal,
+.simone-taskbar-helper {
+	min-height: 1em;
+}
+
+.simone-taskbar-windows-containment {
+	background: transparent;
+	border: 0px solid transparent;
+}
+
+.simone-taskbar-windows-containment,
+.simone-taskbar-window-copy {
+	z-index: -10000;
+	position: fixed;
+}
+
+.simone-taskbar.simone-taskbar-empty {
+	padding: 0;
+}
+
+.simone-taskbar.ui-state-default {
+	background-image: none;
+}
+
+.simone-taskbar-droppable {
+	background-color: transparent;
+}
+
+.simone-taskbar-droppabe.simone-taskbar-droppable-over {
+	z-index: 10000;
+}
+
+.simone-taskbar-helper {
+	z-index: 10001;
+}
+
+.simone-hidden,
+.simone-taskbar .simone-hidden {
+	display: none;
+}
+
+.simone-taskbar-stick-left {
+	left: 0;
+}
+
+.simone-taskbar-stick-right {
+	right: 0;
+}
+
+.simone-taskbar-stick-top {
+	top: 0;
+}
+
+.simone-taskbar-stick-bottom {
+	bottom: 0;
+}
+
+.simone-taskbar > .simone-taskbar-menu > .ui-menu,
+.simone-taskbar-vertical .simone-taskbar-system-buttons-container,
+.simone-taskbar-datepicker,
+.simone-taskbar-resizable,
+.simone-taskbar-resizable.ui-resizable,
+.simone-taskbar [data-menu-type],
+.simone-taskbar .simone-taskbar-window-group-menu {
+	position: absolute;
+}
+
+.simone-taskbar-resizable,
+.simone-taskbar-resizable.ui-resizable,
+.simone-taskbar-window-close {
+	z-index: 10;
+}
+
+.simone-taskbar-window-close {
+	display: none;
+}
+
+/* jQuery UI 1.10 */
+.simone-taskbar-window-group-menu .ui-menu-item a[role=menuitem].ui-state-focus + .simone-taskbar-window-close,
+/* jQuery UI 1.11+ */
+.simone-taskbar-window-group-menu .ui-menu-item.simone-taskbar-window-group-element-active .simone-taskbar-window-close {
+	display: block;
+}
+
+.simone-taskbar-horizontal .simone-taskbar-resizable {
+	width: 100%;
+	left: 0px;
+}
+
+.simone-taskbar-vertical .simone-taskbar-resizable {
+	height: 100%;
+	top: 0px;
+}
+
+.simone-taskbar-horizontal .simone-taskbar-start-container,
+.simone-taskbar-horizontal .simone-taskbar-buttons-container,
+.simone-taskbar-horizontal .simone-taskbar-window-buttons-container {
+	float: left;
+}
+
+.simone-taskbar-horizontal .simone-taskbar-system-buttons-container {
+	float: right;
+}
+
+.simone-taskbar [data-menu-type] {
+	z-index: 10000;
+}
+
+.simone-taskbar [data-menu-type]:empty {
+	padding: 0;
+}
+
+/* jQuery UI 1.10 */
+.simone-taskbar [data-menu-type].ui-corner-all .ui-menu-item,
+.simone-taskbar .simone-taskbar-window-group-menu.ui-corner-all .ui-menu-item {
+	white-space: nowrap;
+	font-weight: normal;
+}
+
+/* jQuery UI 1.11+ */
+.simone-taskbar [data-menu-type]:not(.ui-corner-all) .ui-menu-item,
+.simone-taskbar .simone-taskbar-window-group-menu:not(.ui-corner-all) .ui-menu-item {
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+.simone-taskbar [data-menu-type]:not(.ui-corner-all) .ui-menu-item a,
+.simone-taskbar .simone-taskbar-window-group-menu:not(.ui-corner-all) .ui-menu-item a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: -webkit-calc( 100% - 1em );
+	max-width:    -moz-calc( 100% - 1em );
+	max-width:         calc( 100% - 1em );
+	display: inline-block;
+	line-height: 1;
+}
+
+.simone-taskbar [data-menu-type=languageSelect]:not(.ui-corner-all) .ui-menu-item a {
+	max-width: 100%;
+	overflow: visible;
+}
+/* jQuery UI 1.11+ */
+
+.simone-taskbar .ui-menu .ui-state-active a,
+.simone-taskbar .ui-menu .ui-state-active a:link,
+.simone-taskbar .ui-menu .ui-state-active a:visited {
+	color: inherit;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item {
+	list-style-image: none;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item > a {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item > a {
+	padding-right: 2.4em;
+}
+
+.simone-taskbar-window-group-menu-scroll.simone-taskbar-window-group-menu.ui-corner-all > .ui-menu-item {
+	margin-right: 1.2em;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item {
+	position: relative;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item > span.ui-icon {
+	z-index: 1;
+	cursor: pointer;
+}
+
+/* jQuery UI 1.10 */
+.simone-taskbar-window-group-menu.ui-corner-all > .ui-menu-item.simone-taskbar-window-group-element-active > span.ui-icon {
+	margin-top: 1px;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item > .ui-button {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	right: .1em;
+	top: 50%;
+	margin-top: -9px;
+}
+
+.simone-taskbar-window-group-menu > .ui-menu-item > .ui-button .ui-icon {
+	top: 50%;
+	left: 50%;
+	/* margin-top and margin-left were added for jQuery UI 1.11+ */
+	margin-top: -8px;
+	margin-left: -8px;
+}
+
+.simone-taskbar .ui-menu-item a {
+	text-decoration: none;
+}
+
+.simone-taskbar [data-menu-type=start] .ui-menu-item > a {
+	padding-right: 1.4em;
+}
+
+.simone-taskbar [data-menu-type=start] .ui-menu-item > a > .ui-menu-icon {
+	margin-right: -1.3em;
+}
+
+/* Fixes jQuery UI #8844 fix for IE10 (1px by 1px data URI image),
+   where ui-menu-item calculated width
+   (webkitLogicalWidth, and, as a result, width itself) would increace by 1px,
+   and stay that way despite blur occuring;
+   targets WebKit/Blink only, we don't want any collateral damage */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.simone-taskbar .ui-menu .ui-menu-item {
+		list-style-image: none;
+	}
+}
+
+.simone-taskbar-vertical .simone-taskbar-system-buttons-container .simone-taskbar-icon {
+	display: inline-block;
+}
+
+.simone-taskbar {
+	border-style: solid;
+	border-width: 0px;
+}
+
+.simone-taskbar-system-buttons-container,
+.simone-taskbar-start-container,
+.simone-taskbar-buttons-container,
+.simone-taskbar-window-buttons-container {
+	padding: .2em 0px 0px .2em;
+}
+
+.simone-taskbar-separator {
+	margin: 0 .2em .2em 0;
+	background-image: none;
+}
+
+.simone-taskbar-horizontal .simone-taskbar-separator {
+	display: inline-block;
+	margin: .2em 0 0;
+	vertical-align: top;
+	width: 1px;
+	line-height: normal;
+	font-size: 1.1em;
+	border-width: 0 0 0 1px;
+	border-left-style: solid;
+	height: calc(100% - .4em);
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+.simone-taskbar-vertical .simone-taskbar-separator {
+	height: 1px;
+	display: block;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.simone-taskbar-vertical .ui-button {
+	display: block;
+}
+
+.simone-taskbar-vertical .simone-taskbar-system-buttons-container .ui-button {
+	display:inline-block;
+}
+
+.simone-taskbar-vertical.simone-taskbar-window-buttons-icons-only .simone-taskbar-window-buttons-container > .ui-button {
+	display: block;
+	width: auto;
+}
+
+.simone-taskbar .ui-button {
+	margin: 0 .2em .2em 0;
+	margin: 0 .2em .25em 0;
+}
+
+.simone-taskbar .simone-taskbar-window-buttons-container {
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.simone-taskbar .simone-taskbar-window-buttons-container .ui-button.ui-sortable-placeholder {
+	/* fixes tests/functional/taskbarInteractions.html
+	   "Window buttons stay in place during sortable" */
+	vertical-align: top;
+}
+
+.simone-taskbar-vertical .simone-taskbar-window-buttons-container > .ui-button.ui-sortable-helper {
+	width: calc(100% - .4em - 2px);
+}
+
+.simone-taskbar-vertical .simone-taskbar-window-buttons-container {
+	overflow-y: auto;
+	margin-top: -.2em;
+}
+
+.simone-taskbar-vertical .simone-taskbar-window-buttons-container.simone-taskbar-window-buttons-container-first-child {
+	margin-top: 0px;
+}
+
+/* If you would like to change border width, you need to change the part
+   calc(.4em + 1px) to match the border width you choose */
+.simone-taskbar.simone-taskbar-horizontal .simone-taskbar-window-buttons-container > .ui-button {
+	margin: 0 .2em calc(.4em + 1px) 0;
+	overflow: hidden;
+}
+
+/* See the notice a few linies above */
+.simone-taskbar.simone-taskbar-horizontal.simone-taskbar-stick-top,
+.simone-taskbar.ui-corner-br,
+.simone-taskbar.ui-corner-bl,
+.simone-taskbar-resizable.ui-corner-br,
+.simone-taskbar-resizable.ui-corner-bl {
+	border-bottom-width: 1px;
+}
+
+.simone-taskbar.simone-taskbar-horizontal.simone-taskbar-stick-bottom,
+.simone-taskbar.ui-corner-tr,
+.simone-taskbar.ui-corner-tl,
+.simone-taskbar-resizable.ui-corner-tr,
+.simone-taskbar-resizable.ui-corner-tl {
+	border-top-width: 1px;
+}
+
+.simone-taskbar.simone-taskbar-vertical.simone-taskbar-stick-left,
+.simone-taskbar.ui-corner-tr,
+.simone-taskbar.ui-corner-br,
+.simone-taskbar-resizable.ui-corner-tr,
+.simone-taskbar-resizable.ui-corner-br {
+	border-right-width: 1px;
+}
+
+.simone-taskbar.simone-taskbar-vertical.simone-taskbar-stick-right,
+.simone-taskbar.ui-corner-tl,
+.simone-taskbar.ui-corner-bl,
+.simone-taskbar-resizable.ui-corner-tl,
+.simone-taskbar-resizable.ui-corner-bl {
+	border-left-width: 1px;
+}
+
+.simone-taskbar .ui-button.simone-taskbar-button-disabled {
+	cursor: default;
+}
+
+.simone-taskbar-vertical .ui-button .ui-button-text,
+.simone-taskbar-window-button .ui-button-text,
+.ui-tooltip.simone-taskbar-button-tooltip .ui-tooltip-content {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.simone-taskbar-window-button.ui-sortable-placeholder {
+	visibility: visible !important;
+	background-image: none;
+	opacity: 0.5;
+}
+
+/* keep window button dimensions when title: "" is set to window */
+.simone-taskbar-window-button .ui-button-text:before {
+	content: "";
+	display: inline-block;
+}
+
+.simone-taskbar-container:empty {
+	padding: 0;
+}
+
+.simone-taskbar-container:empty + .simone-taskbar-separator {
+	display: none;
+}
+
+.simone-taskbar-horizontal .simone-taskbar-window-button {
+	max-width: 20em;
+}
+
+.simone-taskbar-vertical .ui-button-text-only .ui-button-text {
+	padding: .4em .7em;
+}
+
+.simone-taskbar-vertical .ui-button-text-icon-primary .ui-button-text {
+	padding: .4em .7em .4em 2.1em;
+}
+
+.simone-taskbar .simone-taskbar-system-buttons-container .ui-button-text-only .ui-button-text {
+	padding: .4em .6em;
+}
+
+.simone-taskbar .simone-taskbar-system-buttons-container .ui-button {
+	margin: 0 .2em .2em 0;
+}
+
+.simone-taskbar-vertical .simone-taskbar-system-buttons-container {
+	bottom: 0;
+	text-align: center;
+}
+
+.simone-taskbar-vertical.simone-taskbar-stick-top .simone-taskbar-system-buttons-container {
+	bottom: 0.1em;
+}
+
+.simone-taskbar-window-copy {
+	top: 0;
+	left: 0;
+}
+
+.simone-taskbar-iframe {
+	background-color: transparent;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border-width: 0;
+	position: absolute;
+}
+
+.simone-taskbar-iframe-horizontal {
+	height: 0;
+	width: 100%;
+}
+
+.simone-taskbar-iframe-vertical {
+	width: 0;
+	height: 100%;
+}
+
+.simone-taskbar-window-group-menu-scroll {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.simone-menu-hidden {
+	display: none;
+}
+
+.simone-taskbar-window-group-menu,
+.ui-tooltip.simone-taskbar-button-tooltip {
+	max-width: 25em;
+}
+
+.simone-taskbar-resizable {
+	/* border-style for this element should not be omitted, otherwise it would damage UX */
+	border-style: solid;
+}
+
+.simone-taskbar-resizable.simone-taskbar-resizable-disabled .ui-resizable-handle {
+	cursor: auto;
+}
+
+.simone-taskbar-vertical .simone-taskbar-separator {
+	border-width: 1px 0 0;
+	border-top-style: solid;
+	width: calc(100% - .4em);
+	margin-left: .2em;
+	margin-bottom: 1px;
+	z-index: 1;
+}
+
+.simone-taskbar-droppable {
+	opacity: .70;
+}

@@ -1,0 +1,73 @@
+html body {
+	font-size: 12px;
+	position: static;
+}
+
+.notice {
+	margin: 5px 0px;
+}
+
+.demo .ui-button,
+.font-size-slider {
+	margin: .4em 0 0 0;
+}
+
+.simone-window-content hr {
+	margin: 15px 0px;
+}
+
+.simone-window-content label {
+	display: inline-block;
+	margin-bottom: .4em;
+}
+
+.simone-window-content label.theme-switch-notice:empty {
+	display: none;
+}
+
+.simone-window-content label.code-main-label {
+	margin: .4em 0 1em 0;
+}
+
+.simone-window-content .description {
+	margin-bottom: .6em;
+	padding-left: 20px;
+	position: relative;
+}
+
+/* make inlined code font-size a bit smaller */
+.simone-window-content .description code[class*="language"] {
+	font-size: .75em;
+}
+
+.simone-window-content .description:before {
+	content: "→";
+	display: block;
+	position: absolute;
+	left: 0px;
+	font-size: 1em;
+}
+
+.simone-window-content .log {
+	margin-top: .6em;
+	margin-bottom: .6em;
+	height: 100px;
+	overflow-y: auto;
+	position: relative;
+}
+
+.simone-window-content .log:not(:empty) {
+	border-top: 1px solid #ccc;
+}
+
+.simone-window-content code[class*="language-"],
+.simone-window-content pre[class*="language-"] {
+	-moz-tab-size: 4;
+	  -o-tab-size: 4;
+	     tab-size: 4;
+	line-height: 1.2;
+}
+
+body .switcher_container {
+	padding: 0;
+}

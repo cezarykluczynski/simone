@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Issues | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Issues</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#bug-report">Bug report</a></li>
+			<li><a href="#reduced-test-case">Reduced test case</a></li>
+			<li><a href="#feature-request">Feature request</a></li>
+			<li><a href="#discussions">Discussions</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				This page describes bug reporting and other activities that can be taken using <a data-json-key="bugs">issue tracker</a>.
+			</p>
+			<p>
+				A <a href="https://github.com/">GitHub</a> account is required for using issue tracker.
+			</p>
+
+			<span id="bug-report" class="anchor-fix"></span>
+			<h2>Bug report</h2>
+
+			<p>
+				If you found a bug in Simone and you would like to report it, please adhere to the following guidelines:
+			</p>
+			<ul>
+				<li>Describe bug in most details possible.</li>
+				<li>Provide a <a href="#reduced-test-case">reduced test case</a>.</li>
+				<li>Provide names of failing <a href="tests.html">tests</a>, if that's the case.</li>
+				<li>Provide your browser name and version, preferably user agen string.</li>
+				<li>Give names of all CSS and Javascript libraries you run along Simone, if any.</li>
+				<li>Give names of all browser plugins relevant to page rendering, if any.</li>
+				<li>Provide any information about unusual configuration of your device, if any. Are you running Wine? Do you have screen reader installed? Those sorts of things.</li>
+				<li>If you can provide a patch, make a <a href="code.html">pull request</a>, and don't create a separate issue.</li>
+			</ul>
+
+			<span id="reduced-test-case" class="anchor-fix"></span>
+			<h2>Reduced test case</h2>
+
+			<p>
+				Reduced test case is minimal amount of code that is required to reproduce a bug. Using websites like <a href="http://jsfiddle.net/">JSFiddle</a> or <a href="http://codepen.io/">CodePen</a>, write a proof that bug your reporting really occurs, then attach it to <a href="#but-report">bug report</a>. Although it's not required to do so, it's likely to speed things up when it comes to bug fixing.
+			</p>
+
+			<p>
+				Related resource:
+			</p>
+
+			<ul>
+				<li><a href="http://css-tricks.com/reduced-test-cases/">Reduced Test Cases | CSS-Tricks</a></li>
+			</ul>
+
+			<span id="feature-request" class="anchor-fix"></span>
+			<h2>Feature request</h2>
+
+			<p>
+				Feature requests are welcomed.
+			</p>
+			<p>
+				Check the <a href="roadmap.html">roadmap</a> to see if feature you want to request isn't already planned.
+			</p>
+			<p>
+				Before creating a issue on <a data-json-key="bugs">issue tracker</a>, search existing open issues to check if you're request isn't already requested. If it is, drop your ideas and support into open issue.
+			</p>
+			<p>
+				There is no promise that any of the requests will be implemented.
+			</p>
+
+			<span id="discussions" class="anchor-fix"></span>
+			<h2>Discussions</h2>
+
+			<p>
+				There are cases when discussions your changes and ideas first can be beneficial. You can become sure your changes won't get rejected, and the general direction you want to go with your changes does not conflict with this project's vision written down in <a href="roadmap.html">roadmap</a>.
+			</p>
+			<p>
+				Please discuss your changes in the following cases:
+			</p>
+			<ul>
+				<li>When you're planning to <a href="code.html">contribute</a> a major portion of code.</li>
+				<li>When you would like to contribute a new <a href="demos.html">demo</a>.</li>
+				<li>When you're planning to add feature from the <a href="roadmap.html">roadmap</a>. Someone can be already working on it, in which case you could coordinate your efforts.</li>
+				<li>When you want to describe your experience with plugin itself and the documentation, and tell about what you've been missing.</li>
+				<li>When you're done a custom skin and would like to share the experience and tell about the obstacle you've overcome.</li>
+				<li>And especially when you would like to add a feature that is not currently <a href="roadmap.html">planned</a>.
+			</ul>
+			<p>
+				If you're not the kind of chatty person, you can just go ahead and do a <a href="code.html">pull request</a>. Be aware however that even well written and thoughtfully tested code might get rejected if it against the general direction written down in <a href="roadmap.html">roadmap</a>. So it's always best to talk first.
+			</p>
+
+		</div>
+	</div>
+</main>
+
+<script>
+$( document ).ready( function () {
+	$( "[data-json-key=bugs]" ).attr( "href", jQueryJSON.bugs );
+});
+</script>
+
+</body>
+</html>

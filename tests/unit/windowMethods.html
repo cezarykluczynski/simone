@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Window methods | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		function emptyJQueryObject( $object, description ) {
+			deepEqual(
+				[ $object instanceof $, $object.length ],
+				[ true, 0 ],
+				description + " Empty jQuery object is returned."
+			);
+		}
+
+		test( "\"button\"", function () {
+			var $window;
+			var $window2;
+
+			$window = $( "<div></div>" ).window();
+
+			var $button = $window.window( "button" );
+
+			equal(
+				$button.attr( "data-window-id" ),
+				$window.attr( "id" ),
+				"Create window 1. Call \"button\" method on it. Correct button returned."
+			);
+
+			$window2 = $( "<div></div>" ).window({
+				group: "beta"
+			});
+
+			var $button2 = $window2.window( "button" );
+
+			equal(
+				$button2.attr( "data-group-name" ),
+				"beta",
+				"Create window 2 with in group \"beta\". Call \"button\" method on it. Correct button returned."
+			);
+
+			// teardown
+			$window2.window( "destroy" );
+
+			resetTaskbar();
+
+			emptyJQueryObject( $window.window( "button"), "Destroy taskbar that window 1 is binded to." );
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"close\"", function () {
+			var $window = $( "<div></div>" ).appendTo( "body" ).window();
+
+			$window.window( "close" );
+
+			equal(
+				$window.hasClass( "simone-window-content" ),
+				false,
+				"Window closed with method close()."
+			);
+
+			$window = $( "<div></div>" ).window();
+
+			$window.parent().find( ".ui-dialog-titlebar-close" ).trigger( "click" );
+
+			equal(
+				$window.hasClass( "simone-window-content" ),
+				false,
+				"Window closed with click trigger on close button."
+			);
+		});
+
+		test( "\"confirmCloseWindow\"", function () {
+			var $window;
+			var $confirmCloseWindow;
+
+			$window = $( "<div></div>" )
+				.window();
+
+			emptyJQueryObject.call(
+				this,
+				$window.window( "confirmCloseWindow" ),
+				"Initialize window with default options. Call method \"confirmCloseWindow\"."
+			);
+
+			$window.window( "destroy" );
+
+			$window = $( "<div></div>" )
+				.window({
+					confirmClose: {
+						confirm: true
+					}
+				});
+
+			emptyJQueryObject.call(
+				this,
+				$window.window( "confirmCloseWindow" ),
+				"Initialize window with default options and \"confirmClose.confirm\" "
+				+ "set to true. Call method \"confirmCloseWindow\"."
+			);
+
+			$window.window( "close" );
+
+			equal(
+				$window.window( "confirmCloseWindow" ).length,
+				1,
+				"Call method \"close\" on top window. Confirm close window found."
+			);
+
+			$window.window( "confirmCloseWindow" ).window( "close" );
+
+			equal(
+				$window.window( "confirmCloseWindow" ).length,
+				0,
+				"Call method \"close\" on confirm close window. Confirm close window not found."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"containment\"", function () {
+			var $window;
+
+			var windowsContainment = $taskbar.taskbar( "option", "windowsContainment" );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			equal(
+				$window.window( "containment" ),
+				windowsContainment,
+				"Initialize window. Method returns taskbar \"windowsContainment\" option value."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			equal(
+				$window.window( "containment" ),
+				"visible",
+				"Set \"containment\" to \"visible\" via setter. Method returns it."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			equal(
+				$window.window( "containment" ),
+				"viewport",
+				"Set \"containment\" to \"viewport\" via setter. Method returns it."
+			);
+
+			$window.window( "option", "containment", "inherit" );
+
+			equal(
+				$window.window( "containment" ),
+				windowsContainment,
+				"Set \"containment\" to \"inherit\" via setter. Method returns taskbar \"windowsContainment\" option value."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"destroy\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" )
+				.css( "width", 100 )
+				.prependTo( "#qunit-fixture" );
+
+			$window
+				.window({
+					appendTo: "body",
+					embeddedContent: true,
+					buttons: [
+						{
+							text: null,
+							textLocalized: "maximize",
+							click: $.noop
+						}
+					]
+				});
+
+			// let's have some action on this window
+			// before destroying it
+			$window
+				.window( "minimize", false )
+				.window( "show", false )
+				.window( "maximize", false )
+				.window( "restore", false )
+				.window( "option", "modal", true )
+				.window( "option", "confirmClose.confirm", true )
+				.window( "close" )
+				.window( "option", "confirmClose.confirm", false );
+
+			ok(
+				$window.parent().parent().is( "body" ),
+				"Create window. Window widget parent is body."
+			);
+
+			$window.window( "destroy" );
+
+			ok(
+				$window.parent().is( "#qunit-fixture" ),
+				"Destroy window. Window was moved to previous position in DOM tree."
+			);
+
+			var events = $._data( $window[ 0 ] ).events;
+
+			ok(
+				! events,
+				"No events were left."
+			);
+
+			ok(
+				! $window.attr( "class" ),
+				"No classes were left."
+			);
+
+			equal(
+				parseInt( $window.css( "width" ), 10 ),
+				100,
+				"Previous inline styles reverted."
+			);
+
+			equal(
+				$( ".ui-dialog-buttons" ).length,
+				0,
+				"No dialog buttonpane left."
+			);
+
+			equal(
+				$( ".simone-window-overlay" ).length,
+				0,
+				"No window overlay left."
+			);
+
+			equal(
+				$( ".simone-window-content-overlay" ).length,
+				0,
+				"No content overlay left."
+			);
+
+			var nodes = [];
+
+			for ( var attr, i = 0, attrs = $window[ 0 ].attributes, l = attrs.length; i < l; i++ ) {
+				nodes.push( attrs.item( i ).nodeName );
+			}
+
+			deepEqual(
+				[ nodes.length, nodes[ 0 ] ],
+				[ 1, "style" ],
+				"No attributes other than \"style\" left on element."
+			);
+		});
+
+		test( "\"maximize\", \"maximized\", \"maximing\", \"minimize\", \"minimized\", \"minimizing\", \"restore\", \"restored\", \"restoring\", \"show\", \"shown\", \"showing\": covered in functional/windowFlow.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"modalOverlay\": covered in functional/windowModal.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"moveToTop\"", function () {
+			var $window;
+			var $window2;
+
+			$window = $( "<div></div>" )
+				.window();
+
+			ok(
+				$window.parent().hasClass( "simone-window-top"),
+				"Create window 1. Window 1 is on top."
+			);
+
+			$window2 = $( "<div></div>" )
+				.window();
+
+			deepEqual(
+				[ $window2.parent().hasClass( "simone-window-top"), $window.parent().hasClass( "simone-window-top") ],
+				[ true, false ],
+				"Create window 2. Window 2 is on top. Window 1 is not on top."
+			);
+
+			$window.window( "moveToTop" );
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-top"), $window2.parent().hasClass( "simone-window-top") ],
+				[ true, false ],
+				"Call moveToTop() on window 1. Window 1 is on top. Window 2 is not on top."
+			);
+
+			$window2.window( "moveToTop" );
+
+			deepEqual(
+				[ $window2.parent().hasClass( "simone-window-top"), $window.parent().hasClass( "simone-window-top") ],
+				[ true, false ],
+				"Call moveToTop() on window 2. Window 2 is on top. Window 1 is not on top."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+		});
+
+		test( "\"open\"", function () {
+			expect( 1 );
+
+			var $window;
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "is an alias for method" ) > -1 ) {
+					ok( true, "Debug generated on first open() call, meaning it was redirected to show()." );
+				}
+			});
+
+			$window = $( "<div></div>" )
+				.window();
+
+			$window.window( "open" );
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"refreshPosition\"", function () {
+			var $window;
+			var prevPosition;
+			var currentPosition;
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			var prev = $taskbar.taskbar( "option", "windowsContainment" );
+
+			$taskbar.taskbar( "option", "windowsContainment", "viewport" );
+
+			$window = $( "<div></div>" ).window();
+
+			prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "refreshPosition" );
+
+			currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				currentPosition,
+				prevPosition,
+				"Window with default options initialized. Method called. Position not changed."
+			);
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight(),
+					dx: $( window ).innerWidth()
+				}));
+
+			prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "refreshPosition" );
+
+			currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				currentPosition,
+				prevPosition,
+				"\"containment\": \"viewport\"; Window dragged to bottom right corner. Method called. Position not changed."
+			);
+
+			prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "refreshPosition" );
+
+			currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				currentPosition,
+				prevPosition,
+				"\"containment\": \"viewport\"; Window dragged to bottom right corner. Method called again. Position not changed."
+			);
+
+			$taskbar.taskbar( "option", "windowsContainment", "visible" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight(),
+					dx: $( window ).innerWidth()
+				}));
+
+			prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "refreshPosition" );
+
+			currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				currentPosition,
+				prevPosition,
+				"\"containment\": \"visible\"; Window dragged to bottom right corner. Method called. Position not changed."
+			);
+
+			prevPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "refreshPosition" );
+
+			currentPosition = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				currentPosition,
+				prevPosition,
+				"\"containment\": \"visible\"; Window dragged to bottom right corner. Method called again. Position not changed."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"title\"", function () {
+			resetTaskbar();
+
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window({
+					title: "Test1"
+				});
+
+			equal(
+				$window.window( "title" ),
+				"Test1",
+				"Reset taskbar. Set \"title\" to \"Test1\". Method \"title\" returned \"Test1\"."
+			);
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Test1",
+				"DOM title matches."
+			);
+
+			$window.window ("option", "titleLocalized", "maximize" );
+
+			equal(
+				$window.window( "title" ),
+				"Maximize",
+				"Set \"titleLocalized\" to \"maximized\". Method \"title\" returned \"Maximize\"."
+			);
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Maximize",
+				"DOM title matches."
+			);
+
+			$window.window ( "option", {
+				title: null,
+				titleLocalized: null
+			});
+
+			equal(
+				$window.window( "title" ),
+				"New window",
+				"Set \"titleLocalized\" to null, \"title\" to null. Method \"title\" returned \"New window\"."
+			);
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"New window",
+				"DOM title matches."
+			);
+
+			// teardown
+			$window.window( "close" );
+
+			resetTaskbar();
+
+			$window = $( "<div></div>" ).window();
+
+			ok( true, "Remove window, reset taskbar, initialize window with default options." );
+
+			equal(
+				$window.window( "title" ),
+				"New window",
+				"Method \"title\" returned \"New window\"."
+			);
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"New window",
+				"DOM title matches."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"taskbar\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window();
+
+			deepEqual(
+				$window.window( "taskbar" ).attr( "id" ),
+				$taskbar.attr( "id" ),
+				"Create window with default options. Method \"taskbar\" returns default taskbar."
+			);
+
+			$window.window( "option", "taskbar", $() );
+
+			emptyJQueryObject.call(
+				this,
+				$window.window( "taskbar" ),
+				"Set taskbar to empty jQuery object. Call method \"taskbar\"."
+			);
+
+			resetTaskbar( 2 );
+
+			$window.window( "option", "taskbar", $taskbar2 );
+
+			deepEqual(
+				$window.window( "taskbar" ).attr( "id" ),
+				$taskbar2.attr( "id" ),
+				"Bind window to second taskbar. Method \"taskbar\" returns second taskbar."
+			);
+
+			$window.window( "option", "taskbar", "not a taskbar" );
+
+			emptyJQueryObject.call(
+				this,
+				$window.window( "taskbar" ),
+				"Set taskbar to a string. Call method \"taskbar\"."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"widget\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window();
+
+			equal(
+				$window.window( "widget" )[ 0 ],
+				$window.parent()[ 0 ],
+				"Method returns correct jQuery object."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "$.simone.windowSetup", function () {
+			// $.simone.taskbarSetup uses the same code,
+			// so if this tests passes,
+			// taskbar's method works too
+
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				closable: false,
+				minimizable: true,
+				maximizable: true
+			});
+
+			var prev = $.simone.windowSetup();
+
+			deepEqual(
+				prev,
+				$.simone.window.prototype.options,
+				"Method without parameters returns widget prototype."
+			);
+
+			deepEqual(
+				$.simone.windowSetup( true ),
+				$.simone.window.prototype.options,
+				"Method with boolean as parameter returns widget prototype."
+			);
+
+			deepEqual(
+				$.simone.windowSetup( "string" ),
+				$.simone.window.prototype.options,
+				"Method with string as parameter returns widget prototype."
+			);
+
+			var changed = $.simone.windowSetup({
+				minimizable: false,
+				maximizable: false
+			});
+
+			var $window2 = $( "<div></div>" ).window();
+
+			deepEqual(
+				[ changed.maximizable, changed.minimizable, ],
+				[ false, false, ],
+				"\"maximizable\" and \"minimizable\" set to false via method, " +
+				"and it's reflected in object returned by method when set."
+			);
+
+			deepEqual(
+				[
+					$window2.window( "option", "minimizable" ),
+					$window2.window( "option", "maximizable" )
+				],
+				[
+					false,
+					false,
+				],
+				"Freshly created window has \"maximizable\" and \"minimizable\" " +
+				"options set to false."
+			);
+
+			deepEqual(
+				[
+					$window.window( "option", "minimizable" ),
+					$window.window( "option", "maximizable" )
+				],
+				[
+					true,
+					true,
+				],
+				"Window create before has \"maximizable\" and \"minimizable\" " +
+				"options set to true and was not affected."
+			);
+
+			$.simone.windowSetup( true, {
+				closable: true,
+				minimizable: true
+			});
+
+			ok( true, "Call $.simone.windowSetup with true as second param." );
+
+			equal(
+				$window2.window( "option", "minimizable" ),
+				true,
+				"Window 2 has \"minimizable\" " +
+				"option set to true and was affected."
+			);
+
+			equal(
+				$window2.window( "option", "closable" ),
+				true,
+				"Window 1 has \"closable\" " +
+				"option set to true and was affected."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+			$.simone.windowSetup( prev );
+		});
+
+		test( "Binding window does not change collided taskbars position.", function () {
+			var $window;
+			var $window2;
+
+			$.each( [ [ "vertical", "horizontal" ], [ "horizontal", "vertical" ] ], function ( i, orientations ) {
+				resetTaskbar();
+
+				ok( true, "Testing " + orientations[ 0 ] + " taskbar initialized first, " +
+					"then " + orientations[ 1 ] + " taskbar initialized second." );
+
+				var prev = $taskbar.taskbar( "option", "orientation" );
+				$taskbar.taskbar( "option", "orientation", orientations[ 0 ] );
+
+				var $taskbar2 = $( ".taskbar2" ).taskbar({
+					orientation: orientations[ 1 ]
+				});
+
+				var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+				var offset  = instance._extendedPosition.call( $taskbar, "offset" );
+				var offset2 = instance._extendedPosition.call( $taskbar2, "offset" );
+				var offsetAfter;
+				var offset2After;
+
+				var windowString = "<div></div>";
+
+				$window = $( windowString ).window({
+					taskbar: $taskbar,
+					group: "test"
+				});
+
+				offsetAfter  = instance._extendedPosition.call( $taskbar, "offset" );
+				offset2After = instance._extendedPosition.call( $taskbar2, "offset" );
+
+				deepEqual(
+					offsetAfter,
+					offset,
+					"Taskbar 1 position didn't change after windows were bound to it."
+				);
+
+				deepEqual(
+					offset2After,
+					offset2,
+					"Taskbar 2 position didn't change after windows were bound to taskbar 1."
+				);
+
+				window.go = true;
+
+				$window2 = $( windowString ).window({
+					taskbar: $taskbar2,
+					group: "test"
+				});
+
+				window.go = false;
+
+				offsetAfter  = instance._extendedPosition.call( $taskbar, "offset" );
+				offset2After = instance._extendedPosition.call( $taskbar2, "offset" );
+
+				deepEqual(
+					offsetAfter,
+					offset,
+					"Taskbar 1 position didn't change after windows were bound to taskbar 2."
+				);
+
+				deepEqual(
+					offset2After,
+					offset2,
+					"Taskbar 2 position didn't change after windows were bound to it."
+				);
+
+				// teardown
+				$window.window( "destroy" );
+				$window2.window( "destroy" );
+				$taskbar2.taskbar( "destroy" );
+				$taskbar.taskbar( "option", "orientation", prev );
+
+			});
+
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar buttons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$( ".taskbar" ).taskbar({
+		buttons: {
+			// when no label of labelLocalized is provided, object key
+			// is used as a label; you can note in console that debug message
+			// was generated about this button
+			clickMe: {},
+			// buttons shouldn't share names with system buttons,
+			// and "minimizeAll" is a system button
+			minimizeAllCustom: {
+				label: "Click to minimize all"
+			}
+		},
+		// without adding to "buttonsOrder" or "systemButtonsOrder",
+		// buttons would never be visible
+		buttonsOrder: [ "clickMe" ],
+		systemButtonsOrder: [
+			// all system buttons should be present  when setting
+			// "systemButtonsOrder", unless you really don't need some
+			"minimizeAllCustom", "languageSelect",
+			"networkMonitor", "toggleFullscreen",
+			"clock", "minimizeAll"
+		]
+	});
+
+	$( ".taskbar" )
+		.taskbar( "option", "buttons.clickMe" )
+		// remember that $element property is only available when button
+		// has been prepended at least once
+		.$element.on( "click", function () {
+			demo.log( "Click!" );
+		});
+
+	$( ".taskbar" )
+		.taskbar(
+			"option",
+			"buttons.minimizeAllCustom"
+		)
+		.$element.on( "click", function () {
+			// call taskbar public method to minimize all windows
+			$( ".taskbar" )
+				.taskbar( "minimizeAll" );
+		});
+
+	// buttons properties can by modified after initialization like any other
+	// jQuery UI buttons
+	$( ".prepend-icons" )
+		.button()
+		.on( "click", function () {
+			// first, get the entire object
+			var buttons = $( ".taskbar" )
+				.taskbar( "option", "buttons" );
+
+			// modify properties we want to change
+			$.each( buttons, function ( i, button ) {
+				button.icons = button.icons || {};
+				button.icons.primary = "ui-icon-star";
+			});
+
+			// push modyfied object back to taskbar
+			$( ".taskbar" )
+				.taskbar( "option", "buttons", buttons );
+		});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="demo">
+	<div class="description">
+		Custom buttons are prepended to the taskbar,
+		after which handlers can be attached to them.
+	</div>
+
+	<button class="prepend-icons">
+		Prepend icons to buttons
+	</button>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

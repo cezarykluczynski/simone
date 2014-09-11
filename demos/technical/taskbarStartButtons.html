@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar start buttons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar - "startButtons" are set to true by default
+	$( ".taskbar" ).taskbar({
+		// switching language let us see changing start menus
+		// for different languages
+		languageSelect: true,
+		// need to specify language available for "languageSelect" button
+		languages: [ "en", "pl" ],
+		localization: {
+			// English buttons translations
+			en: {
+				"startButton:allLangsMenu": "I'm always here",
+				"startButton:stuff": "Stuff"
+			},
+			// Polish buttons translations
+			pl: {
+				"startButton:allLangsMenu": "Zawsze tu jestem",
+				"startButton:stuff": "Rzeczy"
+			}
+		}
+	});
+
+	setTimeout( function () {
+		// make code window wider
+		$( ".code" ).window( "option", "width", 700 );
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar">
+	<!-- start menu for all languages; if a menu is for all language, you can
+	     use wildcard "*", otherwise specify a language coresponding to key in
+	     "localization" option; data-menu-type="start" should always be
+	     specified on root element of menu -->
+	<ul data-menu-lang="*" data-menu-type="start" data-menu-name="allLangsMenu">
+		<li>Restart</li>
+		<li>Exit</li>
+	</ul>
+
+	<!-- start menu for English; data-menu-lang="en" tells taskbar thatthis menu
+	     should only be visible if current language is English -->
+	<ul data-menu-lang="en" data-menu-type="start" data-menu-name="stuff">
+		<li>Some English stuff</li>
+		<li>Some more English stuff</li>
+	</ul>
+
+	<!-- start menu for Polish -->
+	<ul data-menu-lang="pl" data-menu-type="start" data-menu-name="stuff">
+		<li>Coś po polsku</li>
+		<li>Coś więcej po polsku</li>
+	</ul>
+
+	<!-- menu with "simone-menu-hidden" class will alyways be ignored. it also
+	     receives display: none in taskbar stylesheet -->
+	<ul data-menu-lang="*" data-menu-type="start" class="simone-menu-hidden">
+		<li>Never see me</li>
+		<li>Never see me a lot</li>
+	</ul>
+</div>
+
+<div class="demo">
+	<div class="description">
+		Start buttons are created automatically when
+		start menus are found inside a taskbar.
+		<br><br>
+		Start menus should have structure compatible
+		with jQuery UI Menu, so <code class="language-css">ul > li > a</code>
+		for version 1.10, and either that or <code class="language-css">ul > li</code>
+		for version 1.11+.
+		<br><br>
+		Start menus can have multiple levels.
+		<br><br>
+		Change language using language select button to see how menus change.
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Installation | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+<link href="../libs/famfamfam/famfamfam.css" rel="stylesheet">
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Installation</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#supported-browsers">Supported browsers</a></li>
+			<li><a href="#dependencies">Dependencies</a></li>
+			<li><a href="#jquery-ui">Required jQuery UI components</a></li>
+			<li><a href="#installing-files">Adding files to your project</a></li>
+			<li><a href="#getting-started">Gettings started</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				Before introductiong Simone into your project, check if your using a supported versions of jQuery and jQuery UI, or download the appropriate versions. Also make sure that all the browsers version you need to support are supported by Simone.
+			</p>
+
+			<span id="supported-browsers" class="anchor-fix"></span>
+			<h2>Supported browsers</h2>
+
+			<p>
+				Only modern browsers are supported by Simone. No support for legacy browers, sorry.
+			</p>
+			<p>
+				Certain API's, like fullscreen API, are missing in older browsers.
+				Graceful degradation if provided.
+			</p>
+
+			<table>
+				<thead>
+					<tr>
+						<td>Chrome</td>
+						<td>Firefox</td>
+						<td>Internet Explorer</td>
+						<td>Safari</td>
+						<td>Opera</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>17+</td>
+						<td>12+</td>
+						<td>9+</td>
+						<td>6.1+</td>
+						<td>15+</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+		<div class="small-12 large-12 column">
+
+			<span id="dependencies" class="anchor-fix"></span>
+			<h2>Dependencies</h2>
+
+			<p>
+				Simone require <strong>jQuery</strong> and <strong>jQuery UI</strong>. The tables bellow show all compatible versions of jQuery and jQuery UI.
+			</p>
+
+			<table>
+				<thead>
+					<tr>
+						<td colspan="6">Compatible jQuery versions</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong>1.x</strong></td>
+						<td><span class="fam cross"></span>1.7.x and bellow</td>
+						<td><span class="fam tick"></span>1.8.3</td>
+						<td><span class="fam tick"></span>1.9.1</td>
+						<td><span class="fam tick"></span>1.10.2</td>
+						<td><span class="fam tick"></span>1.11.1</td>
+					</tr>
+					<tr>
+						<td><strong>2.x</strong></td>
+						<td></td>
+						<td><span class="fam tick"></span>2.0.3</td>
+						<td colspan="3"><span class="fam tick"></span>2.1.1</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							* Other minor jQuery versions from 1.8.0 are likely to work too,<br>
+							although Simone is not tested againts them.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table>
+				<thead>
+					<tr>
+						<td colspan="6">Compatible jQuery UI versions</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong>1.9.x and bellow</strong></td>
+						<td colspan="5"><span class="fam cross"></span></td>
+					</tr>
+					<tr>
+						<td><strong>1.10.x</strong></td>
+						<td><span class="fam tick"></span>1.10.0</td>
+						<td><span class="fam tick"></span>1.10.1</td>
+						<td><span class="fam tick"></span>1.10.2</td>
+						<td><span class="fam tick"></span>1.10.3</td>
+						<td><span class="fam tick"></span>1.10.4</td>
+					</tr>
+					<tr>
+						<td><strong>1.11.x</strong></td>
+						<td><span class="fam tick"></span>1.11.0</td>
+						<td colspan="4"><span class="fam tick"></span>1.11.1</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<ul>
+				<li><span class="fam tick"></span> – supported</li>
+				<li><span class="fam cross"></span> – not supported</li>
+				<li><span class="fam hourglass"></span> – pending</li>
+			</ul>
+
+			<span id="jquery-ui" class="anchor-fix"></span>
+			<h2>Required jQuery UI components</h2>
+
+			<p>
+				Table bellows shows those jQuery UI components that are required for Simone to work, and those that are optional. Without required components, widgets will not fire or be basically useless. Without highly recommended and recommended components, certain features will be not available, but widgets should work (and if they doesn't, please fill a <a href="issues.html#bug-report">bug report</a>).
+			</p>
+
+			<p>
+				<strong>Note:</strong> When downloading themes from <a href="http://jqueryui.com/download/">jQuery UI download site</a>, check all the JS dependencies required for Simone, otherwise you will be missing some CSS. Unchecking all the JS files and going only for a particular theme won't work.
+			</p>
+
+			<div class="row">
+				<div class="column small-12 large-6">
+					<table>
+						<thead>
+							<tr>
+								<td colspan="2">Required jQuery UI components</td>
+							</tr>
+							<tr>
+								<td>Component name</td>
+								<td>Status</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Core</td>
+								<td>required</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/widget/">Widget</a></td>
+								<td>required</td>
+							</tr>
+							<tr>
+								<td>Mouse</td>
+								<td>required</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/position/">Position</a></td>
+								<td>required</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/dialog/">Dialog</a></td>
+								<td>required</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/button/">Button</a></td>
+								<td>required</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="column small-12 large-6">
+					<table>
+						<thead>
+							<tr>
+								<td colspan="2">Optional jQuery UI components</td>
+							</tr>
+							<tr>
+								<td>Component name</td>
+								<td>Status</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><a href="http://jqueryui.com/draggable/">Draggable</a></td>
+								<td>highly recommended</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/droppable/">Droppable</a></td>
+								<td>highly recommended</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/resizable/">Resizable</a></td>
+								<td>highly recommended</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/menu/">Menu</a></td>
+								<td>highly recommended</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/sortable/">Sortable</a></td>
+								<td>recommended</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="http://jqueryui.com/datepicker/">Datepicker</a><br>
+									(including translations)
+								</td>
+								<td>recommended</td>
+							</tr>
+							<tr>
+								<td><a href="http://jqueryui.com/tooltip/">Tooltip</a></td>
+								<td>recommended</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<span id="installing-files" class="anchor-fix"></span>
+			<h2>Adding files to your project</h2>
+
+			<p>
+				Adding Simone to your project is pretty straightforward.
+			</p>
+			<p>
+				First, <a href="download.html">download</a> Simone version of your choice, either development (uncompressed) or production (compressed) JavaScript and CSS files, and translations for at least one language.
+			</p>
+			<p>
+				Remember to download compatibile versions of <a href="#dependencies">jQuery and jQuery UI</a>.
+			</p>
+			<p>
+				When you have your files downloaded, unpack or move them to a common directory. For the sake of this instruction, let's assume that <code>simone</code> is a directory where your Simone files are, jQuery is in <code>jquery</code> directory, and jQuery UI is in <code>jquery-ui</code> directory. Let's assume that development versions are used. Assuming that you use <code>js/</code> directory for all JS libraries, the inside of your head tag should look something like that:
+			</p>
+			<pre><code class="language-markup">&lt;!DOCTYPE html>
+&lt;html>
+	&lt;head>
+		&lt;!-- first, include jQuery -->
+		&lt;script src="/js/jquery/jquery.js">&lt;/script>
+
+		&lt;!-- second, jQuery UI Theme and jQuery UI itself is needed -->
+		&lt;link href="/js/jquery-ui/themes/sunny/jquery-ui.css" rel="stylesheet">
+		&lt;script src="js/jquery-ui/jquery-ui.js">&lt;/script>
+		&lt;!-- it's also recommended to include jQuery UI Datepicker language files -->
+		&lt;script src="/js/jquery-ui/i18n/jquery.ui.datepicker-all.js">&lt;/script>
+
+		&lt;!-- now, include Simone -->
+		&lt;link href="/js/simone/simone.css" rel="stylesheet">
+		&lt;script src="/js/simone/simone.js">&lt;/script>
+		&lt;!-- include translations after widgets has been included -->
+		&lt;script src="/js/simone/i18n/simone.i18n.all.js">&lt;/script>
+
+		&lt;!-- other scripts go here -->
+
+		&lt;!-- when all libraries are included, start writing your code;
+		     just don't use inline JavaScript - write it in separate file(s)! -->
+		&lt;script>
+			$( document ).ready( function () {
+				// your code goes here—Simone need to be run on
+				// document's ready event, or after it
+			});
+		&lt;/script>
+	&lt;/head>
+	&lt;body>
+&lt;/html></code></pre>
+
+			<span id="getting-started" class="anchor-fix"></span>
+			<h2>Gettings started</h2>
+
+			<p>
+				There are a lot of <a href="demos.html">demos</a> to get you started with Simone.
+			</p>
+
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

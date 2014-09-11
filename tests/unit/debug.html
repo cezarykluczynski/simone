@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Debug | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar({
+			debug: {
+				environment : true,
+				options     : true,
+				localization: true
+			}
+		});
+
+		test( "Taskbar values that can't be lower than 1", function ( assert ) {
+			expect( prototype._optionsPositiveIntegers.length );
+
+			var currentOption;
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				event.preventDefault();
+
+				// add space to searched string so we're sure it's there;
+				// options have similar names (for example horizontalRows, and horizontalRowsMin)
+				ok( ui.message.indexOf( currentOption +  " " ) === 0, "\""
+					+ currentOption + "\": ok." );
+			});
+
+			$.each( prototype._optionsPositiveIntegers, function ( index, value ) {
+				currentOption = value;
+
+				$taskbar.taskbar( "option", value, 0 );
+			});
+
+			$taskbar.taskbar( "option", "debugLogAdd", null );
+
+			$taskbar.taskbar( "option", defaults );
+		});
+
+		test( "Minimal values higher than maximum values", function ( assert ) {
+			var tests = {
+				verticalColumn: false,
+				horizontalRows: false,
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				event.preventDefault();
+				if ( tests.verticalColumn === false ) {
+					if ( ui.message.indexOf( "\"verticalColumnsMax\" should not be lower than \"verticalColumnsMin\"" ) === 0 ) {
+						ok( true, "\"verticalColumnsMax\" should not be lower than \"verticalColumnsMin\"." );
+
+						tests.verticalColumn = true;
+					}
+				}
+
+				if ( tests.horizontalRows === false ) {
+					if ( ui.message.indexOf( "\"horizontalRowsMax\" should not be lower than \"horizontalRowsMin\"" ) === 0 ) {
+						ok( true, "horizontalRowsMax\" should not be lower than \"horizontalRowsMin\"." );
+
+						tests.horizontalRows = true;
+					}
+				}
+			});
+
+			var prev  = $taskbar.taskbar( "option", "horizontalRowsMin" );
+			var prev2 = $taskbar.taskbar( "option", "horizontalRowsMax" );
+			var prev3 = $taskbar.taskbar( "option", "verticalColumnsMin" );
+			var prev4 = $taskbar.taskbar( "option", "verticalColumnsMax" );
+			var prev5 = $taskbar.taskbar( "option", "orientation" );
+
+			$taskbar.taskbar( "option", "horizontalRowsMin", 2 );
+			$taskbar.taskbar( "option", "horizontalRowsMax", 1 );
+			$taskbar.taskbar( "option", "verticalColumnsMin", 2 );
+			$taskbar.taskbar( "option", "verticalColumnsMax", 1 );
+			$taskbar.taskbar( "option", "orientation", "vertical" );
+
+			// teardown
+			$taskbar.taskbar( "option", "horizontalRowsMin", prev );
+			$taskbar.taskbar( "option", "horizontalRowsMax", prev2 );
+			$taskbar.taskbar( "option", "verticalColumnsMin", prev3 );
+			$taskbar.taskbar( "option", "verticalColumnsMax", prev4 );
+			$taskbar.taskbar( "option", "orientation", prev5 );
+		});
+
+		test( "Buttons with names matching system buttons names", function ( assert ) {
+			expect( prototype._systemButtons.length );
+
+			var currentButton;
+			var done = [];
+			var checked = [];
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				// debug would flood console otherwise
+				event.preventDefault();
+
+				$.each( prototype._systemButtons, function ( index, value ) {
+					var inArray = $.inArray( value, done );
+
+					if ( inArray === -1 ) {
+						// add double quotes to searched string so we're sure it's there
+						done.push( value );
+					}
+
+					if ( done.length === prototype._systemButtons.length ) {
+						if ( ui.message.indexOf( "\""+ value +  "\"" ) > -1
+						  && $.inArray( value, checked ) === -1 ) {
+							ok( true, "\"" + value + "\": ok." );
+
+							checked.push( value );
+						}
+					}
+				});
+
+			});
+
+			var buttons = {};
+
+			$.each( prototype._systemButtons, function ( index, value ) {
+				currentButton = value;
+
+				buttons[value] = {
+					labelLocalized: value
+				};
+			});
+
+			$taskbar.taskbar( "option", "buttons", buttons );
+
+			$taskbar.taskbar( "option", "buttons", {} );
+
+			$taskbar.taskbar( "option", defaults );
+		});
+
+		test( "None existing and missing languages and translations", function( assert ) {
+			var tests = {
+				missingTaskbarTranslations: false,
+				missingJQueryUIDatepickerTranslations: false,
+				localizationFileProbablyMissing: false,
+				localizationFileMissing: false,
+				localizationObjectEmpty: false,
+				localizationOptionNotAnObject: false,
+				missingGroupTranslation: false,
+				missingJQueryUIDatepickerTooltipTranslations: false
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				event.preventDefault();
+
+				if ( tests.missingTaskbarTranslations === false ) {
+					if ( ui.message.indexOf( "Missing taskbar translations" ) === 0 ) {
+						ok( true, "Missing taskbar translations." );
+
+						tests.missingTaskbarTranslations = true;
+					}
+				}
+
+				if ( tests.missingJQueryUIDatepickerTranslations === false ) {
+					if ( ui.message.indexOf( "Missing jQuery UI Datepicker translations" ) === 0 ) {
+						ok( true, "Missing jQUery UI Datepicker translations." );
+
+						tests.missingJQueryUIDatepickerTranslations = true;
+					}
+				}
+
+				if ( tests.localizationFileProbablyMissing === false ) {
+					if ( ui.message.indexOf( "Localization file is probably missing" ) === 0 ) {
+						ok( true, "Localization file is probably missing." );
+
+						tests.localizationFileProbablyMissing = true;
+					}
+				}
+
+				if ( tests.localizationFileMissing === false ) {
+					if ( ui.message.indexOf( "Localization file is missing" ) === 0 ) {
+						ok( true, "Localization file is missing." );
+
+						tests.localizationFileMissing = true;
+					}
+				}
+
+				if ( tests.localizationObjectEmpty === false ) {
+					if ( ui.message.indexOf( "Localization object is empty" ) === 0 ) {
+						ok( true, "Localization object is empty." );
+
+						tests.localizationObjectEmpty = true;
+					}
+				}
+
+				if ( tests.localizationOptionNotAnObject === false ) {
+					if ( ui.message.indexOf( "Localization option is not an object" ) === 0 ) {
+						ok( true, "Localization option is not an object." );
+
+						tests.localizationOptionNotAnObject = true;
+					}
+				}
+
+				if ( tests.missingGroupTranslation === false ) {
+					if ( ui.message.indexOf( "Missing translation for windows group" ) === 0 ) {
+						ok( true, "Missing translation for windows group." );
+
+						tests.missingGroupTranslation = true;
+					}
+				}
+
+				if ( tests.missingJQueryUIDatepickerTooltipTranslations === false ) {
+					if ( ui.message.indexOf( "datepicker translations were not found" ) > -1 ) {
+						ok( true, "Missing datepicker translations." );
+
+						tests.missingJQueryUIDatepickerTooltipTranslations = true;
+					}
+				}
+			});
+
+			var lang = $taskbar.taskbar( "option", "language" );
+
+			// missingJQueryUIDatepickerTranslations
+			// missingJQueryUIDatepickerTooltipTranslations
+			var tempDatepickerLang = $.datepicker.regional.lang;
+			$.datepicker.regional[ lang === "en" ? "" : lang ] = null;
+			$taskbar.taskbar( "option", "clock", true );
+			$.datepicker.regional[ lang === "en" ? "" : lang ] = tempDatepickerLang;
+
+			// missingTaskbarTranslations
+			$taskbar.taskbar( "option", "languages", [ "en", "pl", "fakeLang" ] );
+			var prev = $.simone.taskbar.prototype.options.localization;
+
+			// localizationFileProbablyMissing
+			$.simone.taskbar.prototype.options.localization = {};
+			$taskbar.taskbar( "refresh" );
+
+			// localizationFileMissing
+			$.simone.taskbar.prototype.options.localization = false;
+			$taskbar.taskbar( "refresh" );
+
+			// localizationObjectEmpty
+			$taskbar.taskbar( "option", "localization", {} );
+
+			// localizationOptionNotAnObject
+			$taskbar.taskbar( "option", "localization", null );
+
+			// reset
+			$taskbar.taskbar( "option", "languages", defaults.languages );
+			$taskbar.taskbar( "option", "clock", defaults.clock );
+			$.simone.taskbar.prototype.options.localization = prev;
+			$taskbar.taskbar( "option", "localization", defaults.localization );
+
+			// missingGroupTranslation
+			var $window = $( "<div></div>" ).window({
+				group: "unkown"
+			});
+
+			$window.window( "close" ).remove();
+		});
+
+		test( "Missing jQuery UI elements and other plugins", function ( assert ) {
+
+			var prev, prev2, prev3, prev4;
+
+			var $styles;
+
+			var tests = {
+				jQueryUITooltip       : false,
+				jQueryUIDatepicker    : false,
+				jQueryDatepicker      : false,
+				jQueryUISortable      : false,
+				jQueryUIResizable     : false,
+				jQueryUIDraggable     : false,
+				jQueryUIDroppable     : false,
+				jQueryUIMenu          : false,
+				stylesheet            : false,
+				jQueryUITheme         : false,
+				jQueryUIButton        : false,
+				jQueryUIDialog        : false,
+				jQuerySimoneWindow      : false,
+				jQueryUIPosition      : false
+			};
+
+			expect( Object.keys( tests ).length );
+
+			var debugLogAdd = function ( event, ui ) {
+				event.preventDefault();
+
+				if ( tests.jQueryUITooltip === false ) {
+					if ( ui.message.indexOf( "jQuery UI Tooltip is required" ) === 0 ) {
+						ok( true, "jQuery UI Tooltip is required." );
+
+						tests.jQueryUITooltip = true;
+					}
+				}
+
+				if ( tests.jQueryUIDatepicker === false && ! $.ui.datepicker ) {
+					if ( ui.message.indexOf( "jQuery UI Datepicker is required" ) === 0 ) {
+						ok( true, "jQuery UI Datepicker is required (missing $.datepicker)." );
+
+						tests.jQueryUIDatepicker = true;
+					}
+				}
+
+				if ( tests.jQueryDatepicker === false && ! $.datepicker ) {
+					if ( ui.message.indexOf( "jQuery UI Datepicker is required" ) === 0 ) {
+						ok( true, "jQuery UI Datepicker is required (missing $.ui.datepicker)." );
+
+						tests.jQueryDatepicker = true;
+					}
+				}
+
+				if ( tests.jQueryUISortable === false ) {
+					if ( ui.message.indexOf( "jQuery UI Sortable is required" ) === 0 ) {
+						ok( true, "jQuery UI Sortable is required." );
+
+						tests.jQueryUISortable = true;
+					}
+				}
+
+				if ( tests.jQueryUIResizable === false ) {
+					if ( ui.message.indexOf( "jQuery UI Resizable is required" ) === 0 ) {
+						ok( true, "jQuery UI Resizable is required." );
+
+						tests.jQueryUIResizable = true;
+					}
+				}
+
+				if ( tests.jQueryUIDraggable === false && ! $.ui.draggable ) {
+					if ( ui.message.indexOf( "jQuery UI Draggable and Droppable" ) === 0 ) {
+						ok( true, "jQuery UI Draggable and Droppable (missing $.ui.draggable)." );
+
+						tests.jQueryUIDraggable = true;
+					}
+				}
+
+				if ( tests.jQueryUIDroppable === false && ! $.ui.droppable ) {
+					if ( ui.message.indexOf( "jQuery UI Draggable and Droppable" ) === 0 ) {
+						ok( true, "jQuery UI Draggable and Droppable (missing $.ui.droppable)." );
+
+						tests.jQueryUIDroppable = true;
+					}
+				}
+
+				if ( tests.jQueryUIMenu === false ) {
+					if ( ui.message.indexOf( "jQuery UI Menu is required" ) === 0 ) {
+						ok( true, "jQuery UI Menu is required." );
+
+						tests.jQueryUIMenu = true;
+					}
+				}
+
+				if ( tests.stylesheet === false ) {
+					if (
+						   ui.message.indexOf( "Stylesheet for" ) > -1
+						&& ui.message.indexOf( "is probably missing" ) > -1
+					) {
+						ok( true, "Stylesheet is probably missing." );
+
+						tests.stylesheet = true;
+					}
+				}
+
+				if ( tests.jQueryUITheme === false ) {
+					if ( ui.message.indexOf( "jQuery UI Theme is probably missing" ) === 0 ) {
+						ok( true, "jQuery UI Theme is probably missing." );
+
+						tests.jQueryUITheme = true;
+					}
+				}
+
+				if ( tests.jQueryUIButton === false ) {
+					if ( ui.message.indexOf( "jQuery UI Button is required" ) === 0 ) {
+						ok( true, "jQuery UI Button is required." );
+
+						tests.jQueryUIButton = true;
+					}
+				}
+
+				if ( tests.jQueryUIDialog === false ) {
+					if ( ui.message.indexOf( "jQuery UI Dialog is required" ) === 0 ) {
+						ok( true, "jQuery UI Dialog is required." );
+
+						tests.jQueryUIDialog = true;
+					}
+				}
+
+				if ( tests.jQuerySimoneWindow === false ) {
+					if ( ui.message.indexOf( "Simone Window is required" ) === 0 ) {
+						ok( true, "Simone Window is required." );
+
+						tests.jQuerySimoneWindow = true;
+					}
+				}
+
+				if ( tests.jQueryUIPosition === false ) {
+					if ( ui.message.indexOf( "jQuery UI Position is required" ) === 0 ) {
+						ok( true, "jQuery UI Position is required." );
+
+						tests.jQueryUIPosition = true;
+					}
+				}
+			};
+
+			$taskbar.taskbar( "option", "debugLogAdd", debugLogAdd );
+
+			// jQueryUITooltip
+			prev = $.ui.tooltip;
+			prev2 = $taskbar.taskbar( "option", "buttonsTooltips" );
+			$.ui.tooltip = null;
+			$taskbar.taskbar( "option", "buttonsTooltips", true );
+			// teardown
+			$.ui.tooltip = prev;
+			$taskbar.taskbar( "option", "buttonsTooltips", prev2 );
+
+			// jQueryUIDatepicker && jQueryDatepicker
+			prev = $.datepicker;
+			prev2 = $.ui.datepicker;
+			prev3 = $taskbar.taskbar( "option", "clock" );
+			prev4 = $taskbar.taskbar( "option", "clockShowDatepicker" );
+			$taskbar.taskbar( "option", "clock", true );
+			// jQueryUIDatepicker
+			$.ui.datepicker = null;
+			$taskbar.taskbar( "option", "clockShowDatepicker", true );
+			// jQueryDatepicker
+			$.ui.datepicker = prev2;
+			$.datepicker = null;
+			$taskbar.taskbar( "option", "clockShowDatepicker", true );
+			// teardown
+			$.datepicker = prev;
+			$taskbar.taskbar( "option", "clock", prev3 );
+			$taskbar.taskbar( "option", "clockShowDatepicker", prev4 );
+
+			// jQueryUISortable
+			prev = $.ui.sortable;
+			prev2 = $taskbar.taskbar( "option", "windowButtonsSortable" );
+			$.ui.sortable = null;
+			$taskbar.taskbar( "option", "windowButtonsSortable", true );
+			// teardown
+			$.ui.sortable = prev;
+			$taskbar.taskbar( "option", "windowButtonsSortable", prev2 );
+
+			// jQueryUIResizable
+			prev = $.ui.resizable;
+			prev2 = $taskbar.taskbar( "option", "resizable" );
+			$.ui.resizable = null;
+			$taskbar.taskbar( "option", "resizable", true );
+			// teardown
+			$.ui.resizable = prev;
+			$taskbar.taskbar( "option", "resizable", prev2 );
+
+			// jQueryUIDraggable && jQueryUIDroppable
+			prev = $.ui.draggable;
+			prev2 = $.ui.droppable;
+			prev3 = $taskbar.taskbar( "option", "draggable" );
+			// jQueryUIDraggable
+			$.ui.draggable = null;
+			$taskbar.taskbar( "option", "draggable", true );
+			// jQueryUIDroppable
+			$.ui.draggable = prev;
+			$.ui.droppable = null;
+			$taskbar.taskbar( "option", "draggable", true );
+			// teardown
+			$.ui.droppable = prev2;
+			$taskbar.taskbar( "option", "draggable", prev3 );
+
+			// jQueryUIMenu
+			prev = $.ui.menu;
+			prev2 = $taskbar.taskbar( "option", "languageSelect" );
+			$.ui.menu = null;
+			$taskbar.taskbar( "option", "languageSelect", true );
+			// teardown
+			$.ui.menu = prev;
+			$taskbar.taskbar( "option", "languageSelect", prev2 );
+
+			// stylesheet
+			$styles = $( "<style></style>" )
+				.attr( "type", "text/css" )
+				.text( ".simone-taskbar, .simone-window { position: static !important; }" )
+				.appendTo( "body" );
+			$taskbar.taskbar( "refresh" );
+			// teardown
+			$styles.remove();
+			$taskbar.taskbar( "refresh" );
+
+			// jQueryUITheme
+			$styles = $( "<style></style>" )
+				.attr( "type", "text/css" )
+				.text( ".ui-icon { background-image: none !important; }" )
+				.appendTo( "body" );
+			$taskbar.taskbar( "refresh" );
+			// teardown
+			$styles.remove();
+			$taskbar.taskbar( "refresh" );
+
+			// jQueryUIButton
+			prev = $.ui.button;
+			$taskbar.taskbar( "destroy" );
+			$.ui.button = null;
+			$taskbar.taskbar({
+				debugLogAdd: debugLogAdd
+			});
+			// teardown
+			$.ui.button = prev;
+			$taskbar.taskbar( "refresh" );
+
+			// jQueryUIDialog
+			prev = $.ui.dialog;
+			$.ui.dialog = null;
+			$taskbar.taskbar( "refresh" );
+			// teardown
+			$.ui.dialog = prev;
+			$taskbar.taskbar( "refresh" );
+
+			// jQuerySimoneWindow
+			prev = $.simone.window;
+			$.simone.window = null;
+			$taskbar.taskbar( "refresh" );
+			// teardown
+			$.simone.window = prev;
+			$taskbar.taskbar( "refresh" );
+
+			// jQueryUIPosition
+			prev = $.ui.position;
+			$.ui.position = null;
+			$taskbar.taskbar( "refresh" );
+
+			// teardown
+			$.ui.position = prev;
+			$taskbar.taskbar( "refresh" );
+		});
+
+		test( "Unknown elements in taskbar", function ( assert ) {
+			var prev, prev2, prev3, prev4;
+
+			var tests = {
+				unknownElement: 0,
+			};
+
+			expect( 2 );
+
+			var debugLogAdd = function ( event, ui ) {
+				event.preventDefault();
+
+				if ( ui.message.indexOf( "There are elements presents in the taskbar" ) === 0 ) {
+					ok( tests.unknownElement === 0, "There are unkown elements presents in the taskbar." );
+
+					++tests.unknownElement;
+				}
+			};
+
+			$taskbar.taskbar( "option", "debugLogAdd", debugLogAdd );
+
+			var $elem = $( "<ul></ul>" );
+
+			$taskbar.prepend( $elem );
+
+			$taskbar.taskbar( "refresh" );
+
+			$elem.addClass( "simone-menu-hidden" );
+
+			$taskbar.taskbar( "refresh" );
+
+			if ( tests.unknownElement === 1 ) {
+				ok( true, "Debug message not generated after \"simone-menu-hidden\" class was added." );
+			}
+		});
+
+		test( "Unkown options and methods", function () {
+			$taskbar.taskbar( "destroy" );
+
+			$taskbar.uniqueId();
+
+			var taskbarId = $taskbar.attr( "id" );
+
+			var tests = {
+				taskbarInit         : false,
+				taskbarNoSuggestions: false,
+				taskbarSetter       : false,
+				windowInit          : false,
+				window              : false
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar({
+				debugLogAdd                 : function ( event, ui ) {
+					// taskbar: nonExisting
+					if (
+						   ui.message.indexOf( "nonExisting" ) > -1
+						&& ui.message.indexOf( "dropOnExisting" ) > -1
+						&& ui.message.indexOf( "initialization" ) > -1
+						&& ui.$target.is( ".simone-taskbar" )
+					) {
+						tests.taskbarInit = true;
+						ok( true, "\"nonExisting\" on taskbar init" );
+					}
+
+					// taskbar: antidisestablishmentarianism
+					if (
+						   ui.message.indexOf( "antidisestablishmentarianism" ) > -1
+						&& ui.message.indexOf( "Did you mean" ) === -1
+						&& ui.$target.is( ".simone-taskbar" )
+					) {
+						tests.taskbarNoSuggestions = true;
+						ok( true, "\"antidisestablishmentarianism\": no suggestions found" );
+					}
+
+					// taskbar: closen
+					if (
+						   ui.message.indexOf( "closen" ) > -1
+						&& ui.message.indexOf( "initialization" ) === -1
+						&& ui.$target.is( ".simone-taskbar" )
+					) {
+						tests.taskbarSetter = true;
+						ok( true, "\"closen\" on taskbar via setter" );
+					}
+
+					// window: nonExisting
+					if (
+						   ui.message.indexOf( "nonExisting" ) > -1
+						&& ui.message.indexOf( "position" ) > -1
+						&& ui.message.indexOf( "containment" ) > -1
+						&& ui.message.indexOf( "initialization" ) > -1
+						&& ui.message.indexOf( "Did you mean" ) > -1
+						&& ui.$target.is( ".simone-window-content" )
+					) {
+						tests.windowInit = true;
+						ok( true, "\"nonExisting\" on window init, two or more suggestions found" );
+					}
+
+					// window: unknown
+					if (
+						   ui.message.indexOf( "unknown" ) > -1
+						&& ui.message.indexOf( "initialization" ) === -1
+						&& ui.$target.is( ".simone-window-content" )
+					) {
+						tests.window = true;
+						ok( true, "\"window\" on window via setter" );
+					}
+				},
+				nonExisting                 : true,
+				antidisestablishmentarianism: true
+			});
+
+			$taskbar.taskbar( "option", "closen", true );
+
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				nonExisting: true
+			});
+
+			$window.window( "option", "unknown", true );
+
+			$window.window( "close" );
+		});
+
+		test( "Body position:relative", function () {
+			var tests = {
+				relative: 0
+			};
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "position:relative" ) > -1 ) {
+					++tests.relative;
+				}
+			});
+
+			$( "body" ).css( "position", "relative" );
+
+			$taskbar.taskbar( "refresh" );
+
+			equal(
+				tests.relative,
+				1,
+				"Set body position to relative. Refresh taskbar. Debug generated."
+			);
+
+			$( "body" ).css( "position", "" );
+
+			$taskbar.taskbar( "refresh" );
+
+			equal(
+				tests.relative,
+				1,
+				"Remove body position:relative. Refresh taskbar. No debug generated."
+			);
+
+			$taskbar.taskbar( "option", "debugLogAdd", null );
+		});
+
+		test( "\"languages\": {} vs \"languageSelect\": true", function () {
+			expect( 1 );
+
+			var prev  = $taskbar.taskbar( "option", "languages" );
+			var prev2 = $taskbar.taskbar( "option", "languageSelect" );
+
+			var events = {
+				languageSelect: 0
+			}
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "Language select menu wasn't build" ) > -1 ) {
+					ok( ++events.languageSelect === 1, "Debug message generated once." );
+				}
+			});
+
+			$taskbar.taskbar( "option", {
+				languageSelect: true,
+				languages: {}
+			});
+
+			// part of teardown: debug expected not to be generated
+			$taskbar.taskbar( "option", "languages", prev );
+
+			// teardown
+			$taskbar.taskbar( "option", "languageSelect", prev2 );
+		});
+
+		test( "Window options", function () {
+			var $window;
+
+			var tests = {
+				minWidth : 0,
+				minHeight: 0,
+				show     : 0
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "\"minWidth\" option should not be higher than \"maxWidth\" option." ) > -1 ) {
+					ok( ++tests.minWidth === 1, "\"minWidth\" option should not be higher than \"maxWidth\" option." );
+				}
+
+				if ( ui.message.indexOf( "\"minHeight\" option should not be higher than \"maxHeight\" option." ) > -1 ) {
+					ok( ++tests.minHeight === 1, "\"minHeight\" option should not be higher than \"maxHeight\" option." );
+				}
+
+				if ( ui.message.indexOf( "option \"show\" should either be a function or null." ) > -1 ) {
+					ok( ++tests.show === 1, "option \"show\" should either be a function or null." );
+				}
+			});
+
+			$window = $( "<div></div>" ).window({
+				minWidth : 300,
+				maxWidth : 200,
+				minHeight: 300,
+				maxHeight: 200,
+				show     : false
+			});
+
+			// teradown
+			$window.window( "destroy" );
+		});
+
+		test( "Unsupported window options", function () {
+			var $window;
+
+			var tests = {
+				closeText: 0,
+				hide     : 0,
+				autoOpen : 0,
+			};
+
+			expect( Object.keys( tests ).length * 2 + 1);
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "\"hide\" option is not supported" ) > -1 ) {
+					ok( ++tests.hide <= 2, "\"hide\": debug generated on initialization" );
+				}
+
+				if ( ui.message.indexOf( "\"closeText\" option is not supported" ) > -1 ) {
+					ok( ++tests.closeText <= 2, "\"closeText\": debug generated on initialization" );
+				}
+
+				if ( ui.message.indexOf( "\"autoOpen\" option is not supported" ) > -1 ) {
+					ok( ++tests.autoOpen <= 2, "\"autoOpen\": debug generated on initialization" );
+				}
+			});
+
+			$window = $( "<div></div>" ).window({
+				closeText: true,
+				hide     : true,
+				autoOpen : true
+			});
+
+			ok( true, "Test setters." );
+
+			$.each( tests, function ( key, counter ) {
+				$window.window( "option", key, true );
+			});
+
+			// teardown
+			$window.window( "destroy" );
+			$taskbar.taskbar( "option", "debugLogAdd", null );
+		});
+	});
+</script>
+
+</body>
+</html>

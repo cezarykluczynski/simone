@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar interactions | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar({
+			minimizeAll: false
+		});
+
+		test( "\"draggable\": true", function () {
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				draggableBetweenEdges: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "bottom left"
+			});
+
+			var originalEdge, edge;
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() - $taskbar.innerHeight()
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "top" ],
+				"Drag from bottom edge to top edge."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: $( window ).innerHeight() - $taskbar.innerHeight(),
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "top", "bottom" ],
+				"Drag from top edge to bottom edge."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+				dx: - $( window ).innerWidth() / 2
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "left" ],
+				"Drag from bottom edge to left edge."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth()
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "left", "right" ],
+				"Drag from left edge to right edge."
+			);
+		});
+
+		test( "\"draggable\": \"orientation\"", function () {
+			$taskbar.taskbar( "option", {
+				draggable: "orientation",
+				draggableBetweenEdges: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "bottom left"
+			});
+
+			var originalEdge, edge;
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() - $taskbar.innerHeight(),
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "top" ],
+				"Drag from bottom edge to top edge."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: $( window ).innerHeight() - $taskbar.innerHeight(),
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "top", "bottom" ],
+				"Drag from top edge to bottom edge."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+				dx: - $( window ).innerWidth() / 2
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "bottom" ],
+				"Drag from bottom edge to left edge: nothing happened."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+				dx: $( window ).innerWidth() / 2,
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "bottom" ],
+				"Drag from bottom edge to right edge: nothing happened."
+			);
+		});
+
+		test( "\"draggable\": false", function () {
+			$taskbar.taskbar( "option", {
+				draggable: false,
+				draggableBetweenEdges: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "bottom left"
+			});
+
+			var originalEdge, edge;
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() - $taskbar.innerHeight(),
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "bottom" ],
+				"Drag from bottom edge to top edge: nothing happened."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+				dx: - $( window ).innerWidth() / 2
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "bottom" ],
+				"Drag from bottom edge to left edge: nothing happened."
+			);
+
+			originalEdge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+				dx: $( window ).innerWidth() / 2
+			}));
+
+			edge = $taskbar.data( dataPrefix + "taskbar" )._cache.edge;
+
+			deepEqual(
+				[ originalEdge, edge ],
+				[ "bottom", "bottom" ],
+				"Drag from bottom edge to right edge: nothing happened."
+			);
+		});
+
+		test( "Drag outside of window, drag to nowhere", function () {
+			expect( 5 );
+
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				draggableBetweenEdges: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "bottom left"
+			});
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() * 2,
+				beforeDrop: function ( ui ) {
+					var $droppable = $taskbar.siblings( ".simone-taskbar-droppable-container" )
+						.find( ".simone-taskbar-horizontal.simone-taskbar-stick-top" );
+					ok( $droppable.hasClass( "simone-taskbar-droppable-over" ),
+						"Drag helper outside of top edge. Top droppable is highlited." );
+				}
+			}));
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: $( window ).innerHeight() / 2,
+				dx: $( window ).innerWidth() * 2,
+				beforeDrop: function ( ui ) {
+					var $droppable = $taskbar.siblings( ".simone-taskbar-droppable-container" )
+						.find( ".simone-taskbar-vertical.simone-taskbar-stick-right" );
+					ok( $droppable.hasClass( "simone-taskbar-droppable-over" ),
+						"Drag helper outside of right edge. Right droppable is highlited." );
+				}
+			}));
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - $( window ).innerWidth() * 2,
+				beforeDrop: function ( ui ) {
+					var $droppable = $taskbar.siblings( ".simone-taskbar-droppable-container" )
+						.find( ".simone-taskbar-vertical.simone-taskbar-stick-left" );
+					ok( $droppable.hasClass( "simone-taskbar-droppable-over" ),
+						"Drag helper outside of left edge. Left droppable is highlited." );
+				}
+			}));
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth() / 2,
+				dy: $( window ).innerHeight() * 2,
+				beforeDrop: function ( ui ) {
+					var $droppable = $taskbar.siblings( ".simone-taskbar-droppable-container" )
+						.find( ".simone-taskbar-horizontal.simone-taskbar-stick-bottom" );
+					ok( $droppable.hasClass( "simone-taskbar-droppable-over" ),
+						"Drag helper outside of bottom edge. Bottom droppable is highlited." );
+				}
+			}));
+
+			var offsetBefore = $taskbar.offset();
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight() / 2,
+			}));
+
+			deepEqual(
+				$taskbar.offset(),
+				offsetBefore,
+				"Dragged to center of the screen. Taskbar stayed in placed."
+			);
+		});
+
+		test( "\"draggableBetweenEdges\": true", function () {
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				draggableBetweenEdges: true,
+				orientation: "horizontal",
+				horizontalWidth: "70%",
+				verticalHeight: "70%",
+				horizontalStick: "bottom left",
+				verticalStick: "top right"
+			});
+
+			// to best results on maximum number of resolution,
+			// let's use half of 70% as a drag distance
+			var multiplier = 0.35;
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth() * multiplier
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalStick" ),
+				"bottom right",
+				"Horizontal taskbar dragged to oposite side of the window."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - $( window ).innerWidth() * multiplier
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalStick" ),
+				"bottom left",
+				"Horizontal taskbar dragged back."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - $( window ).innerWidth() * multiplier
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				"bottom left",
+				"Horizontal taskbar dragged to vertical bottom left edge."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth(),
+				dy: - $( window ).innerHeight() * multiplier
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				 "top right",
+				"Vertical taskbar dragged to vertical top right edge."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: $( window ).innerHeight() * multiplier
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				"bottom right",
+				"Vertical taskbar dragged to vertical bottom right edge."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight(),
+				dx: - $( window ).innerWidth() * 0.5
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalStick" ),
+				"top left",
+				"Vertical taskbar dragged to horizontal top left edge."
+			);
+		});
+
+		test( "\"draggableBetweenEdges\": false", function () {
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				draggableBetweenEdges: false,
+				orientation: "horizontal",
+				horizontalWidth: "70%",
+				verticalHeight: "70%",
+				horizontalStick: "bottom left",
+				verticalStick: "top left"
+			});
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth() / 2,
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalStick" ),
+				"bottom left",
+				"Horizontal taskbar dragged to oposite side of the window: nothing happened."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - $( window ).innerWidth() / 2,
+				dy: - $( window ).innerHeight() / 4
+			}));
+
+			notEqual(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				"bottom left",
+				"Horizontal taskbar dragged to vertical bottom left edge: nothing happened."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth(),
+				dy: - $( window ).innerHeight() * 2
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				"top right",
+				"Horizontal taskbar dragged to top right edge."
+			);
+
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight()
+			}));
+
+			equal(
+				$taskbar.taskbar( "option", "verticalStick" ),
+				"top right",
+				"Horizontal taskbar dragged to bottom right edge."
+			);
+		});
+
+		test( "\"dropOnExisting\"", function () {
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				draggableBetweenEdges: true,
+				dropOnExisting: true,
+				orientation: "horizontal",
+				//orientation: "vertical",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "top left",
+				verticalStick: "top right"
+			});
+
+			$taskbar2.taskbar({
+				draggable: true,
+				dropOnExisting: true,
+				horizontalStick: "bottom left"
+			});
+
+			$taskbar2.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight(),
+			}));
+
+			deepEqual(
+				$taskbar.position(),
+				$taskbar2.position(),
+				"dropOnExisting: true - second taskbar was dropped on first taskbar."
+			);
+
+			$taskbar2.taskbar( "option", {
+				dropOnExisting: false,
+				horizontalStick: "bottom left"
+			});
+
+			notDeepEqual(
+				$taskbar.position(),
+				$taskbar2.position(),
+				"dropOnExisting: false - second taskbar was not dropped on first taskbar."
+			);
+
+			$taskbar2.taskbar( "destroy" );
+		});
+
+		test( "\"resizable\": true", function () {
+			$taskbar.taskbar( "option", {
+				resizable: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				verticalHeight: "100%",
+				horizontalStick: "bottom left",
+				horizontalRows: 1,
+				horizontalRowsMin: 1,
+				horizontalRowsMax: 2,
+				verticalStick: "top left",
+			});
+
+			var $handle;
+
+			$handle = $taskbar.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dy: - $taskbar.outerHeight(),
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalRows" ),
+				2,
+				"Resized to 2 rows."
+			);
+
+			$handle = $taskbar.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dy: - $taskbar.outerHeight(),
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalRows" ),
+				2,
+				"\"horizontalRowsMax\" set to 2. Couldn't resize to more than 2 rows."
+			);
+
+			$handle = $taskbar.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dy: $taskbar.outerHeight() * 3,
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "horizontalRows" ),
+				1,
+				  "\"horizontalRowsMin\" set to 1. "
+				+ "Couldn't resize to less than 1 row."
+			);
+
+			$taskbar.taskbar( "option", {
+				orientation: "vertical",
+				verticalStick: "top left",
+				verticalColumns: 1,
+				verticalColumnsMin: 1,
+				verticalColumnsMax: 2,
+			});
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dx: $taskbar.outerWidth(),
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "verticalColumns" ),
+				2,
+				"Resized to 2 columns."
+			);
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dx: $taskbar.outerWidth() * 2,
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "verticalColumns" ),
+				2,
+				  "\"verticalColumnsMax\" set to 2. "
+				+ "Couldn't resize to more than 2 columns."
+			);
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dx: - $taskbar.outerWidth() * 3,
+				});
+
+			equal(
+				$taskbar.taskbar( "option", "verticalColumns" ),
+				1,
+				  "\"verticalColumnsMin\" set to 1. "
+				+ "Couldn't resize to less than 1 column."
+			);
+		});
+
+		test( "\"resizable\": false", function () {
+			$taskbar.taskbar( "option", {
+				resizable: false,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				horizontalStick: "bottom left",
+				horizontalRows: 1,
+			});
+
+			ok(
+				$taskbar.find( ".simone-taskbar-resizable-disabled" ).length,
+				1,
+				"\"resizable\" set to false and not available."
+			);
+		});
+
+		test( "\"resizableHandleOverflow\"", function () {
+			$taskbar.taskbar( "option", {
+				resizable: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				horizontalStick: "bottom left",
+				horizontalRows: 1,
+			});
+
+			$taskbar.taskbar( "option", "debug.options", true );
+
+			var resizableHandleOverflowInitial
+				= defaults.resizableHandleOverflow;
+
+			var $handle;
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			equal(
+				$handle.outerHeight(),
+				resizableHandleOverflowInitial * 2 + 1,
+				"Initial size OK."
+			);
+
+			$taskbar.taskbar( "option", "resizableHandleOverflow", 0 );
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			equal(
+				$handle.outerHeight(),
+				1 * 2 + 1,
+				"Set to 0, height equals 3."
+			);
+
+			$taskbar.taskbar( "option", "resizableHandleOverflow", 3 );
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			equal(
+				$handle.outerHeight(),
+				3 * 2 + 1,
+				"Set to 3, height equals 7."
+			);
+
+			var receivedUiLevel,
+			    warning = false;
+
+			$taskbar.taskbar( "option", {
+				debugLogAdd: function ( event, ui ) {
+					receivedUiLevel = ui.level;
+					if ( ui.message.indexOf( "resizableHandleOverflow" ) !== -1 ) {
+						warning = true;
+					}
+				},
+				resizableHandleOverflow: 6
+			});
+
+			$handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			equal(
+				$handle.outerHeight(),
+				6 * 2 + 1,
+				"Set to 6, height equals 13."
+			);
+
+			$taskbar.taskbar( "option", "debugLogAdd", null );
+
+			deepEqual(
+				[ receivedUiLevel, warning ],
+				[ 1, true ],
+				"Debug warning was generated for value going too high."
+			);
+
+			$taskbar.taskbar(
+				"option",
+				"resizableHandleOverflow",
+				resizableHandleOverflowInitial
+			);
+		});
+
+		test( "\"resolveCollisions\"", function () {
+			$taskbar.taskbar( "option", {
+				draggable: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				horizontalStick: "bottom left",
+				horizontalRows: 1,
+			});
+
+			var $taskbar3 = $( "<div></div>" ).taskbar({
+				minimizeAll: false
+			});
+
+			$taskbar2.taskbar({
+				draggable: true,
+				orientation: "horizontal",
+				horizontalWidth: "100%",
+				horizontalStick: "top left",
+				horizontalRows: 1,
+				minimizeAll: false
+			});
+
+			$taskbar.simulate( "drag", {
+				dx: - $( window ).innerWidth() / 2,
+				dy:   $( window ).innerHeight() / 2,
+			});
+
+			equal(
+				$taskbar2.outerHeight(),
+				$taskbar.offset().top,
+				"Taskbar 1 mover to left edge and positioned beneath taskbar 2."
+			);
+
+			equal(
+				$taskbar.outerHeight(),
+				$taskbar3.offset().top - $taskbar2.outerHeight(),
+				"Taskbar 1 is not covering taskbar 3."
+			);
+
+			$taskbar2.simulate( "drag", {
+				dx: $( window ).innerWidth() / 2,
+				dy: $( window ).innerHeight() / 2
+			});
+
+			equal(
+				$taskbar2.offset().top,
+				0,
+				"Taskbar 2 moved to right edge. Taskbar 2 sticks to top edge."
+			);
+
+			equal(
+				$taskbar.offset().top,
+				0,
+				"Taskbar 1 sticks to top edge."
+			);
+
+			$taskbar3.taskbar( "destroy" );
+
+			equal(
+				$taskbar.outerHeight(),
+				$( window ).innerHeight(),
+				  "Destroy taskbar 3. "
+				+ "Taskbar 1 equals window height."
+			);
+
+			equal(
+				$taskbar2.outerHeight(),
+				$( window ).innerHeight(),
+				"Taskbar 2 height equals window height."
+			);
+
+			$taskbar2.taskbar( "destroy" );
+		});
+
+		test( "\"propagateWindowBlur\"", function () {
+			var $window;
+
+			var prev = $taskbar.taskbar( "option", "propagateWindowBlur" );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			ok( $window.parent().hasClass( "simone-window-top" ), "Window created and on top." );
+
+			$taskbar.taskbar( "option", "propagateWindowBlur", true );
+
+			$( window ).trigger( "blur" );
+
+			ok(
+				! $window.parent().hasClass( "simone-window-top" ),
+				"\"propagateWindowBlur\" = true. Window blur triggered. Window not on top."
+			);
+
+			$window.simulate( "mousedown" );
+
+			ok( $window.parent().hasClass( "simone-window-top" ), "Window clicked and moved on top." );
+
+			$taskbar.taskbar( "option", "propagateWindowBlur", false );
+
+			$( window ).trigger( "blur" );
+
+			ok(
+				$window.parent().hasClass( "simone-window-top" ),
+				"\"propagateWindowBlur\" = false. Window blur triggered. Window on top."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "propagateWindowBlur", prev );
+		});
+
+		asyncTest( "Click minimize all button. Add scrollbar. No window button is active." , function () {
+			var $window;
+			var $window2;
+			var $window3;
+
+			setScrollOverflow( undefined, "hidden" );
+
+			var prev = $taskbar.taskbar( "option", "minimizeAll" );
+			$taskbar.taskbar( "option", "minimizeAll", true );
+
+			$window  = $( "<div></div> ").window();
+			$window2 = $( "<div></div> ").window();
+			$window3 = $( "<div></div> ").window();
+
+			$window2.window( "moveToTop" );
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "click" );
+
+			equal(
+				$taskbar.find( ".simone-taskbar-window-button.ui-state-active" ).length,
+				0,
+				"Minimize all windows. All buttons are blurred."
+			);
+
+			setScrollOverflow( "y" );
+
+			setTimeout( function () {
+				equal(
+					$taskbar.find( ".simone-taskbar-window-button.ui-state-active" ).length,
+					0,
+					"Set horizontal scroll. All buttons stay blurred."
+				);
+
+				start();
+
+				setScrollOverflow();
+
+				// teardown
+				$taskbar.taskbar( "option", "minimizeAll", prev );
+				$window.window( "close" );
+				$window2.window( "close" );
+				$window3.window( "close" );
+			}, 500 );
+		});
+
+		asyncTest( "Menu position, submenu position, submenu width", function () {
+			expect( 56 );
+
+			var step      = $.ui.menu.prototype.delay * 2;
+			var timeout   = 0;
+
+			// assume 1px diffrence - that's not really a visual difference,
+			// just a difference in calculated offset for some reason -
+			// a reason that should be investigated one day
+			var tolerance = 1;
+
+			var checked = {
+				bottom: {
+					menuToButton: false,
+					width       : false,
+				},
+				left: {
+					menuToButton: false,
+					width       : false,
+				},
+				top: {
+					menuToButton: false,
+					width       : false,
+				},
+				right: {
+					menuToButton: false,
+					width       : false,
+				}
+			}
+
+			var expectationsList = {
+				bottom: {
+					orientation    : "horizontal",
+					stick          : "bottom left",
+					menuToButton   : "left",
+					equal          : {
+						1: "top",
+						2: "bottom",
+					},
+					menuLength     : 5,
+					submenusLengths: {
+						1: 3,
+						2: 8
+					}
+				},
+				left: {
+					orientation    : "vertical",
+					stick          : "top left",
+					menuToButton   : "top",
+					equal          : {
+						1: "top",
+						5: "bottom"
+					},
+					menuLength     : 5,
+					submenusLengths: {
+						1: 3,
+						5: 3
+					}
+				},
+				top: {
+					orientation: "horizontal",
+					stick      : "top left",
+					menuToButton   : "left",
+					equal      : {
+						1: "top",
+						5: "bottom",
+						6: "top",
+					},
+					equalTo    : {
+						5: "item"
+					},
+					menuLength: 6,
+					submenusLengths: {
+						1: 2,
+						5: 2,
+						6: 8
+					}
+				},
+				right: {
+					orientation    : "vertical",
+					stick          : "top right",
+					menuToButton   : "top",
+					equal          : {
+						1: "top",
+						4: "bottom",
+						5: "top"
+					},
+					equalTo        : {
+						4: "item",
+					},
+					menuLength     : 5,
+					submenusLengths: {
+						1: 3,
+						4: 2,
+						5: 7
+					}
+				},
+			};
+
+			var iterations = Object.keys( expectationsList ).length;
+			var iteration  = 0;
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			$.each( expectationsList, function ( edge, expectations ) {
+				++iteration;
+
+				var elems = {};
+				var create = {};
+
+				var menuPosition;
+				var menuCSS;
+
+				var iterations2 = Object.keys( expectations.equal ).length;
+				var iteration2 = 0;
+
+				setTimeout( function () {
+					start();
+
+					// cleanup
+					$taskbar.find( "[data-menu-type=start]" ).remove();
+
+					// create menu and submenus
+					create.$menu     = getMenu( expectations.menuLength );
+
+					$.each( expectations.submenusLengths, function ( index, length ) {
+						create[ "$submenu" + index ] = getMenu( length, true );
+						create[ "$item" + index ]    = create.$menu.children( "li:eq(" + ( index - 1 ) + ")" );
+						create[ "$item" + index ].append( create[ "$submenu" + index ] );
+					});
+
+					$taskbar
+						.prepend( create.$menu )
+						.taskbar( "refresh" );
+
+					var stick = expectations.orientation === "horizontal"
+						? "horizontalStick"
+						: "verticalStick";
+
+					$taskbar.taskbar( "option", "orientation", expectations.orientation );
+					$taskbar.taskbar( "option", stick, expectations.stick );
+
+					ok( true, "Set taskbar \"orientation\" to \"" + expectations.orientation + "\""
+						+ ", \"" + stick + "\" to \"" + expectations.stick + "\"." );
+
+					stop();
+				}, timeout );
+
+				// more time for full taskbar refresh
+				timeout += step * 3;
+
+				$.each( expectations.equal, function ( index, expectEqual ) {
+					++iteration2;
+
+					// click button
+					setTimeout( function () {
+						start();
+
+						elems.$button = $taskbar.find( "[data-menu-button-for=test]" );
+
+						elems.$button.trigger( "click" );
+
+						ok(
+							$taskbar.find( "[data-menu-name=test]" ).is( ":visible" ),
+							"Trigger click on menu button. Menu visible."
+						);
+
+						menuPosition   = instance._extendedPosition.call( create.$menu, "offset" );
+
+						if ( ! checked[ edge ].menuToButton ) {
+							var buttonPosition = instance._extendedPosition.call( elems.$button, "offset" );
+
+							// use Math.round - if those are equal, elements are visually where they should be
+							var menuDimension   = Math.round( menuPosition[ expectations.menuToButton ] );
+							var buttonDimension = Math.round( buttonPosition[ expectations.menuToButton ] );
+
+							ok(
+								inRange( menuDimension, buttonDimension - tolerance, buttonDimension + tolerance ),
+								"Submenu edge \"" + expectations.menuToButton + "\" equal to"
+								+ " button \""  + expectations.menuToButton + "\" edge."
+							);
+
+							checked[ edge ].menuToButton = true;
+						}
+
+						if ( checked[ edge ].width !== true ) {
+							menuCSS = $.extend( {}, window.getComputedStyle( create.$menu[ 0 ] ) );
+							checked[ edge ].width = menuPosition.width;
+						}
+
+						elems[ "$item" + index ] = create.$menu.children( "li:eq(" +( index - 1 )+ ")" );
+						elems[ "$item" + index ].trigger( "mouseenter" );
+
+						stop();
+					}, timeout );
+
+					timeout += step;
+
+					// submenu
+					setTimeout( function () {
+						start();
+
+						if ( checked[ edge ].width !== true ) {
+
+							var menuPositionAfter = instance._extendedPosition.call( create.$menu, "offset" );
+
+							var menuCSSAfter = $.extend( {}, window.getComputedStyle( create.$menu[ 0 ] ) );
+
+							// we have to use PHPJS'es array_diff_assoc, because
+							// QUnit's deepEqual cannot compare results of window.getComputedStyle()
+							// and throws TypeError: Illegal invocation for a hard to reproduce reason
+							var diff  = array_diff_assoc( menuCSS, menuCSSAfter );
+							var diff2 = array_diff_assoc( menuCSSAfter, menuCSS );
+
+							// don't need that, that summary of other props,
+							// and makes the diff unreadable in case of errors
+							delete diff.cssText;
+							delete diff2.cssText;
+
+							deepEqual(
+								diff2,
+								diff,
+								"Menu CSS after mouseenter equal to menu CSS before mouseenter."
+							);
+
+							equal(
+								menuPositionAfter.width,
+								menuPosition.width,
+								"Menu width after mouseenter equal to menu width before mouseenter."
+							);
+
+							checked[ edge ].width = true;
+						}
+
+						elems[ "$submenu" + index ] = elems[ "$item" + index ].children( "ul.ui-menu" );
+
+						ok(
+							elems[ "$submenu" + index ].is( ":visible" ),
+							"Trigger mouseenter on item. Submenu is visible."
+						);
+
+						var equalToItem = expectations.equalTo
+							&& expectations.equalTo[ index ] === "item";
+
+						var $equalToElem = equalToItem
+								? elems[ "$item" + index ]
+								: create.$menu;
+
+						var equalName = equalToItem
+							? "item"
+							: "submenu";
+
+						var submenuPosition = instance._extendedPosition.call( elems[ "$submenu" + index ], "offset" );
+						var elemPosition    = instance._extendedPosition.call( $equalToElem, "offset" );
+
+						// use Math.round - if those are equal, elements are visually where they should be
+						var submenuDimension = Math.round( submenuPosition[ expectations.equal[ index ] ] );
+						var elemDimension    = Math.round( elemPosition[ expectations.equal[ index ] ] );
+
+						var useTolerance = tolerance;
+
+						// higher tolerance is required when comparing bottom
+						// of submenu with bottom of menu item on jQueryUI 1.10
+						// because of different HTML structure and different CSS of jQueryUI Menu
+						if (
+							   expectEqual === "bottom"
+							&& equalName === "item"
+							&& parseFloat( $.ui.dialog.prototype.version ) < 1.11 ) {
+							useTolerance = 2;
+						}
+
+						ok(
+							inRange( submenuDimension, elemDimension - useTolerance, elemDimension + useTolerance ),
+							"Submenu position \"" + expectEqual + "\" equal to " + equalName + " "
+							+ index + " position \"" + expectEqual + "\"."
+						);
+
+						stop();
+					}, timeout );
+
+					timeout += step;
+
+					// close submenu
+					setTimeout( function () {
+						start();
+
+						elems.$button.trigger( "click" );
+
+						ok(
+							! $taskbar.find( "[data-menu-name=test]").is( ":visible" ),
+							"Trigger click on menu button. Menu not visible."
+						);
+
+						stop();
+					}, timeout );
+
+					timeout += step;
+				});
+			});
+
+			setTimeout( function () {
+				start();
+
+				// teardown
+				$taskbar.find( "[data-menu-type=start]" ).remove();
+				$taskbar.taskbar( "refresh" );
+			}, timeout );
+		});
+
+		test( "Window buttons stay in place during sortable", function () {
+			resetTaskbar();
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			$taskbar.taskbar( "option", "resizable", true );
+
+			expect( 20 );
+
+			var $button1, $button2, $button3, $container,
+			    offset1Before, offset3Before, offset1After, offset3After,
+			    styleBefore, styleAfter,
+			    CSSBefore, CSSAfter;
+			var fontSizes = [ 10, 11, 12, 13, 14 ];
+
+			var $window = $( "<div></div>" ).window();
+			var $window2 = $( "<div></div>" ).window();
+			var $window3 = $( "<div></div>" ).window();
+			var $body = $( "body" );
+
+			var taskbarSizes = [ 1, 2 ];
+
+			$.each( taskbarSizes, function ( index, taskbarSize ) {
+				$taskbar.taskbar( "option", "horizontalRows", taskbarSize );
+
+				$.each( fontSizes, function ( index, fontSize ) {
+					$body.css( "fontSize", fontSize );
+					$taskbar.taskbar( "refresh" );
+
+					$container = $taskbar.children( ".simone-taskbar-window-buttons-container" );
+
+					$button1 = $container.find( ".ui-button:eq(0)" );
+					$button2 = $container.find( ".ui-button:eq(1)" );
+					$button3 = $container.find( ".ui-button:eq(2)" );
+
+					offset1Before = instance._extendedPosition.call( $button1, "offset" );
+					offset3Before = instance._extendedPosition.call( $button3, "offset" );
+
+					$button2.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dx: 100,
+						beforeDrop: function () {
+							offset1After = instance._extendedPosition.call( $button1, "offset" );
+							offset3After = instance._extendedPosition.call( $button3, "offset" );
+						}
+					}));
+
+					deepEqual(
+						offset1After,
+						offset1Before,
+						"Row count: " + taskbarSize + ". Font size: " + fontSize
+						+ ". Button 1 position does not change during button 2 drag."
+					);
+
+					deepEqual(
+						offset3After,
+						offset3Before,
+						"Row count: " + taskbarSize + ". Font size: " + fontSize
+						+ ". Button 3 position does not change during button 2 drag."
+					);
+				});
+			});
+
+			// teardown
+			$body.css( "fontSize", "" );
+			$taskbar.taskbar( "refresh" );
+			$taskbar.taskbar( "option", "horizontalRows", 1 );
+
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+			$window3.window( "destroy" );
+		});
+
+		test( "Window buttons container vs empty taskbar", function () {
+			var $window;
+
+			$taskbar.taskbar( "destroy" );
+
+			$taskbar.taskbar({
+				minimizeAll: false
+			});
+
+			var $container = $taskbar.find( ".simone-taskbar-window-buttons-container" );
+
+			ok(
+				$container.outerWidth() > $( window ).innerHeight() * 0.9,
+				"Create taskbar with no button on left or on right. "
+				+ "Window buttons container stretch to most of the taskbar."
+			);
+
+
+			$window = $( "<div></div>" ).window();
+
+			ok(
+				$container.outerWidth() > $( window ).innerHeight() * 0.9,
+				"Add window. Window buttons container stretch to most of the taskbar."
+			);
+
+			$taskbar.taskbar( "refresh" );
+
+			ok(
+				$container.outerWidth() > $( window ).innerHeight() * 0.9,
+				"Call \"refresh\" method on taskbar. "
+				+ "Window buttons container stretch to most of the taskbar."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		function startVertical( options ) {
+			var prev = {
+				orientation: $taskbar.taskbar( "option", "orientation" ),
+				verticalStick: $taskbar.taskbar( "option", "verticalStick" ),
+			};
+
+			if ( !options ) {
+				options = {};
+			}
+
+			$.each( options, function ( key, value ) {
+				prev[ key ] = $taskbar.taskbar( "option", key );
+			});
+
+			$taskbar.taskbar( $.extend( true, {
+				orientation: "vertical",
+				verticalStick: "left top"
+			}, options ));
+
+			return prev;
+		}
+
+		test( "Window buttons sortable containment on vertical taskbar", function () {
+			var $window;
+
+			var c = 0;
+
+			var prev = startVertical();
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			var $container = $taskbar.find( ".simone-taskbar-window-buttons-container" );
+
+			var $windows = $( "<div></div>" ).window({
+				title: "Drag button"
+			});
+
+			var buttonHeight = $container.find( ".ui-button" ).outerHeight();
+			var containerHeight = $container.outerHeight();
+
+			var buttonsCount = parseInt( containerHeight / buttonHeight * 1.2, 10 );
+
+			for(var i = 0; i < buttonsCount; i++ ) {
+				$window = $( "<div></div>" ).window();
+
+				$windows = $windows.add( $window );
+			}
+
+			var $button = $container.find( ".ui-button:eq(0)" );
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				// uncomment the following 3 lines to see where drag button was at the end of drag
+				// beforeDrop: function ( event, ui ) {
+				// 	return false;
+				// }
+				dy        : containerHeight,
+				moves     : 200 // force scroll to occur in greater number
+			}));
+
+			var buttonDimensions    = instance._extendedPosition.call( $button, "offset" );
+			var containerDimensions = instance._extendedPosition.call( $container, "offset" );
+
+			ok(
+				buttonDimensions.bottom <= containerDimensions.bottom,
+				"Button was not moved over bottom edge of container during sortable."
+			);
+
+			// teardown
+			$windows.window( "destroy" );
+			$taskbar.taskbar( "option", prev );
+		});
+
+		test( "\"simone-taskbar-window-buttons-container-first-child\", "
+			+ "\"simone-taskbar-window-buttons-container-only-child\" classes, "
+			+ "window buttons container size", function () {
+			var prev = startVertical({
+				minimizeAll: false
+			});
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			var $container = $taskbar.find( ".simone-taskbar-window-buttons-container" );
+
+			var taskbarDimensions   = instance._extendedPosition.call( $taskbar, "offset" );
+			var containerDimensions = instance._extendedPosition.call( $container, "offset" );
+
+			equal(
+				containerDimensions.height,
+				taskbarDimensions.height,
+				"Window buttons container height equal to taskbar height "
+				+ "when container is the only non-empty subortinate of taskbar."
+			);
+
+			ok(
+				$container.hasClass( "simone-taskbar-window-buttons-container-only-child" ),
+				"Container have \"simone-taskbar-window-buttons-container-only-child\" class."
+			);
+
+			ok(
+				$container.hasClass( "simone-taskbar-window-buttons-container-first-child" ),
+				"Container have \"simone-taskbar-window-buttons-container-first-child\" class."
+			);
+
+			$taskbar.taskbar( "option", "minimizeAll", true );
+
+			ok(
+				! $container.hasClass( "simone-taskbar-window-buttons-container-only-child" ),
+				"Add minimize all button. Container doesn't have \"simone-taskbar-window-buttons-container-only-child\" class."
+			);
+
+			ok(
+				$container.hasClass( "simone-taskbar-window-buttons-container-first-child" ),
+				"Container have \"simone-taskbar-window-buttons-container-first-child\" class."
+			);
+
+			var $menu = getMenu();
+
+			$menu.prependTo( $taskbar );
+
+			$taskbar.taskbar( "refresh" );
+
+			ok(
+				! $container.hasClass( "simone-taskbar-window-buttons-container-only-child" ),
+				"Add start menu. Container doesn't have \"simone-taskbar-window-buttons-container-only-child\" class."
+			);
+
+			ok(
+				! $container.hasClass( "simone-taskbar-window-buttons-container-first-child" ),
+				"Container doesn't have \"simone-taskbar-window-buttons-container-first-child\" class."
+			);
+
+			// teardown
+			$menu.remove();
+			$taskbar.taskbar( "refresh" );
+			$taskbar.taskbar( "option", prev );
+		});
+
+		test( "Scrollable menus", function () {
+			var $window;
+
+			var prev = $taskbar.taskbar( "option", "verticalStick" );
+			var prev2 = $taskbar.taskbar( "option", "orientation" );
+			$taskbar.taskbar( "option", "verticalStick", "top left" );
+
+			$.each( [ "horizontal", "vertical" ], function( index, orientation ) {
+				if ( $taskbar.taskbar( "option", "orientation" ) !== orientation ) {
+					$taskbar.taskbar( "option", "orientation", orientation );
+				}
+
+				var $windows = $( "<div></div><div></div>" ).window({
+					group: "meta"
+				});
+
+				var $containment = $( ".simone-taskbar-windows-containment" );
+				var  containment = $containment[ 0 ];
+				var $menu        = $taskbar.find( "ul" );
+				var  menu        = $menu[ 0 ];
+
+				$menu.show();
+
+				var liHeight = $taskbar.find( "li.simone-taskbar-window-group-element:eq(0)" ).outerHeight();
+				var containmentHeight = $containment.outerHeight();
+
+				$menu.hide();
+
+				var windowsCount = parseInt( containmentHeight / liHeight * 1.2, 10 );
+
+				for(var i = 0; i < windowsCount; i++ ) {
+					$window = $( "<div></div>" ).window({
+						group: "meta"
+					});
+
+					$windows = $windows.add( $window );
+				}
+
+				var $button = $taskbar.find( "[data-group-name=meta]" );
+
+				ok( true, "Taskbar orientation: " + orientation + "." );
+
+				$button.trigger( "click" );
+
+				notEqual(
+					menu.scrollHeight,
+					menu.clientHeight,
+					"Open " + windowsCount + " windows - enought for menu scroll to appear. Menu has scrollbar."
+				);
+
+				equal(
+					$menu.outerHeight(),
+					$containment.outerHeight(),
+					"Menu height is equal to viewport height."
+				);
+
+				var closeWindows = Math.floor( windowsCount / 2 );
+
+				$windows.filter( ":lt(" + closeWindows + ")" ).window( "close" );
+
+				$button.trigger( "click" );
+
+				equal(
+					menu.scrollHeight,
+					menu.clientHeight,
+					"Close " + closeWindows + " windows - enough for menu scroll to disappear."
+				);
+
+				notEqual(
+					$menu.outerHeight(),
+					$containment.outerHeight(),
+					"Menu height is not equal to viewport height."
+				);
+
+				// teardown
+				$windows
+					// close existing windows
+					.filter( ".simone-window-content" )
+					.window( "destroy" );
+			});
+
+			// teardown
+			$taskbar.taskbar( "option", "verticalStick", prev );
+			$taskbar.taskbar( "option", "orientation", prev2 );
+		});
+	});
+</script>
+
+</body>
+</html>

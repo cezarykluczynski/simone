@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Window interactions | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+		test( "\"minHeight\": 9000, toggle containment from \"viewport\" to \"visible\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible",
+				minHeight: 9000
+			});
+
+			var dimensionsVisible = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "option", "containment", "viewport" );
+
+			var dimensionsViewport = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			notDeepEqual(
+				dimensionsVisible,
+				dimensionsViewport,
+				"Set containment to \"visible\", then to \"viewport\". Dimension for \"visible\" and \"viewport\" differs."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\". Dimensions were kept."
+			);
+
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\". Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\" again. Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\" again. Dimensions were kept."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"minWidth\": 9000, toggle containment from \"viewport\" to \"visible\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible",
+				minWidth: 9000
+			});
+
+			var dimensionsVisible = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "option", "containment", "viewport" );
+
+			var dimensionsViewport = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			notDeepEqual(
+				dimensionsVisible,
+				dimensionsViewport,
+				"Set containment to \"visible\", then to \"viewport\". Dimension for \"visible\" and \"viewport\" differs."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\". Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\". Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\" again. Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\" again. Dimensions were kept."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"minWidth\": 9000, \"minHeight\": 9000, toggle containment from \"viewport\" to \"visible\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible",
+				minWidth: 9000,
+				minHeight: 9000
+			});
+
+			var dimensionsVisible = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "option", "containment", "viewport" );
+
+			var dimensionsViewport = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			notDeepEqual(
+				dimensionsVisible,
+				dimensionsViewport,
+				"Set containment to \"visible\", then to \"viewport\". Dimension for \"visible\" and \"viewport\" differs."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\". Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\". Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsVisible,
+				"Set containment to \"visible\" again. Dimensions were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			deepEqual(
+				instance._extendedPosition.call( $window.parent(), "offset" ),
+				dimensionsViewport,
+				"Set containment to \"viewport\" again. Dimensions were kept."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		asyncTest( "\"containment\": \"visible\", draggable area", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible"
+			});
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+			var $title  = $window.parent().find( ".ui-dialog-title" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			setTimeout( function () {
+				ok( withinViewport( $title ), "Drag beyond left top corner. Title within viewport." );
+
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: $( window ).innerHeight() * 2,
+						dx: $( window ).innerWidth() * 2,
+					}));
+
+					start();
+					stop();
+			}, 0 );
+
+			setTimeout( function () {
+				ok( withinViewport( $title ), "Drag beyond bottom right corner. Title within viewport." );
+
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight() / 2,
+						dx: - $( window ).innerWidth() / 2,
+					}));
+
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy:   $( window ).innerHeight(),
+						dx: - $( window ).innerWidth(),
+					}));
+
+				ok( withinViewport( $title ), "Drag beyond bottom left corner. Title within viewport." );
+
+					start();
+					stop();
+			}, 500 );
+
+			setTimeout( function () {
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight() * 2,
+						dx:   $( window ).innerWidth() * 2,
+					}));
+
+				ok( withinViewport( $title ), "Drag beyond top right corner. Title within viewport." );
+
+				start();
+
+				// teardown
+				$window.window( "close" );
+			}, 1000 );
+		});
+
+		test( "\"containment\": \"viewport\", draggable area", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "viewport"
+			});
+
+			var dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			var dimensionsWindow;
+
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+			var $title  = $window.parent().find( ".ui-dialog-title" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			ok( withinViewport( $window.parent() ), "Drag beyond left top corner. Window within viewport." );
+
+			deepEqual(
+				[ dimensionsWindow.top, dimensionsWindow.left ],
+				[ dimensionsViewport.top, dimensionsViewport.left ],
+				"Window stick to the top left corner."
+			);
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight() * 2,
+					dx: $( window ).innerWidth() * 2,
+				}));
+
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			ok( withinViewport( $window.parent() ), "Drag beyond bottom right corner. Window within viewport." );
+
+			deepEqual(
+				[ dimensionsWindow.bottom, dimensionsWindow.right ],
+				[ dimensionsViewport.bottom, dimensionsViewport.right ],
+				"Window stick to the bottom right corner."
+			);
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight() / 2,
+					dx: - $( window ).innerWidth() / 2,
+				}));
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy:   $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			ok( withinViewport( $window.parent() ), "Drag beyond bottom left corner. Window within viewport." );
+
+			deepEqual(
+				[ dimensionsWindow.bottom, dimensionsWindow.left ],
+				[ dimensionsViewport.bottom, dimensionsViewport.left ],
+				"Window stick to the bottom left corner."
+			);
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight() * 2,
+					dx:   $( window ).innerWidth() * 2,
+				}));
+
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			ok( withinViewport( $window.parent() ), "Drag beyond top right corner. Window within viewport." );
+
+			deepEqual(
+				[ dimensionsWindow.top, dimensionsWindow.right ],
+				[ dimensionsViewport.top, dimensionsViewport.right ],
+				"Window stick to the top right corner."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"containment\": \"visible\", drag to corners, switch to \"viewport\", check window position", function () {
+			var $window;
+
+			var dimensionsViewport;
+			var dimensionsWindow;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible"
+			});
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+			var $title  = $window.parent().find( ".ui-dialog-title" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			$window.window( "option", "containment", "viewport" );
+
+			dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindow.top, dimensionsWindow.left ],
+				[ dimensionsViewport.top, dimensionsViewport.left ],
+				"Switch \"containment\" to \"visible\". Drag to top left corner, switch \"containment\" to \"viewport\". Window stick to the top left corner."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight() * 2,
+					dx: $( window ).innerWidth() * 2,
+				}));
+
+			$window.window( "option", "containment", "viewport" );
+
+			dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindow.bottom, dimensionsWindow.right ],
+				[ dimensionsViewport.bottom, dimensionsViewport.right ],
+				"Switch \"containment\" to \"visible\". Drag to bottom right corner, switch \"containment\" to \"viewport\". Window stick to the bottom right corner."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight() / 2,
+					dx: - $( window ).innerWidth() / 2,
+				}));
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy:   $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			$window.window( "option", "containment", "viewport" );
+
+			dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindow.bottom, dimensionsWindow.left ],
+				[ dimensionsViewport.bottom, dimensionsViewport.left ],
+				"Switch \"containment\" to \"visible\". Drag to bottom left corner, switch \"containment\" to \"viewport\". Window stick to the bottom left corner."
+			);
+
+			$window.window( "option", "containment", "visible" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight() * 2,
+					dx:   $( window ).innerWidth() * 2,
+				}));
+
+			$window.window( "option", "containment", "viewport" );
+
+			dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			dimensionsWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindow.top, dimensionsWindow.right ],
+				[ dimensionsViewport.top, dimensionsViewport.right ],
+				"Switch \"containment\" to \"visible\". Drag to top right corner, switch \"containment\" to \"viewport\". Window stick to the top right corner."
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "\"containment\": \"viewport\", drag to corners, switch to \"visible\", check if top left corner stay in place", function () {
+			var $window;
+
+			var dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			var dimensionsWindowBefore, dimensionsWindowAfter;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "viewport",
+				minHeight: 9000,
+				minWidth: 9000
+			});
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+			var $title  = $window.parent().find( ".ui-dialog-title" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight(),
+					dx: - $( window ).innerWidth(),
+				}));
+
+			dimensionsWindowBefore = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "option", "containment", "visible" );
+
+			dimensionsWindowAfter  = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindowAfter.top, dimensionsWindowAfter.left ],
+				[ dimensionsWindowBefore.top, dimensionsWindowBefore.left ],
+				"Drag to top left corner, switch \"containment\" from \"viewport\" to \"visible\", top and left were kept."
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight(),
+					dx: $( window ).innerWidth(),
+				}));
+
+			dimensionsWindowBefore = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			$window.window( "option", "containment", "visible" );
+
+			dimensionsWindowAfter  = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			deepEqual(
+				[ dimensionsWindowAfter.top, dimensionsWindowAfter.left ],
+				[ dimensionsWindowBefore.top, dimensionsWindowBefore.left ],
+				"Drag to bottom right corner, switch \"containment\" from \"viewport\" to \"visible\", top and left were kept."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "Draggable size change", function () {
+			var $window;
+
+			var dimensionsViewport = instance._extendedPosition.call( $( ".simone-taskbar-windows-containment" ), "offset" );
+			var dimensionsWindowBefore, dimensionsWindowAfter;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "viewport",
+				height: dimensionsViewport.height
+			});
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+
+			$handle.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight()
+			}));
+
+			var $handleSE = $window.parent().find( ".ui-resizable-se" );
+			var $handleSW = $window.parent().find( ".ui-resizable-sw" );
+			var $handleNW = $window.parent().find( ".ui-resizable-nw" );
+			var $handleNE = $window.parent().find( ".ui-resizable-ne" );
+
+			var height, heights, compareHeights, moves = 30;
+
+			// SE
+			heights = [];
+			height = $window.outerHeight();
+			compareHeights = [];
+
+			for( var i = 0; i < moves; i++ ) {
+				compareHeights.push( height );
+			}
+
+			$handleSE
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: moves,
+					dx: moves,
+					moves: moves,
+					onDrag: function ( ui ) {
+						heights.push( $window.outerHeight() );
+					}
+				}));
+
+			deepEqual(
+				heights,
+				compareHeights,
+				"Window height set to 100% vieport. Resizable does not change height when dragged with SE handle."
+			);
+
+			// SW
+			heights = [];
+			height = $window.outerHeight();
+			compareHeights = [];
+
+			for( var i = 0; i < moves; i++ ) {
+				compareHeights.push( height );
+			}
+
+			$handleSW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: moves,
+					dx: - moves,
+					moves: moves,
+					onDrag: function ( ui ) {
+						heights.push( $window.outerHeight() );
+					}
+				}));
+
+			deepEqual(
+				heights,
+				compareHeights,
+				"Window height set to 100% vieport. Resizable does not change height when dragged with SW handle."
+			);
+
+			// NW
+			heights = [];
+			height = $window.outerHeight();
+			compareHeights = [];
+
+			for( var i = 0; i < moves; i++ ) {
+				compareHeights.push( height );
+			}
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - moves,
+					dx: - moves,
+					moves: moves,
+					onDrag: function ( ui ) {
+						heights.push( $window.outerHeight() );
+					}
+				}));
+
+			deepEqual(
+				heights,
+				compareHeights,
+				"Window height set to 100% vieport. Resizable does not change height when dragged with NW handle."
+			);
+
+			// NE
+			heights = [];
+			height = $window.outerHeight();
+			compareHeights = [];
+
+			for( var i = 0; i < moves; i++ ) {
+				compareHeights.push( height );
+			}
+
+			$handleNE
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - moves,
+					dx: moves,
+					moves: moves,
+					onDrag: function ( ui ) {
+						heights.push( $window.outerHeight() );
+					}
+				}));
+
+			deepEqual(
+				heights,
+				compareHeights,
+				"Window height set to 100% vieport. Resizable does not change height when dragged with NE handle."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test("\"resizable\": true vs \"containment\": \"visible\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				containment: "visible",
+				width: 500,
+				height: 500
+			});
+
+			var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+			var $title  = $window.parent().find( ".ui-dialog-title" );
+
+			var $handleSE = $window.parent().find( ".ui-resizable-se" );
+			var $handleSW = $window.parent().find( ".ui-resizable-sw" );
+			var $handleNW = $window.parent().find( ".ui-resizable-nw" );
+			var $handleNE = $window.parent().find( ".ui-resizable-ne" );
+
+			var height, width;
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: - $( window ).innerHeight() * 2,
+					dx: - $( window ).innerWidth(),
+				}));
+
+			ok( withinViewport( $title ), "Resize beyond top edge. Title within viewport." );
+
+			height = $window.parent().outerHeight();
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dx: - $( window ).innerWidth(),
+				}));
+
+			equal(
+				$window.parent().outerHeight(),
+				height,
+				"Resize beyond top edge. Height didn\'t change."
+			);
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: 3 * $( window ).innerHeight(),
+					dx: 3 * $( window ).innerWidth(),
+				}));
+
+			ok( withinViewport( $title ), "Drag beyond bottom right corner. Title within viewport." );
+
+			$handle
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dx: $( window ).innerWidth() / 2,
+				}));
+
+			setScrollOverflow();
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight(),
+				}));
+
+			ok( withinViewport( $title ), "Resize beyond bottom edge with no scrollbars. Title within viewport." );
+
+			setScrollOverflow( "y" );
+
+			height = $window.parent().outerHeight();
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight(),
+				}));
+
+			ok( withinViewport( $title ), "Resize beyond bottom edge with vertical scrollbar. Title within viewport." );
+
+			equal(
+				$window.parent().outerHeight(),
+				height,
+				"Height didn\'t change."
+			);
+
+			width = $window.parent().outerWidth();
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dx: $( window ).innerWidth(),
+				}));
+
+			equal(
+				$window.parent().outerWidth(),
+				width,
+				"Resize beyond right edge. Width didn\'t change."
+			);
+
+			width = $window.parent().outerWidth();
+
+			$handleNW
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dx: - $( window ).innerWidth() * 2
+				}));
+
+			equal(
+				$window.parent().outerWidth(),
+				width + $( window ).innerWidth() * 2,
+				"Drag beyond left edge. Window height equals drag distance."
+			);
+
+			// teardown
+			$window.window( "close" );
+			setScrollOverflow();
+		});
+
+		test( "Draggable and resizable start hides taskbar subordinates", function () {
+			var $window3 = $( "<div></div>" )
+				.window();
+
+			testHideSubordinates.call( this, function () {
+				var $handle = $window3.parent().find( ".ui-dialog-titlebar" );
+
+				deepEqual(
+					[ $taskbar.find( "ul:visible").length, $taskbar.find( ".hasDatepicker:visible").length ],
+					[ 3, 1 ],
+					"All subordinate elements shown."
+				);
+
+				$handle
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight(),
+						dx: - $( window ).innerWidth(),
+					}));
+
+				deepEqual(
+					[ $taskbar.find( "ul:visible").length, $taskbar.find( ".hasDatepicker:visible").length ],
+					[ 0, 0 ],
+					"Drag window by titlebar. All subordinate elements hidden."
+				);
+			});
+
+			testHideSubordinates.call( this, function () {
+				var $handleSE = $window3.parent().find( ".ui-resizable-se" );
+
+				deepEqual(
+					[ $taskbar.find( "ul:visible").length, $taskbar.find( ".hasDatepicker:visible").length ],
+					[ 3, 1 ],
+					"All subordinate elements shown."
+				);
+
+				$handleSE
+					.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+						dy: - $( window ).innerHeight(),
+						dx: - $( window ).innerWidth(),
+					}));
+
+				deepEqual(
+					[ $taskbar.find( "ul:visible").length, $taskbar.find( ".hasDatepicker:visible").length ],
+					[ 0, 0 ],
+					"Drag window by SE resize handle. All subordinate elements hidden."
+				);
+			});
+
+			// teardown
+			$window3.window( "close" );
+		});
+
+		asyncTest( "Draggable and resizable vs \"minimize\", \"maximize\", \"restore\", \"show\", \"close\", and \"destroy\" methods", function () {
+			expect( 12 );
+
+			var $window;
+
+			var interactions       = [ "draggable", "resizable" ];
+			var interactionsLength = interactions.length;
+			var methods            = [ "minimize", "maximize", "restore", "show", "close", "destroy" ];
+			var methodsLength      = methods.length;
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			var timeout = 0;
+
+			$.each( interactions, function ( index, interaction ) {
+				timeout += 1000;
+				setTimeout( function () {
+					start();
+
+					$window = $( "<div></div>" )
+						.prependTo( "body" )
+						.window({
+							durations: {
+								minimize: false,
+								maximize: false,
+								restore : false,
+								show    : false
+							}
+						});
+
+					var methodsPointer = 0;
+
+					if ( interaction === "resizable" ) {
+						var $handle = $window.parent().find( ".ui-resizable-se" );
+					} else if ( interaction === "draggable" ) {
+						var $handle = $window.parent().find( ".ui-dialog-titlebar" );
+					}
+
+					$handle
+						.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+							dy   : methodsLength,
+							dx   : methodsLength,
+							moves: methodsLength,
+							onDrag: function () {
+								var method = methods[ methodsPointer ];
+
+								$window.window( method );
+
+								if ( method === "close" || method === "destroy") {
+									ok(
+										$window.hasClass( "simone-window-content" ),
+										"Method \"" + method + "\" was not fired during "
+										+ interaction + ", element is still an instance of window."
+									);
+								} else {
+									var positionBefore = instance._extendedPosition.call( $window.parent(), "offset" );
+
+									var positionAfter = instance._extendedPosition.call( $window.parent(), "offset" );
+
+									deepEqual(
+										positionAfter,
+										positionBefore,
+										"Window position during " + interaction
+										+ " was not modified by calling method \"" + method + "\"."
+									);
+								}
+
+								++methodsPointer;
+							}
+						}));
+
+					if ( index + 1 !== interactionsLength ) {
+						stop();
+
+						return;
+					}
+
+
+				}, timeout );
+			});
+		});
+	});
+</script>
+
+</body>
+</html>

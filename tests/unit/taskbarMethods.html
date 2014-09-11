@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar methods | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts devtools-required">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		test( "\"refresh\"", function ( assert ) {
+			resetTaskbar();
+
+			expect( 5 );
+
+			var counter = 0;
+
+			$taskbar.taskbar( "option", "beforeRefresh", function ( assert ) {
+				ok( true, "beforeRefresh: ok" );
+				++counter;
+			});
+
+			$taskbar.taskbar( "option", "refresh", function () {
+				ok( true, "refresh: ok" );
+				++counter;
+			});
+
+			$taskbar.taskbar( "refresh" );
+
+			ok ( counter === 2, "\"beforeRefresh\" fired once, \"refresh\" fired once." );
+
+			$taskbar.taskbar( "option", "beforeRefresh", null );
+			$taskbar.taskbar( "option", "refresh", null );
+
+			testHideSubordinates.call( this, {
+				event: "refresh"
+			});
+		});
+
+		test( "\"button\"", function ( assert ) {
+			resetTaskbar();
+			resetTaskbar(2);
+
+			var $window = $( "<div></div>" ).window();
+
+			var $button1 = $taskbar.taskbar( "button", $window );
+
+			equal( $window.attr( "id" ), $button1.attr( "data-window-id"), "Window: ok" );
+
+			$taskbar2.taskbar();
+
+			var $window2 = $( "<div></div>" ).window({
+				taskbar: $taskbar2
+			});
+
+			var $button2 = $taskbar.taskbar( "button", $window2 );
+
+			ok( $button2.length === 0 && $button2 instanceof $, "Window binded to other taskbar: empty jQuery object" );
+			notEqual( $window2.attr( "id"), $button2.attr( "data-window-id"), "Window binded to other taskbar: not found" );
+
+			var $button3 = $taskbar.taskbar( "button", null );
+
+			ok( $button2.length === 0 && $button2 instanceof $, "null: empty jQuery object" );
+
+			var $button3 = $taskbar.taskbar( "button" );
+
+			ok( $button2.length === 0 && $button2 instanceof $, "undefined: empty jQuery object" );
+
+			$window.window( "option", "taskbar", $taskbar2 );
+			$window.window( "option", "taskbar", $taskbar );
+
+			ok( $window.attr( "id" ) === $button1.attr( "data-window-id"), "Window rebinded to other taskbar, and binded back: ok" );
+
+			$window.window( "close" ).remove();
+			$window2.window( "close" ).remove();
+		});
+
+		test( "\"windows\"", function ( assert ) {
+			resetTaskbar();
+			resetTaskbar(2);
+
+			$taskbar2.taskbar();
+
+			var windowsCount;
+
+			windowsCount = $taskbar.taskbar( "windows" ).length;
+
+			ok( $taskbar.taskbar( "windows" ) instanceof $, "No windows binded: jQuery object." );
+			equal( windowsCount, 0, "No windows binded, empty jQuery object." );
+
+			var $window = $( "<div></div>" ).window();
+			var $window2 = $( "<div></div>" ).window();
+			var $window3 = $( "<div></div>" ).window();
+
+			windowsCount = $taskbar.taskbar( "windows" ).length;
+
+			equal( windowsCount, 3, "3 windows created, 3 found." );
+
+			$window2.window( "option", "taskbar", $taskbar2 );
+
+			windowsCount = $taskbar.taskbar( "windows" ).length;
+
+			equal( windowsCount, 2, "1 window binded to other taskbar, 2 windows found." );
+
+			$window3.window( "destroy" );
+
+			windowsCount = $taskbar.taskbar( "windows" ).length;
+
+			equal( windowsCount, 1, "1 window destroyed, 1 window found." );
+
+			$window.window( "close" );
+
+			windowsCount = $taskbar.taskbar( "windows" ).length;
+
+			equal( windowsCount, 0, "1 window closed, no windows found." );
+
+			// teardown
+			$taskbar2.taskbar( "destroy" );
+			$window2.window( "close" );
+		});
+
+		test( "\"i18n\": covered in unit/languagesLocalization.html", function ( assert ) {
+			expect( 0 );
+		});
+
+		test( "\"show\", \"hide\": covered in functional/taskbarAutoHide.html", function ( assert ) {
+			expect( 0 );
+		});
+
+		test( "\"destroy\"", function () {
+			var $window;
+			var $window2;
+			var instance;
+			var rebindAll;
+
+			expect( 15 );
+
+			try {
+				$taskbar.taskbar( "destroy" );
+			} catch( e ) {}
+
+
+			$taskbar.css({
+				width: 100,
+				position: "relative"
+			});
+
+			$taskbar2.taskbar({
+				orientation: "vertical"
+			});
+
+			var taskbarOptions = {
+				draggable: true,
+				resizable: true,
+				clock    : true,
+				toggleFullscreen: true,
+				networkMonitor: true,
+				languageSelect: true,
+				beforeDestroy: function( event, ui ) {
+					equal(
+						ui.$windows.length,
+						2,
+						"\"beforeDestroy\" fired with 2 windows binded."
+					);
+
+					var $windows = ui.$windows;
+
+					if ( ! rebindAll ) {
+						$windows = $windows.filter( ":first" );
+					}
+
+					$windows.window( "option", "taskbar", $taskbar2 );
+
+					var windowId = ui.$windows.attr( "id" );
+
+					if ( rebindAll ) {
+						equal(
+							$taskbar.find( "[data-window-id=" + windowId + "]" ).length,
+							0,
+							"Windows successfully rebinded before destroy."
+						);
+					} else {
+						ok(
+							$taskbar2.find( "[data-window-id=" + windowId + "]" ).length,
+							"Window 1 successfully rebinded before destroy."
+						);
+					}
+				},
+				debugLogAdd: function ( event, ui ) {
+					if ( ui.message.indexOf( "Windows were binbed upon calling" ) > -1 ) {
+						ok( rebindAll === false, "Debug message about windows binded upon destroy generated." );
+					}
+				}
+			};
+
+			// test debug with windows left
+			rebindAll = false;
+
+			$taskbar.taskbar( taskbarOptions );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			$window2 = $( "<div></div>" )
+				.window();
+
+			try {
+				$taskbar.taskbar( "destroy" );
+				ok( true, "Taskbar destroyed (1)." );
+			} catch( e ) {
+				ok( false, "Taskbar destroyed (1)." );
+			}
+
+			try {
+				$window.window( "close" );
+			} catch( e ) {}
+
+			try {
+				$window2.window( "close" );
+			} catch( e ) {}
+
+			// test debug without windows left
+			rebindAll = true;
+
+			$taskbar.taskbar( taskbarOptions );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			$window2 = $( "<div></div>" )
+				.window();
+
+			try {
+				$taskbar.taskbar( "destroy" );
+				ok( true, "Taskbar destroyed (2)." );
+			} catch( e ) {
+				ok( false, "Taskbar destroyed (2)." );
+			}
+
+			$window.window( "close" );
+			$window2.window( "close" );
+
+			$taskbar2.taskbar( "destroy" );
+
+			ok(
+				$taskbar.attr( "class" ).indexOf( "simone-taskbar" ) === -1,
+				"No taskbar classes left."
+			);
+
+			equal(
+				$taskbar.children().length,
+				0,
+				"No children left."
+			);
+
+			var noHandlers = true;
+
+			var events = $._data( window ).events;
+
+			if ( events && typeof events === "object" ) {
+				$.each( events, function ( index, handlers ) {
+					$.each( handlers, function ( index, handler ) {
+						if ( handler.namespace.indexOf( "taskbar" ) > -1 ) {
+							noHandlers = false;
+						}
+					});
+				});
+			}
+
+			ok( noHandlers, "No handlers left." );
+
+			var data = $taskbar.data();
+
+			var noData = true;
+
+			$.each( data, function ( index ) {
+				if ( index.indexOf( "simone" ) === 0 ) {
+					noData = false;
+				}
+			});
+
+			ok( noData, "No data left." );
+
+			deepEqual(
+				[ parseInt( $taskbar.css( "width" ), 10 ), $taskbar.css( "position" ) ],
+				[ 100, "relative" ],
+				"Previous CSS reverted."
+			);
+
+			var nodes = [];
+
+			for ( var attr, i = 0, attrs = $taskbar[ 0 ].attributes, l = attrs.length; i < l; i++ ) {
+				nodes.push( attrs.item( i ).nodeName );
+			}
+
+			deepEqual(
+				[ nodes.length, nodes.sort() ],
+				[ 2, [ "style", "class" ].sort() ],
+				"No attributes other than \"style\" nad \"class\" left on element."
+			);
+
+			equal(
+				$taskbar.attr( "class" ),
+				"taskbar",
+				"Class attr === \"taskbar\"."
+			);
+
+			$taskbar.css({
+				position: "",
+				width: ""
+			});
+
+			$taskbar.taskbar();
+
+			instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			$window = $( "<div></div>" ).lorem({
+				amount: 10
+			}).window({
+				maximizable: true,
+				durations: {
+					maximize: false,
+					restore: false
+				},
+				width: 300
+			});
+
+			var prev = instance._extendedPosition.call( $window, "offset" );
+
+			$taskbar2.taskbar({
+					orientation: "vertical",
+					horizontalStick: "top right"
+				})
+				.taskbar( "destroy" );
+
+			var cur = instance._extendedPosition.call( $window, "offset" );
+
+			// right won't be equal, that's expected
+			delete prev.right;
+			delete cur.right;
+
+			deepEqual(
+				cur,
+				prev,
+				  "Vertical taskbar \"destroy\" method impact on window position:"
+				+ " Vertical taskbar created and destroyed. Window was not moved."
+			);
+
+			$window.window( "destroy" );
+		});
+
+		test( "\"hideSubordinates\"", function ( assert ) {
+			resetTaskbar();
+
+			expect( 2 );
+
+			testHideSubordinates.call( this, {
+				event: "hideSubordinates"
+			});
+		});
+
+		test( "\"enable\"", function () {
+			expect( 1 );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function( event, ui ) {
+				if (
+					   ui.message.indexOf( "enable") > -1
+					&& ui.message.indexOf( "not implemented") > -1
+				) {
+					ok( "Debug message generated." );
+				}
+			});
+
+			$taskbar.taskbar( "enable" );
+		});
+
+		test( "\"disable\"", function () {
+			expect( 1 );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function( event, ui ) {
+				if (
+					   ui.message.indexOf( "disable") > -1
+					&& ui.message.indexOf( "not implemented") > -1
+				) {
+					ok( "Debug message generated." );
+				}
+			});
+
+			$taskbar.taskbar( "disable" );
+		});
+
+		test( "\"widget\"", function () {
+			equal(
+				$taskbar.taskbar( "widget" )[ 0 ],
+				$taskbar[ 0 ],
+				"Method returns correct jQuery object."
+			);
+		});
+
+		test( "\"blurWindows\"", function() {
+			var $window;
+			var $window2;
+			var $window3;
+
+			$window  = $( "<div></div>" ).window();
+			$window2 = $( "<div></div>" ).window();
+
+			equal(
+				$( ".simone-window-top" ).length,
+				1,
+				"Create two windows. One window is on top."
+			);
+
+			$taskbar.taskbar( "blurWindows" );
+
+			equal(
+				$( ".simone-window-top" ).length,
+				0,
+				"Call \"blurWindows\". No windows on top."
+			);
+
+			$taskbar2.taskbar();
+
+			$window3 = $( "<div></div>" ).window({
+				taskbar: $taskbar2
+			});
+
+			equal(
+				$( ".simone-window-top" ).length,
+				1,
+				"Create another taskbar and a window binded to another taskbar. One window is on top."
+			);
+
+			$taskbar.taskbar( "blurWindows" );
+
+			equal(
+				$( ".simone-window-top" ).length,
+				0,
+				"Call \"blurWindows\" on initial taskbar. No windows on top."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+			$window3.window( "destroy" );
+			$taskbar2.taskbar( "destroy" );
+		});
+
+
+		asyncTest( "\"minimizeAll\"", function () {
+			expect( 7 );
+
+			var $window;
+			var $window2;
+			var $window3;
+			var $window4;
+			var $window5;
+
+			$window = $( "<div></div>" ).window();
+			$window2 = $( "<div></div>" ).window();
+			$window3 = $( "<div></div>" ).window();
+
+			$taskbar2.taskbar({
+				orientation: "vertical"
+			});
+
+			$window4 = $( "<div></div>" ).window({
+				taskbar: $taskbar2
+			});
+
+			$window5 = $( "<div></div>" ).window();
+
+			$window.window( "minimize", 500 );
+			$window2.window( "maximize", 500 );
+
+			ok( true, "Create 3 windows. Create taskbar 2. Bind forth window to taskbar 2." )
+			ok( true, "Minimize window 1 with animation. Maximize window 2 with animation." );
+
+			setTimeout( function () {
+				start();
+
+				ok( true, "Create window 5. Start dragging it.")
+
+				$window5.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: 3,
+					beforeDrop: function () {
+						ok( true, "Trigger \"minimizeAll\" method on taskbar 2 during window 5 drag." );
+						$taskbar2.taskbar( "minimizeAll" );
+
+						equal(
+							$( ".simone-window:visible" ).length,
+							0,
+							"All windows are not visible."
+						);
+
+						equal(
+							$( ".simone-window-minimized" ).length,
+							5,
+							"All windows are minimized."
+						);
+
+						equal(
+							$( ".simone-taskbar-window-buttons-container .ui-button.ui-state-active" ).length,
+							0,
+							"All buttons are blurred."
+						);
+					}
+				}));
+
+				// teardown
+				$taskbar.taskbar( "windows" ).window( "destroy" );
+				$window4.window( "destroy" );
+				$taskbar2.taskbar( "destroy" );
+			}, 100 );
+		});
+	});
+</script>
+
+</body>
+</html>

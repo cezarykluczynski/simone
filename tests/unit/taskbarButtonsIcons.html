@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar buttons | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		var $taskbar = $( "div.taskbar" );
+
+		$taskbar.taskbar();
+
+		// this is for toggle fullscreen test, but let's put it here so clicking
+		// on toggle fullscree button don't product a undefined variable error
+		var fullscreenChange = 0;
+
+		test( "Clock button", function ( assert ) {
+			$taskbar.taskbar( "option", "clock", true );
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			equal(
+				$taskbar.find( "[data-button-name=clock]").length,
+				1,
+				"Make clock present. One clock button found."
+			);
+
+			$taskbar.taskbar( "option", "clock", false );
+
+			equal(
+				$taskbar.find( "[data-button-name=clock]").length,
+				0,
+				"Make clock not present. No clock buttons found."
+			);
+
+			$taskbar.taskbar( "option", {
+				clock: true,
+				clockShowDatepicker: true
+			});
+
+			deepEqual(
+				[
+					$taskbar.find( "[data-button-name=clock]").length,
+					instance.$systemButtonsContainer.find( ".hasDatepicker" ).length
+				],
+				[ 1, 1 ],
+				"Make clock present and show clock datepicker."
+			);
+
+			ok(
+				   $taskbar.find( "[data-button-name=clock]").length
+				&& $taskbar.find( "[data-button-name=clock]").css( "cursor" ) === "pointer",
+				"Clock with datepicker has the right cursor \"pointer\"."
+			);
+
+			$taskbar.taskbar( "option", "clockShowDatepicker", false );
+
+			equal(
+				instance.$systemButtonsContainer.find( ".hasDatepicker" ).length,
+				0,
+				"Remove datepicker."
+			);
+
+			ok(
+				   $taskbar.find( "[data-button-name=clock]").length
+				&& $taskbar.find( "[data-button-name=clock]").css( "cursor" ) === "default",
+				"Clock with no datepicker has the right cursor \"default\"."
+			);
+		});
+
+		test( "Language select button" , function ( assert ) {
+			$taskbar.taskbar( "option", "languageSelect", true );
+
+			equal(
+				$taskbar.find( "[data-button-name=languageSelect]" ).length,
+				1,
+				"Make language select button present. One language select button button found."
+			);
+
+			equal(
+				$taskbar.find( "[data-menu-type=languageSelect]" ).length,
+				1,
+				"Language select menu found."
+			);
+
+			equal(
+				$taskbar.find( "[data-menu-type=languageSelect] > li" ).length,
+				defaults.languages.length,
+				"Language select menu has default number of languages (" + defaults.languages.length + ")."
+			);
+
+			$taskbar.taskbar( "option", "languages", [ "en", "pl"] );
+
+			equal(
+				$taskbar.find( "[data-menu-type=languageSelect] > li" ).length,
+				2,
+				"Set language select menu item number to 2."
+			);
+
+			$taskbar.taskbar( "option", "languages", [ "en", "pl", "fakeLangCode" ] );
+
+			equal(
+				$taskbar.find( "[data-menu-type=languageSelect] > li" ).length,
+				2,
+				"Insert fake language code into \"languages\" option array. Language select menu item number should stay at 2."
+			);
+
+			// teardown last test, we don't want debug.languages to flood console
+			$taskbar.taskbar( "option", "languages", [ "en", "pl" ] );
+
+			$taskbar.taskbar( "option", "languageSelect", false );
+
+			equal(
+				$taskbar.find( "[data-button-name=languageSelect]" ).length,
+				0,
+				"Make language select button not present. No language select button buttons found."
+			);
+
+			equal(
+				$taskbar.find( "[data-menu-name=languageSelect]" ).length,
+				0,
+				"Language select menu not found."
+			);
+		});
+
+		test( "Minimize all button", function ( assert ) {
+			$taskbar.taskbar( "option", "minimizeAll", true );
+
+			equal(
+				$taskbar.find( "[data-button-name=minimizeAll]" ).length,
+				1,
+				"Make minimize all button present. One minimize all button found."
+			);
+
+			$taskbar.taskbar( "option", "minimizeAll", false );
+
+			equal(
+				$taskbar.find( "[data-button-name=minimizeAll]" ).length,
+				0,
+				"Make minimize all button not present. No minimize all buttons found."
+			);
+
+			var $window = $( "<div></div>" ).window();
+
+			equal(
+				$taskbar.find( ".simone-taskbar-window-button" ).length,
+				1,
+				"Create window."
+			);
+
+			$taskbar.taskbar( "option", "minimizeAll", true );
+
+			equal(
+				$taskbar.find( "[data-button-name=minimizeAll]" ).length,
+				1,
+				"Make minimize all button present again. One minimize all button found."
+			);
+
+			$taskbar.taskbar( "option", "minimizeAllHoverOpaqueWindows", false );
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseenter" );
+
+			ok(
+				! $window.parent().hasClass( "simone-taskbar-window-minimize-all-hover"),
+				"Set \"minimizeAllHoverOpaqueWindows\" to false. Window has no opacity forced by minimize all hover."
+			);
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseleave" );
+
+			$taskbar.taskbar( "option", "minimizeAllHoverOpaqueWindows", true );
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseenter" );
+
+			ok(
+				$window.parent().hasClass( "simone-taskbar-window-minimize-all-hover" ),
+				"Set \"minimizeAllHoverOpaqueWindows\" to true. Window has opacity forced by minimize all hover."
+			);
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseleave" );
+
+			var $window3 = $( "<div></div>" )
+				.window()
+				.window( "maximize", false );
+
+			var $window4 = $( "<div></div>" ).window();
+
+			var $window5 = $( "<div></div>" ).window({
+				group: "shared"
+			});
+			var $window6 = $( "<div></div>" ).window({
+				group: "shared"
+			});
+
+			var $window2 = $( "<div></div>" )
+				.window()
+				.window( "minimize", false );
+
+			equal(
+				$taskbar.find( ".simone-taskbar-window-button" ).length,
+				5, // two windows are grouped, so expect 5 buttons, not 6
+				"Create 5 more windows."
+			);
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "click" );
+
+			equal(
+				$( ".simone-window:visible" ).length,
+				0,
+				"Minimize all windows."
+			);
+
+			equal(
+				$taskbar.find( ".simone-taskbar-window-button.ui-state-active" ).length,
+				0,
+				"All buttons are blurred."
+			);
+
+			// teardown
+			$window
+				.add( $window2 )
+				.add( $window3 )
+				.add( $window4 )
+				.add( $window5 )
+				.add( $window6 )
+				.window( "close" );
+		});
+
+		asyncTest( "Minimize all button vs window with \"minimizable\": false", function () {
+			expect( 2 );
+
+			start();
+
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				minimizable: false
+			});
+
+			$taskbar.taskbar( "minimizeAll" );
+
+			equal(
+				$( ".simone-window:visible" ).length,
+				1,
+				  "Create unminimizable button. Trigger taskbars' \"minimizeAll\" method. "
+				+ "One visible window found."
+			);
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseenter" );
+
+			stop();
+
+			setTimeout( function () {
+				equal(
+					parseFloat( $window.parent().css( "opacity" ) ),
+					1,
+					"Window opacity did not change after minimize all button mouseenter was triggered."
+				);
+
+				start();
+
+				// teardown
+				$window.window( "close" );
+				$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseleave" );
+			}, 500 );
+		});
+
+		test( "Network monitor button", function ( assert ) {
+			$taskbar.taskbar( "option", "networkMonitor", true );
+
+			equal(
+				$taskbar.find( "[data-button-name=networkMonitor]").length,
+				1,
+				"Make network monitor button present. One network monitor button button found."
+			);
+
+			$taskbar.taskbar( "option", "networkMonitor", false );
+
+			equal(
+				$taskbar.find( "[data-button-name=networkMonitor]" ).length,
+				0,
+				"Make network monitor button not present. No network monitor button buttons found."
+			);
+		});
+
+		test( "Toggle fullscreen button", function ( assert ) {
+			$taskbar.taskbar( "option", "toggleFullscreen", true );
+
+			if ( fullscreenAvailable ) {
+				equal(
+					$taskbar.find( "[data-button-name=toggleFullscreen]" ).length,
+					1,
+					"Make toggle fullscreen present. Fullscreen available in browser. One toggle fullscreen button found."
+				);
+			} else {
+				equal(
+					$taskbar.find( "[data-button-name=toggleFullscreen]" ).length,
+					0,
+					"Make toggle fullscreen present. Fullscreen not available in browser. No toggle fullscreen buttons found."
+				);
+			}
+
+			$taskbar.taskbar( "option", "toggleFullscreen", false );
+
+			equal(
+				$taskbar.find( "[data-button-name=toggleFullscreen]" ).length,
+				0,
+				"Make toggle fullscreen not present. No toggle fullscreen buttons found."
+			);
+
+			if ( ! fullscreenAvailable ) {
+				ok( true, "Fullscreen not available in browser. No more test can be done." );
+				return;
+			}
+
+			$taskbar.taskbar( "option", "toggleFullscreen", true );
+
+			equal(
+				$taskbar.find( "[data-button-name=toggleFullscreen]" ).length,
+				1,
+				"Make toggle fullscreen present again. One toggle fullscreen button found."
+			);
+
+			var fullscreenChangeBefore = fullscreenChange;
+
+			// requestFullscreen can't be called programmatically, so let's use callbacks instead
+			$taskbar.taskbar( "option", "beforeRequestFullscreen", function ( event, ui ) {
+				++fullscreenChange;
+			});
+
+			$taskbar.taskbar( "option", "requestFullscreen", function ( event, ui ) {
+				++fullscreenChange;
+			});
+
+			$taskbar.find( "[data-button-name=toggleFullscreen]" ).trigger( "click" );
+
+			equal(
+				fullscreenChange,
+				fullscreenChangeBefore + 2,
+				"Toggle fullscreen successfully fired."
+			);
+
+			fullscreenChangeBefore = fullscreenChange;
+
+
+			$taskbar.find( "[data-button-name=toggleFullscreen]" ).trigger( "click" );
+
+			equal(
+				fullscreenChange,
+				fullscreenChangeBefore + 2,
+				"Toggle fullscreen successfully fired again."
+			);
+		});
+
+		test( "\"windowButtonsIconsOnly\"", function ( assert ) {
+			var prev = $taskbar.taskbar( "option", "windowButtonsIconsOnly" );
+			$taskbar.taskbar( "option", "windowButtonsIconsOnly", false );
+
+			var title = "New Window With Title";
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			var $window = $( "<div></div>" ).window({
+				icons: {
+					main: "ui-icon-star",
+				},
+				title: title
+			});
+
+			var id = $window.attr( "id" );
+
+			var $button = instance.$windowButtonsContainer.find( "[data-window-id=" + id + "]" );
+
+			deepEqual(
+				$button.find( ".ui-button-text" ).text(),
+				title,
+				"Set \"windowButtonsIconsOnly\" to false. Window button has the correct title."
+			);
+
+			ok( $button.outerWidth() > 50, "Button text is visible." );
+
+			$taskbar.taskbar( "option", "windowButtonsIconsOnly", true );
+
+			ok( $button.hasClass( "ui-button-icon-only" ), "Button has the class \"ui-button-icon-only\"." );
+
+			ok( $button.outerWidth() < 50, "Set \"windowButtonsIconsOnly\" to true. Button text is not visible." );
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "windowButtonsIconsOnly", prev );
+		});
+
+		test( "\"windowButtonsSortable\"", function ( assert ) {
+			$taskbar.taskbar( "option", "windowButtonsSortable", false );
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			ok( ! instance.$windowButtonsContainer.hasClass( "ui-sortable" ), "Sortable windows buttons disabled." );
+
+			$taskbar.taskbar( "option", "windowButtonsSortable", true );
+
+			ok( instance.$windowButtonsContainer.hasClass( "ui-sortable" ), "Sortable windows buttons enabled." );
+		});
+
+		test( "\"startButtons\"", function ( assert ) {
+			$taskbar.taskbar( "option", {
+				startButtons: true,
+				language: "en"
+			});
+
+			$taskbar.taskbar( "option", "localization.en.startButton:test", "Testing" );
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			var $menu = getMenu();
+
+			$taskbar.prepend( $menu );
+
+			$taskbar.taskbar( "refresh" );
+
+			var $button;
+
+			$button = instance.$startButtonsContainer.find( "[data-menu-button-for=test]" );
+
+			// open menu
+			$button.trigger( "click" );
+
+			ok( $menu.is( ":visible" ) && $menu.hasClass( "ui-menu" ),
+				  "\"startButtons\" set to true. Menu set not to have \"simone-menu-hidden\" class."
+				+ " Menu is visible and has class \"ui-menu\"." );
+
+			$menu.addClass( "simone-menu-hidden" );
+
+			$taskbar.taskbar( "refresh" );
+
+			$button = instance.$startButtonsContainer.find( "[data-menu-button-for=test]" );
+
+			// open menu
+			$button.trigger( "click" );
+
+			ok( ! $menu.is( ":visible" ) && ! $menu.hasClass( "ui-menu" ),
+				  "\"startButtons\" set to true. Menu set to have \"simone-menu-hidden\" class."
+				+ " Menu is invisible and has no class \"ui-menu\"." );
+
+			$menu.addClass( "simone-menu-hidden" );
+			$taskbar.taskbar( "option", "startButtons", false );
+
+			$button = instance.$startButtonsContainer.find( "[data-menu-button-for=test]" );
+
+			// open menu
+			$button.trigger( "click" );
+
+			ok( ! $menu.hasClass( "ui-menu" ),
+				  "\"startButtons\" set to false. Menu set to have \"simone-menu-hidden\" class."
+				+ " Menu is invisible and has no class \"ui-menu\"." );
+
+			$menu.addClass( "simone-menu-hidden" );
+			$taskbar.taskbar( "option", "startButtons", false );
+
+			$button = instance.$startButtonsContainer.find( "[data-menu-button-for=test]" );
+
+			// open menu
+			$button.trigger( "click" );
+
+			ok( ! $menu.is( ":visible" ) && ! $menu.hasClass( "ui-menu" ),
+				  "\"startButtons\" set to false. Menu set not to have \"simone-menu-hidden\" class."
+				+ " Menu is invisible and has no class \"ui-menu\"." );
+
+			$menu.removeClass( "simone-menu-hidden" );
+			$taskbar.taskbar( "option", "startButtons", true );
+
+			$button = instance.$startButtonsContainer.find( "[data-menu-button-for=test]" );
+
+			// open menu
+			$button.trigger( "click" );
+
+			ok( $menu.is( ":visible" ) && $menu.hasClass( "ui-menu" ),
+				  "\"startButtons\" set to true. Menu set not to have \"simone-menu-hidden\" class."
+				+ " Menu is visible and has class \"ui-menu\"." );
+
+			// teardown
+			$menu.remove();
+			$taskbar.taskbar( "refresh" );
+		});
+
+		test( "\"buttonsTooltips\"", function ( assert ) {
+			$taskbar.taskbar( "option", "buttonsTooltips", false );
+			$taskbar.taskbar( "option", "minimizeAll", true );
+
+			var $window = $( "<div></div>" ).window();
+
+			var windowId = $window.attr( "id" );
+
+			$taskbar.taskbar( "option", "buttons.pushMe", {} );
+			$taskbar.taskbar( "option", "buttonsOrder", [ "pushMe" ] );
+			$taskbar.taskbar( "option", "durations.buttonsTooltipsShow", false );
+			$taskbar.taskbar( "option", "durations.buttonsTooltipsHide", false );
+
+			$taskbar.find( "[data-button-name=pushMe]" ).trigger( "mouseenter" );
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseenter" );
+			$taskbar.find( "[data-window-id=" + windowId + "]" ).trigger( "mouseenter" );
+
+			equal(
+				$( "div.ui-tooltip" ).length,
+				0,
+				"Set \"buttonsTooltips\" to false. No tooltips found."
+			);
+
+			$taskbar.taskbar( "option", "buttonsTooltips", true );
+
+			$taskbar.find( "[data-button-name=pushMe]" ).trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$( "div.ui-tooltip" ).length,
+					$taskbar.find( "[data-button-name=pushMe]" ).attr( "aria-describedby" )
+						=== $( "div.ui-tooltip" ).attr( "id" )
+				],
+				[
+					1,
+					true
+				],
+				  "Set \"buttonsTooltips\" to true. Trigger \"pushMe\" button mouseenter. "
+				+ "One tooltip found and it is tooltip for this button."
+			);
+
+			$taskbar.find( "[data-button-name=pushMe]" ).trigger( "mouseleave" );
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$( "div.ui-tooltip" ).length,
+					$taskbar.find( "[data-button-name=minimizeAll]" ).attr( "aria-describedby" )
+						=== $( "div.ui-tooltip" ).attr( "id" )
+				],
+				[
+					1,
+					true
+				],
+				  "Trigger \"minimizeAll\" button mouseenter. "
+				+ "One tooltip found and it is tooltip for this button."
+			);
+
+			$taskbar.find( "[data-button-name=minimizeAll]" ).trigger( "mouseleave" );
+
+			$taskbar.find( "[data-window-id=" + windowId + "]" ).trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$( "div.ui-tooltip" ).length,
+					$taskbar.find( "[data-window-id=" + windowId + "]" ).attr( "aria-describedby" )
+						=== $( "div.ui-tooltip" ).attr( "id" )
+				],
+				[
+					1,
+					true
+				],
+				  "Trigger mouseenter on window button. "
+				+ "One tooltip found and it is tooltip for this button."
+			);
+
+			$taskbar.taskbar( "option", "buttons", {} );
+			$taskbar.taskbar( "option", "buttonsOrder", [] );
+
+			$window.window( "close" );
+		});
+
+		test( "Manipulation of buttons position", function ( assert ) {
+			expect( 10 );
+
+			$taskbar.taskbar( "option", {
+				languageSelect  : true,
+				toggleFullscreen: true,
+				clock           : true,
+				networkMonitor  : true,
+				buttons         : {
+					basket: {
+						label: "Basket",
+						icons: {
+							primary: "ui-icon-cart"
+						}
+					},
+					logout: {
+						label: "Logout"
+					}
+				},
+				buttonsOrder: [ "basket", "logout" ]
+			});
+
+			ok( true, "Rebuild taskbar" );
+
+			var systemButtonsOrder = $taskbar.taskbar( "option", "systemButtonsOrder" );
+			var systemButtonsOrderLengthBefore = systemButtonsOrder.length
+			    - ( fullscreenAvailable ? 0 : 1 );
+
+			$taskbar.taskbar( "option", "systemButtonsOrder", [] );
+			$taskbar.taskbar( "option", "systemButtonsOrder", [ "languageSelect", "clock" ] );
+
+			var systemButtonsOrderLengthAfter = $( ".simone-taskbar-system-buttons-container .ui-button").length;
+
+			$taskbar.taskbar( "option", "systemButtonsOrder", [ "toggleFullscreen", "minimizeAll" ] );
+
+			var systemButtonsOrderLengthInProgress = $( ".simone-taskbar-system-buttons-container .ui-button").length;
+
+			equal(
+				systemButtonsOrderLengthInProgress,
+				2 - ( fullscreenAvailable ? 0 : 1 ),
+				"Remove all system buttons, then insert them again using systemButtonsOrder. Two system buttons are present."
+			);
+
+			$taskbar.taskbar( "option", "systemButtonsOrder", systemButtonsOrder.sort(function() {
+				// randomize order
+				return .5 - Math.random();
+			}));
+
+			var systemButtonsOrderLengthAfter = $( ".simone-taskbar-system-buttons-container .ui-button").length;
+
+			equal(
+				systemButtonsOrderLengthAfter,
+				systemButtonsOrderLengthBefore,
+				"All system buttons are present."
+			);
+
+			var systemButtonsContainerChildrenBeforeLength = $( ".simone-taskbar-system-buttons-container").children().length;
+
+			var systemButtonsOrder = $taskbar.taskbar( "option", "systemButtonsOrder" );
+
+			systemButtonsOrder.push( "nonExistingButton", "buttonNotPresent" );
+
+			$taskbar.taskbar( "option", "systemButtonsOrder", systemButtonsOrder );
+
+			var systemButtonsContainerChildrenAfterLength = $( ".simone-taskbar-system-buttons-container").children().length;
+
+			equal(
+				systemButtonsContainerChildrenBeforeLength,
+				systemButtonsContainerChildrenAfterLength,
+				"Insert undefined buttons into system buttons container. No elements were inserted into system buttons container."
+			);
+
+			ok( true, "Remove all buttons from buttons container, them insert them again, test if binded events were kept." );
+
+			var eventResults = {
+				basket: false,
+				logout: false
+			};
+
+			var expectedResults = {
+				basket: true,
+				logout: true
+			}
+
+			var $basket = $taskbar.taskbar( "option", "buttons.basket" ).$element;
+			var $logout = $taskbar.taskbar( "option", "buttons.logout" ).$element;
+
+			$basket.on( "click.testing", function () {
+				eventResults.basket = true;
+
+				ok( true, "Basket event click was triggered." );
+			});
+
+			$logout.on( "mouseleave.testing", function () {
+				eventResults.logout = true;
+
+				ok( true, "Logout event mouseleave was triggered." );
+			})
+
+			$taskbar.taskbar( "option", "buttonsOrder", [] );
+			$taskbar.taskbar( "option", "buttonsOrder", [ "logout" ] );
+			$taskbar.taskbar( "option", "buttonsOrder", [] );
+			$taskbar.taskbar( "option", "buttonsOrder", [ "basket" ] );
+			$taskbar.taskbar( "option", "buttonsOrder", [] );
+
+			$taskbar.taskbar( "option", "buttonsOrder", [ "logout", "basket" ] );
+
+			$( ".simone-taskbar-buttons-container" ).find( $basket ).trigger( "click.testing" );
+			$( ".simone-taskbar-buttons-container" ).find( $logout ).trigger( "mouseleave.testing" );
+
+			deepEqual(
+				expectedResults,
+				eventResults,
+				"Events were kept."
+			);
+
+			$basket.off( "click.testing" );
+			$logout.off( "mouseleave.testing" );
+
+			$taskbar.taskbar( "option", "buttonsOrder", [ "basket" ] );
+
+			var systemButtonsOrder = $taskbar.taskbar( "option", "systemButtonsOrder" );
+			var buttonsOrder = $taskbar.taskbar( "option", "buttonsOrder" );
+			systemButtonsOrder.push( "logout" );
+
+			$taskbar.taskbar( "option", "systemButtonsOrder", systemButtonsOrder );
+
+			ok( $taskbar.find( ".simone-taskbar-system-buttons-container .ui-button[data-button-name=logout]").length,
+				"Move buttons beetween containers using systemButtonsOrder and buttonsOrder. Logout moved to system buttons container."
+			);
+
+			buttonsOrder.push( systemButtonsOrder.pop() );
+
+			$taskbar.taskbar( "option", {
+				systemButtonsOrder: systemButtonsOrder,
+				buttonsOrder: buttonsOrder
+			});
+
+			ok( $taskbar.find( ".simone-taskbar-buttons-container .ui-button[data-button-name=logout]").length,
+				"Logout moved back to buttons container."
+			);
+
+			$taskbar.taskbar( "option", "buttonsOrder", [] );
+			$taskbar.taskbar( "option", "buttons" );
+		});
+
+		test( "Active class buttons propagation", function () {
+			var prev = $taskbar.taskbar( "option", "menuAutoOpenOnBrowse" );
+			$taskbar.taskbar( "option", "menuAutoOpenOnBrowse", true );
+
+			var $window = $( "<div></div>" ).window({
+				group: "shared"
+			});
+
+			var $window2 = $( "<div></div>" ).window({
+				group: "shared"
+			});
+
+			var $group              = $taskbar.find( ".ui-button[data-group-name=shared]" );
+			var $groupMenu          = $taskbar.find( "ul[data-group-name=shared]" );
+
+			var $windowBetween = $( "<div></div>" ).window();
+
+			var $window3 = $( "<div></div>" ).window({
+				group: "meta"
+			});
+
+			var $buttonBetween = $taskbar
+				.find( ".ui-button[data-window-id=" + $windowBetween.attr( "id" ) + "]" );
+
+			var $window4 = $( "<div></div>" ).window({
+				group: "meta"
+			});
+
+			var $group2             = $taskbar.find( ".ui-button[data-group-name=meta]" );
+			var $groupMenu2         = $taskbar.find( "ul[data-group-name=meta]" );
+
+			$group.trigger( "click" );
+
+			ok(
+				$group.hasClass( "ui-state-active" ),
+				"Group button 1 has class \"ui-state-active\"."
+			);
+
+			$buttonBetween.trigger( "mouseenter" );
+
+			ok(
+				$group.hasClass( "ui-state-active" ),
+				"Trigger mouseenter on windowBetween button. "
+				+ "Group button 1 still has \"ui-state-active\" class."
+			);
+
+			$group2.trigger( "mouseenter" );
+
+			ok(
+				! $group.hasClass( "ui-state-active" ),
+				"Trigger mouseenter on group 2 button. "
+				+ "Group button 1 still don't have \"ui-state-active\" class."
+			);
+
+			ok(
+				$group2.hasClass( "ui-state-active" ),
+				"Group button 12 has class \"ui-state-active\"."
+			);
+
+			$taskbar.taskbar( "windows" ).window( "close" );
+			$taskbar.taskbar( "option", "menuAutoOpenOnBrowse", prev );
+		});
+
+		test( "\"menuAutoOpenOnBrowse\"", function () {
+			var prev = $taskbar.taskbar( "option", "menuAutoOpenOnBrowse" );
+			var prev2 = $taskbar.taskbar( "option", "clock" );
+			var prev3 = $taskbar.taskbar( "option", "clockShowDatepicker" );
+			var prev4 = $taskbar.taskbar( "option", "languageSelect" );
+			var prev5 = $taskbar.taskbar( "option", "startButtons" );
+
+			$taskbar.taskbar( "option", "menuAutoOpenOnBrowse", true );
+			$taskbar.taskbar( "option", "clock", true );
+			$taskbar.taskbar( "option", "clockShowDatepicker", true );
+			$taskbar.taskbar( "option", "languageSelect", true );
+			$taskbar.taskbar( "option", "startButtons", true );
+
+			var $menu = getMenu();
+
+			$taskbar.prepend( $menu );
+
+			$taskbar.taskbar( "refresh" );
+
+			var $window = $( "<div></div>" ).window({
+				group: "shared"
+			});
+
+			var $window2 = $( "<div></div>" ).window({
+				group: "shared"
+			});
+
+			var $languageSelect     = $taskbar.find( "[data-button-name=languageSelect]" );
+			var $languageSelectMenu = $taskbar.find( "[data-menu-type=languageSelect]" );
+
+			var $clock              = $taskbar.find( "[data-button-name=clock]" );
+			var $datepicker         = $taskbar.find( ".hasDatepicker" );
+
+			var $group              = $taskbar.find( ".ui-button[data-group-name=shared]" );
+			var $groupMenu          = $taskbar.find( "ul[data-group-name=shared]" );
+
+			var $start              = $taskbar.find( "[data-menu-button-for=test]" );
+			var $startMenu          = $taskbar.find( "[data-menu-name=test]" );
+
+			var $all = $()
+				.add( $languageSelectMenu )
+				.add( $datepicker )
+				.add( $groupMenu )
+				.add( $startMenu );
+
+			$languageSelect.trigger( "click" );
+
+			deepEqual(
+				[ $languageSelectMenu.is( ":visible" ), $all.not( $languageSelectMenu ).is( ":visible" ) ],
+				[ true, false ],
+				"menuAutoOpenOnBrowse: true. Trigger click on language select button. Language select menu is visible. Other elements are not."
+			);
+
+			$clock.trigger( "mouseenter" );
+
+			deepEqual(
+				[ $datepicker.is( ":visible" ), $all.not( $datepicker ).is( ":visible" ) ],
+				[ true, false ],
+				"Trigger mouseenter on clock. Datepicker is visible. Other elements are not."
+			);
+
+			$group.trigger( "mouseenter" );
+
+			deepEqual(
+				[ $groupMenu.is( ":visible" ), $all.not( $groupMenu ).is( ":visible" ) ],
+				[ true, false ],
+				"Trigger mouseenter on window group button. Window group menu is visible. Other elements are not."
+			);
+
+			$start.trigger( "mouseenter" );
+
+			deepEqual(
+				[ $startMenu.is( ":visible" ), $all.not( $startMenu ).is( ":visible" ) ],
+				[ true, false ],
+				"Trigger mouseenter on start button. Start menu is visible. Other elements are not."
+			);
+
+			$languageSelect.trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$languageSelectMenu.is( ":visible" ),
+					$all.not( $languageSelectMenu ).is( ":visible" )
+				],
+				[ true, false ],
+				"Trigger mouseenter on language select button. Language select menu is visible. Other elements are not."
+			);
+
+			$taskbar.taskbar( "option", "menuAutoOpenOnBrowse", false );
+
+			ok( true, "menuAutoOpenOnBrowse: false." );
+
+			$clock.trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$datepicker.is( ":visible" ),
+					$all.not( $languageSelectMenu ).is( ":visible" ),
+					$languageSelectMenu.is( ":visible" )
+				],
+				[ false, false, true ],
+				"Trigger mouseenter on clock. Datepicker is not visible. "
+				+"Elements other than language select menu are not visible."
+			);
+
+			$group.trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$groupMenu.is( ":visible" ),
+					$all.not( $languageSelectMenu ).is( ":visible" ),
+					$languageSelectMenu.is( ":visible" )
+				],
+				[ false, false, true ],
+				"Trigger mouseenter on window group button. Window group menu is not visible. "
+				+"Elements other than language select menu are not visible."
+			);
+
+			$start.trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$startMenu.is( ":visible" ),
+					$all.not( $languageSelectMenu ).is( ":visible" ),
+					$languageSelectMenu.is( ":visible" )
+				],
+				[ false, false, true ],
+				"Trigger mouseenter on start button. Start menu is not visible. "
+				+"Elements other than language select menu are not visible."
+			);
+
+			$languageSelect.trigger( "click" );
+
+			$clock.trigger( "click" );
+
+			deepEqual(
+				[
+					$datepicker.is( ":visible" ),
+					$all.not( $datepicker ).is( ":visible" )
+				],
+				[ true, false ],
+				"Trigger click on language select button. Trigger click on clock. "
+				+ "Datepicker is visible. Other elements are not."
+			);
+
+			$languageSelect.trigger( "mouseenter" );
+
+			deepEqual(
+				[
+					$languageSelectMenu.is( ":visible" ),
+					$all.not( $datepicker ).is( ":visible" )
+				],
+				[ false, false ],
+				"Trigger mouseenter on language select button. "
+				+ "Datepicker is visible. Other elements are not."
+			);
+
+			$clock.trigger( "click" );
+
+			$window.window( "close" );
+			$window2.window( "close" );
+
+			$menu.remove();
+			$taskbar.taskbar( "refresh" );
+
+			$taskbar.taskbar( "option", "menuAutoOpenOnBrowse", prev );
+			$taskbar.taskbar( "option", "clock", prev2 );
+			$taskbar.taskbar( "option", "clockShowDatepicker", prev2 );
+			$taskbar.taskbar( "option", "languageSelect", prev4 );
+			$taskbar.taskbar( "option", "startButtons", prev5 );
+		});
+
+		test( "Buttons and system buttons icons.", function ( assert ) {
+			$taskbar.taskbar( "option", {
+				languageSelect  : true,
+				toggleFullscreen: true,
+				clock           : true,
+				networkMonitor  : true,
+				buttons         : {
+					basket: {
+						label: "Basket",
+						icons: {
+							primary: "ui-icon-cart"
+						}
+					},
+					logout: {
+						label: "Logout"
+					}
+				},
+				buttonsOrder: [ "basket", "logout" ]
+			});
+
+			ok( true, "Change buttons icons." );
+
+			var basketIcon = $taskbar.taskbar( "option", "buttons.basket.icon.primary" );
+			var logoutIcon = $taskbar.taskbar( "option", "buttons.logout.icon.primary" );
+
+			$taskbar.taskbar( "option", "buttons.basket.icons.primary", "ui-icon-pin-w" );
+			$taskbar.taskbar( "option", "buttons.logout.icons.primary", "ui-icon-play" );
+
+			ok( $taskbar.find( "[data-button-name=basket] .ui-button-icon-primary" ).hasClass( "ui-icon-pin-w" ), "Basket has icon pin-w." );
+
+			ok( $taskbar.find( "[data-button-name=logout] .ui-button-icon-primary" ).hasClass( "ui-icon-play" ), "Logout has icon play." );
+
+			$taskbar.taskbar( "option", "buttons.logout.icons.primary", null );
+
+			ok( ! $taskbar.find( "[data-button-name=logout] .ui-button-icon-primary" ).length, "Logout has no icon." );
+
+			$taskbar.taskbar( "option", "icons.minimizeAll", "ui-icon-star" );
+			$taskbar.taskbar( "option", "icons.toggleFullscreenOn", null );
+			$taskbar.taskbar( "option", "icons.toggleFullscreenOff", null );
+			$taskbar.taskbar( "option", "icons.clock", "ui-icon-disk" );
+
+			ok( $taskbar.find( "[data-button-name=minimizeAll] .ui-button-icon-primary" ).hasClass( "ui-icon-star" ), "minimizeAll has icon star." );
+
+			ok( ! $taskbar.find( "[data-button-name=toggleFullscreen] .ui-button-icon-primary" ).length, "toggleFullscreen has no icon." );
+
+			ok( $taskbar.find( "[data-button-name=clock] .ui-button-icon-primary" ).hasClass( "ui-icon-disk" ), "Clock has icon disk." );
+		});
+
+		test( "Start buttons icons", function ( assert ) {
+			var $menu = getMenu();
+
+			$taskbar.taskbar( "option", "startButtons", true );
+			$taskbar.taskbar( "option", "icons.startButton", null );
+
+			$taskbar.prepend( $menu );
+
+			$taskbar.taskbar( "refresh" );
+
+			$taskbar.taskbar( "option", "icons.startButtonSet", "ui-icon-arrowstop-1" );
+
+			ok( $taskbar.find( "[data-menu-button-for=test] .ui-button-icon-primary" ).hasClass( "ui-icon-arrowstop-1-n" ), "Testing \"icons.startButtonSet\" option. Setting \"icons.startButton\" option to null. Button for custom start menu \"test\" has icon ui-icon-arrowstop-1-n." );
+
+			$taskbar.taskbar( "option", "icons.startButton", "ui-icon-seek-next" );
+
+			ok( $taskbar.find( "[data-menu-button-for=test] .ui-button-icon-primary" ).hasClass( "ui-icon-seek-next" ), "Testing \"icons.startButton\" option - should have higher priority than \"icons.startButtonSet\". Button for custom start menu \"test\" has icon ui-icon-seek-next." );
+
+			$menu.remove();
+			$taskbar.taskbar( "refresh" );
+		});
+
+		test( "Windows buttons icons", function ( assert ) {
+			var $window = $( "<div></div>" ).window({
+				icons: {
+					main: "ui-icon-cancel"
+				}
+			});
+
+			var windowId = $window.attr( "id" );
+
+			ok( $taskbar.find( "[data-window-id=" + windowId + "] .ui-button-icon-primary" ).hasClass( "ui-icon-cancel" ),
+				"Open new window with icon \"ui-icon-cancel\". Window button has the right icon." );
+
+			$window.window( "option", "icons.main", "ui-icon-trash" );
+
+			ok( $taskbar.find( "[data-window-id=" + windowId + "] .ui-button-icon-primary" ).hasClass( "ui-icon-trash" ),
+				"Change window icon to \"ui-icon-trash\". Window button has the right icon." );
+
+			$window.window( "close" );
+		});
+	});
+</script>
+
+</body>
+</html>

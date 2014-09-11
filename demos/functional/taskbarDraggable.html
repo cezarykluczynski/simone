@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Draggable taskbars - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// create horizontal draggable taskbar
+	$( ".taskbar" ).taskbar({
+		draggable: true
+	});
+
+	// create vertical draggable taskbar
+	$( ".taskbar2" ).taskbar({
+		draggable: true,
+		horizontalStick: "top left"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Shows taskbars draggable demo. Taskbar's can't be dropped on each other,
+		because "<a href="../../docs/taskbar.html#option-dropOnExisting">dropOnExisting</a>"
+		option is set to false by default.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

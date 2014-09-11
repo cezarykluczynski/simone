@@ -1,0 +1,407 @@
+html {
+	font-size: 16px;
+}
+
+body {
+	min-width: 960px;
+}
+
+body:not(.no-top-bar) {
+	margin-top: 45px;
+}
+
+html,
+body {
+	height: auto;
+}
+
+.diff {
+	background-color: #FFE27F !important;
+}
+
+.dontuse {
+	background-color: #FFB2AE !important;
+}
+
+.empty {
+	width: 100%;
+	height: 45px;
+}
+
+main {
+	font-size: 0.75em;
+	margin: 2rem;
+	margin-top: calc(2rem + 45px);
+}
+
+main.with-tos {
+	margin: calc(2rem + 45px) 22rem 2rem 2rem;
+	min-width: calc(915px - 26rem);
+}
+
+/* fix for topbar, an idea borrowed from:
+   http://www.pixelflips.com/blog/anchor-links-with-a-fixed-header/ */
+.anchor-fix {
+	display: block;
+	height: 45px;
+	margin-top: -45px;
+	visibility: hidden;
+}
+
+/* a bit more space needed in tables */
+tr .anchor-fix {
+	height: 65px;
+	margin-top: -65px;
+}
+
+/* TOS start */
+.tos {
+	width: 20rem;
+	float: right;
+	background-color: #fff;
+}
+
+.tos h3 {
+	display: inline-block;
+	margin-left: -1em;
+	padding: .5em 1em;
+	border-radius: 90px / 40px;
+}
+
+.tos h3.highlight {
+	-webkit-animation: highlight-header .4s alternate;
+	   -moz-animation: highlight-header .4s alternate;
+	     -o-animation: highlight-header .4s alternate;
+	        animation: highlight-header .4s alternate;
+}
+
+.tos ul li ul {
+	padding-top: .4em;
+	list-style: none;
+}
+
+.tos ul li ul li {
+	font-size: .75rem;
+}
+
+.tos-contents {
+	overflow-y: hidden;
+	padding-left: 2rem;
+	position: fixed;
+	right: 0px;
+	height: -webkit-calc( 100% - 45px );
+	height:    -moz-calc( 100% - 45px );
+	height:         calc( 100% - 45px );
+	width: 22em;
+	bottom: 0px;
+}
+
+
+@media only screen and (max-width: 64.063em) {
+	main.widget {
+		margin: 2rem;
+	}
+
+	.tos {
+		float: none;
+		display: block;
+	}
+	.tos-contents {
+		position: static;
+		width: 100%;
+		float: none;
+	}
+
+	.tos-contents .top-arrow,
+	.tos-contents .bottom-arrow {
+		display: none;
+	}
+}
+
+.tos-contents .top-arrow,
+.tos-contents .bottom-arrow {
+	position: fixed;
+	right: 30px;
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+	-webkit-transition: opacity 0.1s;
+	   -moz-transition: opacity 0.1s;
+	     -o-transition: opacity 0.1s;
+	        transition: opacity 0.1s;
+}
+
+.tos-contents .top-arrow:before,
+.tos-contents .bottom-arrow:after {
+	display: inline-block;
+}
+
+.tos-contents .top-arrow {
+	top: 60px;
+}
+
+.tos-contents .top-arrow:before {
+	content: "▲";
+}
+
+.tos-contents .bottom-arrow {
+	bottom: 15px;
+}
+
+.tos-contents .bottom-arrow:after {
+	content: "▼";
+}
+
+.tos-contents:hover {
+	overflow-y: auto;
+}
+
+.tos .side-nav {
+	padding: 0;
+}
+.tos .side-nav li {
+	margin: 0;
+}
+
+.tos .side-nav li.every {
+	margin-bottom: 1em;
+}
+
+.tos .side-nav li a:not(.button) {
+	padding: 0;
+}
+/* TOS end */
+
+.demo-list-header span {
+	color: #888;
+	font-size: .5em;
+}
+
+/* taskbar, window - docs start */
+.widget table tr td,
+.widget table tr td p,
+.widget table ul {
+	font-size: .75rem;
+	line-height: 1rem;
+}
+
+td {
+	vertical-align: top;
+}
+
+td p {
+	cursor: text;
+}
+
+/* make inlined code font-size a bit smaller */
+tr td:not(:first-child) code[class*="language"] {
+	font-size: 0.875em;
+}
+
+/* join multiple alert boxes */
+.widget table .alert-box.since + .alert-box.since {
+	margin-top: -1.5rem;
+	border-top: none;
+}
+
+/* taskbar, window - docs end */
+
+/* Pages with content loaded from file.manifest.json start */
+.file-list li.h1,
+.file-list li.h2 {
+	font-weight: bold;
+}
+
+.file-list li.h1,
+.file-list li.h2,
+.file-list li.no-bullets {
+	list-style-type: none;
+	margin-left: -1.1rem;
+}
+
+.file-list li.h1:not(:first-child) {
+	margin-top: 2rem;
+}
+
+.file-list li.h1 {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+}
+
+.file-list li.h2 {
+	margin-top: 1rem;
+	font-size: 1rem;
+}
+/* Pages with content loaded from file.manifest.json end */
+
+/* General two column layout for docs start */
+.layout-default ul,
+.layout-default p {
+	font-size: 14px;
+}
+
+.layout-default h2 {
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+	font-weight: bold;
+}
+/* General two column layout for docs end */
+
+/* Foundation */
+.widget table tr:nth-of-type(even) {
+	background-color: #e8e8e8;
+}
+
+.widget table tr:nth-of-type(odd):hover {
+	background-color: #f0f0f0;
+}
+
+.widget table tr:nth-of-type(even):hover {
+	background-color: #ddd;
+}
+
+.widget table tr:nth-of-type(odd).highlight {
+	-webkit-animation: highlight-odd .4s alternate;
+	   -moz-animation: highlight-odd .4s alternate;
+	     -o-animation: highlight-odd .4s alternate;
+	        animation: highlight-odd .4s alternate;
+}
+
+.widget table tr:nth-of-type(even).highlight {
+	-webkit-animation: highlight-even .4s alternate;
+	   -moz-animation: highlight-even .4s alternate;
+	     -o-animation: highlight-even .4s alternate;
+	        animation: highlight-even .4s alternate;
+}
+
+@-webkit-keyframes highlight-header {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-moz-keyframes highlight-header {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-ms-keyframes highlight-header {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-o-keyframes highlight-header {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@keyframes highlight-header {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+
+@-webkit-keyframes highlight-odd {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-moz-keyframes highlight-odd {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-ms-keyframes highlight-odd {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@-o-keyframes highlight-odd {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+@keyframes highlight-odd {
+	from { background-color: #fff; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #fff; }
+}
+
+@-webkit-keyframes highlight-even {
+	from { background-color: #e8e8e8; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #e8e8e8; }
+}
+@-moz-keyframes highlight-even {
+	from { background-color: #e8e8e8; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #e8e8e8; }
+}
+@-ms-keyframes highlight-even {
+	from { background-color: #e8e8e8; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #e8e8e8; }
+}
+@-o-keyframes highlight-even {
+	from { background-color: #e8e8e8; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #e8e8e8; }
+}
+@keyframes highlight-even {
+	from { background-color: #e8e8e8; }
+	30%  { background-color: #D2E8C7; }
+	to   { background-color: #e8e8e8; }
+}
+
+/* Prism */
+code[class*="language-"],
+pre[class*="language-"] {
+	font-size: 12px;
+	cursor: text;
+	line-height: 1.2;
+}
+
+code[class*="language-"].option-name {
+	font-size: 1.2rem;
+	line-height: 2.5rem;
+}
+
+table p + pre[class*="language-"] {
+	margin-top: -1rem;
+}
+
+a > *[class*="language-"] {
+	cursor: pointer;
+}
+
+pre[class*="language-"] {
+	padding: .2em .6em;
+	overflow-x: auto;
+	max-width: 40rem;
+}
+/* Prism end */
+
+/* CSS3 Two column layout start */
+.two-columns-natural {
+	 webkit-column-gap: 1em;
+	   -moz-column-gap: 1em;
+	        column-gap: 1em;
+	-webkit-column-count: 2;
+	   -moz-column-count: 2;
+	        column-count: 2;
+}
+/* CSS3 Two column layout start */
+
+.fam {
+	margin-right: .2em;
+	vertical-align: middle;
+}
+
+/* overwrite Foundation */
+code {
+	color: #333;
+}
+
+/* overwrite Prism CSS */
+pre[class*="language-"] {
+	max-width: none;
+}

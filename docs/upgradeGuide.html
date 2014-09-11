@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Upgrade guide | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+<link href="../libs/famfamfam/famfamfam.css" rel="stylesheet">
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Upgrade guide</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#csso">CSSO</a></li>
+			<li><a href="#filesaver">FileSaver.js</a></li>
+			<li><a href="#foundation">Foundation</a></li>
+			<li><a href="#jquery">jQuery and jQuery UI</a></li>
+			<li><a href="#jui-theme-switch">jui_theme_switch</a></li>
+			<li><a href="#loremipsum">Lorem Ipsum</a></li>
+			<li><a href="#prism">Prism</a></li>
+			<li><a href="#qunit">QUnit<br>Qunit Composite<br>jQuery Simulate</a></li>
+			<li><a href="#uglify-js">UglifyJS</a></li>
+			<li><a href="#zip-js">Zip.js</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+			<span id="intoduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				This page describes which libraries, present in this project's <a href="https://github.com/cezarykluczynski/simone">repository</a>, should be upgraded, how, and when. If you think some of this guidelines should be changed, feel free to <a gref="code.html#discussions">start discussion</a>.
+			</p>
+			<p>
+				All libraries can be found in <a href="https://github.com/cezarykluczynski/simone/tree/master/libs"><code>libs</code></a> directory of this repository.
+			</p>
+			<p>
+				<strong>Important:</strong> As long as this repository is in active development, there are people how will keep all libraries up to date. This page serves more as a guidelines for whoever want's to fork or take over this project in the future.
+			</p>
+			<p>
+				Generally, it's preffered to have the development, uncompressed versions of libraries.
+			</p>
+			<p>
+				<strong>Note:</strong> When downloading new versions, include only those files that are already included.
+			</p>
+
+			<span id="csso" class="anchor-fix"></span>
+			<h2>CSSO</h2>
+
+			<p>
+				Upgrade when convinent. Test <a href="download.html">download page</a> CSS minifications afterwards.
+			</p>
+			<p>
+				csso.web.js can be found <a href="https://github.com/css/csso/tree/master/web">on GitHub</a>.
+			</p>
+			<p class="version">
+				Current version is from 2013-11-19.
+			</p>
+
+			<span id="filesaver" class="anchor-fix"></span>
+			<h2>FileSaver.js</h2>
+
+			<p>
+				Upgrade when convinent. Test <a href="download.html">download page</a> files saving capatilities afterwards.
+			</p>
+			<p>
+				FileSaver.js can be found <a href="https://github.com/eligrey/FileSaver.js/">on GitHub</a>.
+			</p>
+			<p class="version">
+				Current version is from 2014-05-27.
+			</p>
+
+			<span id="foundation" class="anchor-fix"></span>
+			<h2>Foundation</h2>
+
+			<p>
+				Foundation 5 is used. Current version meets the needs of this project.
+			</p>
+			<p>
+				There are two versions of Foundation. One is for test pages and contain only basic styles and top bar styles, the other one is for other pages, and it's Foundation with all components.
+			</p>
+			<p>
+				When Foundation is upgraded, those two versions should be kept, unless Foundation will drop <code class="language-css">body { position: relative; }</code> in future releases, in which case full version can probably be used on tests pages too.
+			</p>
+			<p>
+				Foundation can be found <a href="http://foundation.zurb.com/">here</a>.
+			</p>
+
+			<span id="jquery" class="anchor-fix"></span>
+			<h2>jQuery and jQuery UI</h2>
+
+			<p>
+				Whenever a new stable version is released, either maintenance or major, it should be added to repository. Create new directory with name reflecting version number and add full production versions of jQuery or jQuery UI (and jQuery UI Sunny theme, and also a full list of datapicker translations). Refer to <code>libs/jquery</code> and <code>libs/jquery-ui</code> directories to see the exact files structure, and mimic it—otherwise, file will not be included correctly in <a href="tests.html">tests</a>.
+			</p>
+			<p>
+				After adding new files to subdirectory, replace files in main directory of either <code>libs/jquery</code> or <code>libs/jquery-ui</code>, so head version can be the newest (the one called in test when no version is specified).
+			</p>
+			<p>
+				When upgrading jQuery UI, change paths in <code>libs/jui_theme_switch/official.json</code> to match latest version.
+			</p>
+			<p>
+				Next, add new version to <code>config/tests.json</code> file, and change appropriate value of <code class="language-javascript">"head"</code> key to match the latest version.
+			</p>
+			<p>
+				Do some tests and bugfixes.
+			</p>
+			<p>
+				Add new versions to <a href="installation.html">installation</a> page. Tag new version appropriately. Use <span class="fam tick"></span><code class="language-html">"fam tick"</code> class to tag supported version, <span class="fam cross"></span><code class="language-html">"fam cross"</code> to tag unsupported version of library, and <span class="fam hourglass"></span><code class="language-html">"fam hourglass"</code> to tag version for which decision on the matter is pending.
+			</p>
+
+			<span id="jui-theme-switch" class="anchor-fix"></span>
+			<h2>jui_theme_switch</h2>
+
+			<p>
+				Version 1.0.6 of jui_theme_switch is used, and it meets the needs of this project.
+			</p>
+			<p>
+				Moving to <a href="https://github.com/harborhoffer/Super-Theme-Switcher">Super-Theme-Switcher</a> can be considered, as it has nicer visuals.
+			</p>
+
+			<p class="version">
+				Current version is from 2013-01-21.
+			</p>
+
+			<span id="loremipsum" class="anchor-fix"></span>
+			<h2>Lorem Ipsum</h2>
+
+			<p>
+				This plugin is likely discontinued, but it meets the needs of this project.
+			</p>
+			<p>
+				Some bugfixes were made to original code.
+			</p>
+			<p>
+				Originally downloaded from <a href="http://sanderkorvemaker.nl/jquery/jLorem.php">here</a>.
+			</p>
+			<p class="version">
+				Current version is from 2008-04-29.
+			</p>
+
+			<span id="prism" class="anchor-fix"></span>
+			<h2>Prism</h2>
+
+			<p>
+				Prism is not strictly versioned. Current version meets the needs of this project.
+			</p>
+			<p>
+				Upgrade if major features were added to Prism since last upgrade. <a href="http://prismjs.com/download.html">Download</a> production versions of JavaScript and CSS, with Twilight theme and support for markup, CSS, C-like, JavaScript, and Bash. Check <a href="demos.html">demos</a> afterwards to make sure nothing's broken up.
+			</p>
+			<p class="version">
+				Current version is from 2014-09-05.
+			</p>
+
+			<span id="qunit" class="anchor-fix"></span>
+			<h2>QUnit, Qunit Composite, jQuery Simulate</h2>
+
+			<p>
+				QUnit 1.14.0 is used, and it meets the needs of this project. Dropping Qunit 1.15 into repository proved to generated some issues. Those can be investigated and resolved.
+			</p>
+			<p>
+				QUnit Composite v1.0.2pre is used, and it meets the needs of this project.
+			</p>
+			<p>
+				jQuery Simulate 0.0.1 is used, and it meets the needs of this project.
+			</p>
+			<p>
+				Some changes were made to original code of Qunit Composite and jQuery Simulate. When upgrading to newest versions, those changes should be reflected. Qunit Composite was detached at <a href="https://github.com/jquery/qunit-composite/tree/7f3499ef35ea143466d9db8a9f2432146e4c900f">7f3499ef35</a>. jQuery Simulate was detached at <a href="https://github.com/jquery/jquery-simulate/tree/2b450a99316c50b54fd577e7cfbe50fd5bdbe7d3">2b450a9931</a>.
+			</p>
+
+			<span id="uglify-js" class="anchor-fix"></span>
+			<h2>UglifyJS</h2>
+
+			<p>
+				UglifyJS 1.4.3 is used, and it meets the needs of this project.
+			</p>
+			<p>
+				Upgrade when convinent. Test <a href="download.html">download page</a> JS minifications afterwards.
+			</p>
+			<p>
+				<a href="http://nodejs.org/">Node.js</a> is required to build UglifyJS for this project. Here's how to do this:
+			</p>
+
+			<pre><code class="language-bash"># Install UglifyJS globally
+npm install uglify-js -g
+
+# Assuming you're in project's root directory,
+# navigate to UglifyJS directory
+cd libs/uglify-js
+
+# Build UglifyJS in current directory
+uglifyjs --self -cmo uglify-js.js</code></pre>
+
+			<span id="zip-js" class="anchor-fix"></span>
+			<h2>Zip.js</h2>
+
+			<p>
+				Unspecified version of Zip.js from 2013-04-04 is used, and it meets the needs of this project.
+			</p>
+			<p>
+				Zip.js can be found <a href="https://github.com/gildas-lormeau/zip.js">on GitHub</a>.
+			</p>
+			<p>
+				Upgrade if major features were added to Zip.js since last upgrade. Test <a href="download.html">download page</a> zipping functionality afterwards.
+			</p>
+			<p class="version">
+				Current version is from 2013-04-04.
+			</p>
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

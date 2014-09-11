@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "propagateWindowBlur" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize window
+	$( ".window" ).window();
+
+	// initialize handler for changing option state
+	$( ".toggle-option" )
+		.button()
+		.on( "click", function () {
+			// get current state
+			var current = $( ".taskbar" )
+				.taskbar( "option", "propagateWindowBlur" );
+
+			// set toggled state
+			$( ".taskbar" )
+				.taskbar( "option", "propagateWindowBlur", ! current );
+
+			// prepend new state to log
+			demo.log( "Current state: " + ( ! current ? "true" : "false" ) );
+		})
+		// trigger handler, it will set
+		// "propagateWindowBlur" to true
+		.trigger( "click" );
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		Click button bellow to toggle
+		"<a href="../../taskbar.html#option-propagateWindowBlur">propagateWindowBlur</a>"
+		option state. Then move to window on top by clicking it and click
+		outside of the current window, or switch tabs.
+	</div>
+
+	<button class="toggle-option">
+		Toggle "propagateWindowBlur"
+	</button>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

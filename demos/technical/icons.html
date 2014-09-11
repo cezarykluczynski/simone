@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Icons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$( ".taskbar" ).taskbar({
+		// let's have all the native buttons ("maximizeAll" is on by default)
+		clock: true,
+		languageSelect: true,
+		networkMonitor: true,
+		toggleFullscreen: true,
+		// here goes icons for taskbar and window group
+		icons: {
+			"group:test": "ui-icon-folder-collapsed",
+			clock: "ui-icon-clock",
+			languageSelect: "ui-icon-document",
+			menuWindowClose: "ui-icon-closethick",
+			minimizeAll: "ui-icon-arrowthickstop-1-s",
+			networkMonitorOffline: "ui-icon-radio-off",
+			networkMonitorOnline: "ui-icon-radio-on",
+			startButton: "ui-icon-star",
+			// "startButton" is in usage already
+			startButtonSet: null,
+			toggleFullscreenOff: "ui-icon-extlink",
+			toggleFullscreenOn: "ui-icon-newwin"
+		}
+	});
+
+	$( ".window, .window2" ).window({
+		group: "test",
+		position: {
+			my: "center bottom",
+			at: "center bottom"
+		},
+		// here goes icons for windows, and, of course, different windows
+		// can have different icons
+		icons: {
+			close: "ui-icon-closethick",
+			main: "ui-icon-contact",
+			maximize: "ui-icon-carat-1-ne",
+			minimize: "ui-icon-carat-1-sw",
+			restore: "ui-icon-home"
+		}
+	});
+
+	// move first window a bit to the left, so it's not confusing
+	// at first glance
+	$( ".window" ).window( "option", "position", {
+		my: "center-150 bottom",
+		at: "center bottom",
+		of: window,
+		collision: "fit"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar">
+	<!-- a simplest start menu, so start menu icon could be visible -->
+	<ul data-menu-lang="*" data-menu-type="start">
+		<li>Item</li>
+	</ul>
+</div>
+
+<div class="window"></div>
+<div class="window2"></div>
+
+<div class="demo">
+	<div class="description">
+		Shows how different icons can be used with both taskbar and windows.
+		<br><br>
+		<strong>Tip:</strong> available jQuery UI icons can be found
+		<a href="http://api.jqueryui.com/theming/icons/">here</a>.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

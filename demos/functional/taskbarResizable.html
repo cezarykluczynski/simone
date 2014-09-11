@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Resizable taskbars - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// horizontal taskbar initialized with custom number of rows
+	// and custom limits on resizable
+	$( ".taskbar" ).taskbar({
+		resizable: true,
+		horizontalRows: 2,
+		horizontalRowsMin: 2,
+		horizontalRowsMax: 4
+	});
+
+	// vertical taskbar initialized with default options
+	$( ".taskbar2" ).taskbar({
+		orientation: "vertical",
+		verticalStick: "top left",
+		resizable: true
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Taskbar cannot be resized freely. It has to go by a full row in case of
+		horizontal taskbar, and by full column in case of vertical taskbar.
+		<br><br>
+		Vertical taskbar is resizable and has all the options set to default,
+		where horizontal taskbar has custom options set.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

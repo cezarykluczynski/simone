@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window durations - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize one windows with some durations
+	$( ".window" ).window({
+		durations: {
+			maximize: 1000,
+			minimize: 100,
+			restore: 1000,
+			show: 100
+		}
+	});
+
+	// initialize another windows with different durations
+	$( ".window2" ).window({
+		durations: {
+			// false means no animation at all
+			maximize: false,
+			minimize: false,
+			// you can use valid jQuery durations,
+			// like "slow", "fast" or "default"
+			restore: "fast",
+			show: "slow"
+		}
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+<div class="window2"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo has two windows, both with different values for
+		"<a href="../../docs/window.html#option-durations">durations</a>" option.
+		<br><br>
+		Minimize, maximize, restore and show windows to feel
+		the different durations applied.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

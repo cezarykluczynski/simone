@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>famfamfam iconset - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+	<link href="../../libs/famfamfam/famfamfam.css" rel="stylesheet">
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$( ".taskbar" ).taskbar({
+		// let's have all the native buttons ("maximizeAll" is on by default)
+		clock: true,
+		languageSelect: true,
+		networkMonitor: true,
+		toggleFullscreen: true,
+		// here goes icons for taskbar and window group
+		icons: {
+			"group:test": "fam group_gear",
+			clock: "fam clock",
+			languageSelect: "fam information",
+			menuWindowClose: "fam delete",
+			minimizeAll: "fam application_put",
+			networkMonitorOffline: "fam disconnect",
+			networkMonitorOnline: "fam connect",
+			startButton: "fam award_star_add",
+			// "startButton" is in usage already
+			startButtonSet: null,
+			toggleFullscreenOff: "fam arrow_out",
+			toggleFullscreenOn: "fam arrow_in"
+		}
+	});
+
+	$( ".window, .window2" ).window({
+		group: "test",
+		position: {
+			my: "center bottom",
+			at: "center bottom"
+		},
+		// here goes icons for windows, and, of course, different windows
+		// can have different icons
+		icons: {
+			close: "fam delete",
+			main: "fam new",
+			maximize: "fam application_get",
+			minimize: "fam application_put",
+			restore: "fam application_cascade"
+		}
+	});
+
+	// move first window a bit to the left,  so it's not confusing
+	// at first glance
+	$( ".window" ).window( "option", "position", {
+		my: "center-150 bottom",
+		at: "center bottom",
+		of: window,
+		collision: "fit"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+.ui-icon.fam {
+	/* change icons sprite from jQuery UI to famfamfam,
+	   !important is required to overwrite stateful icons fixes that's
+	   been made by taskbar */
+	background-image: url(../../libs/famfamfam/famfamfam.png) !important;
+}
+</style>
+
+
+<div class="demo-html">
+<div class="taskbar">
+	<!-- a simplest start menu, so start menu icon could be visible -->
+	<ul data-menu-lang="*" data-menu-type="start">
+		<li>Item</li>
+	</ul>
+</div>
+
+<div class="window"></div>
+<div class="window2"></div>
+
+<div class="demo">
+	<div class="description">
+		A famous famfamfam iconset (converted to CSS sprite)
+		used for supplying icons for both taskbar and window.
+		<br><br>
+		Sadly, there's no easy way to make custom icons stateful
+		like jQuery UI icons, but with some more CSS, that can
+		be accomplished too.
+		<br><br>
+		<strong>Tip:</strong> check the famfamfam sprite stylesheet
+		<a href="https://github.com/webarto/famfamfam/blob/master/famfamfam.css">here</a>.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

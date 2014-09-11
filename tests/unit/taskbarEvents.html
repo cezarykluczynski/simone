@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar events | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var tests = {};
+
+		var testEvents = function ( index, elem ) {
+			$taskbar.taskbar( "option", index, function ( event, ui ) {
+				$.each( tests, function ( index, elem ) {
+					if (
+						event.type.substr( "taskbar".length )
+							=== index.toLowerCase()
+					 && tests[ index ] === false
+					) {
+						tests[ index ] = true;
+						ok( true, index + ": ok" );
+					}
+				});
+			});
+		};
+
+		var atest = function(){}
+
+				test( "\"autoHideStart\", \"autoHideStop\"", function( assert ) {
+			expect( 7 );
+
+			var counter = {
+				autoHideStart: 0,
+				autoHideStop : 0
+			};
+
+			var prev  = $taskbar.taskbar( "option", "autoHide" );
+			var prev2 = $taskbar.taskbar( "option", "durations.autoHideHide" );
+			var prev3 = $taskbar.taskbar( "option", "durations.autoHideShow" );
+			var prev4 = $taskbar.taskbar( "option", "durations.autoHideDelay" );
+
+			$taskbar.taskbar( "option", "autoHideStart", function ( event, ui ) {
+				ok( true, "autoHideStart: ok" );
+				++counter.autoHideStart;
+			});
+
+			$taskbar.taskbar( "option", "autoHideStop", function ( event, ui ) {
+				ok( true, "autoHideStop: ok" );
+				++counter.autoHideStop;
+			});
+
+			$taskbar.taskbar( "option", "durations.autoHideHide", false );
+			$taskbar.taskbar( "option", "durations.autoHideShow", false );
+			$taskbar.taskbar( "option", "durations.autoHideDelay", false );
+			$taskbar.taskbar( "option", "autoHide", true );
+
+			$taskbar.find( ".ui-resizable-handle" ).trigger( "mouseenter" );
+
+			deepEqual(
+				[ counter.autoHideStart, counter.autoHideStop ],
+				[ 3, 3 ],
+				"3 autoHideStart, 3 autoHideStop fired."
+			);
+
+			// teardown
+			$taskbar.taskbar( "option", "durations.autoHideHide", prev2 );
+			$taskbar.taskbar( "option", "durations.autoHideShow", prev3 );
+			$taskbar.taskbar( "option", "durations.autoHideDelay", prev4 );
+			$taskbar.taskbar( "option", "autoHide", prev );
+		});
+
+		asyncTest( "\"autoHideProgress\"", function ( assert ) {
+			resetTaskbar();
+
+
+			tests = {
+				autoHideProgress: false,
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar( "option", {
+				durations: {
+					autoHideHide: 100,
+					autoHideShow: 100,
+					autoHideDelay: 100,
+				},
+				autoHide: true
+			});
+
+			$taskbar.taskbar( "option", "autoHideProgress", function ( event, ui ) {
+				if ( tests.autoHideProgress === false ) {
+					ok( true, "autoHideProgress: ok" );
+					tests.autoHideProgress = true;
+				}
+			});
+
+			$taskbar.trigger( "mouseleave" );
+
+			setTimeout( function () {
+				start();
+
+				$taskbar.taskbar( "option", {
+					autoHide: false,
+					autoHideProgress: null
+				});
+			}, 1000 );
+		});
+
+		test( "\"bind\", \"unbind\"", function () {
+			expect( 4 );
+
+			var $window =  $( "<div></div>" ).attr( "id", "window" );
+
+			$taskbar.taskbar( "option", {
+				bind: function ( event, ui ) {
+					ok( true, "\"bind\" triggered" );
+					ok( ui.$window.attr( "id" ) === $window.attr( "id" ), "Triggered with the right window." );
+				},
+				unbind: function ( event, ui ) {
+					ok( true, "\"unbind\" triggered" );
+					ok( ui.$window.attr( "id" ) === $window.attr( "id" ), "Triggered with the right window." );
+				}
+			});
+
+			$window
+				.window()
+				.window( "close" );
+
+			// teardown
+			$taskbar.taskbar( "option", {
+				bind: null,
+				unbind: null
+			});
+		});
+
+		test( "\"create\", \"beforeRefresh\", \"refresh\"", function ( assert ) {
+			$taskbar.taskbar( "destroy" );
+
+			tests = {
+				       create: false,
+				beforeRefresh: false,
+				      refresh: false,
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$taskbar.taskbar({
+				create: function( event, ui ) {
+					if ( tests.create === false) {
+						ok( true, "create fires" );
+
+						tests.create = true;
+					}
+				},
+				refresh: function( event, ui ) {
+					if ( tests.refresh === false) {
+						ok( true, "refresh fires" );
+
+						tests.refresh = true;
+					}
+				},
+				beforeRefresh: function( event, ui ) {
+					if ( tests.beforeRefresh === false) {
+						ok( true, "beforeRefresh fires" );
+
+						tests.beforeRefresh = true;
+					}
+				}
+			});
+
+			$taskbar.taskbar( "refresh" );
+		});
+
+		test( "\"beforeDestroy\": tested with \"destroy\" method", function () {
+			expect( 0 );
+		});
+
+		test( "\"beforeDroppableOver\", \"droppableOver\", \"beforeDroppableOut\", "
+			+ "\"droppableOut\", \"beforeDrop\", \"drop\", \"dragStart\", \"drag\", \"dragStop\"",
+			function ( assert ) {
+			tests = {
+				beforeDroppableOver: false,
+				droppableOver:       false,
+				beforeDroppableOut:  false,
+				droppableOut:        false,
+				beforeDrop:          false,
+				drop:                false,
+				dragStart:           false,
+				drag:                false,
+				dragStop:            false
+			};
+
+			var prev = $taskbar.taskbar( "option", "draggable" );
+
+			$taskbar.taskbar( "option", "draggable", true );
+
+			expect( Object.keys( tests ).length );
+
+			$.each( tests, testEvents );
+
+			// drag
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight()
+			}));
+
+			// drag revert
+			$taskbar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: $( window ).innerHeight()
+			}));
+
+			// teardown
+			$taskbar.taskbar( "option", "draggable", prev );
+		});
+
+		test( "\"elementOpen\", \"elementClose\"", function ( assert ) {
+			expect( 4 );
+
+			var prev = $taskbar.taskbar( "option", "languageSelect" );
+			var prev2 = $taskbar.taskbar( "option", "clock" );
+			var prev3 = $taskbar.taskbar( "option", "clockShowDatepicker" );
+			var prev4 = $taskbar.taskbar( "option", "elementOpen" );
+			var prev5 = $taskbar.taskbar( "option", "elementClose" );
+
+			var counter = {
+				elementOpen: 0,
+				elementClose: 0
+			};
+
+			$taskbar.taskbar( "option", "languageSelect", true );
+			$taskbar.taskbar( "option", "clock", true );
+			$taskbar.taskbar( "option", "clockShowDatepicker", true );
+			$taskbar.taskbar( "option", "elementOpen", function ( event, ui ) {
+				++counter.elementOpen;
+				ok( true, "elementOpen: ok" );
+			});
+
+			$taskbar.taskbar( "option", "elementClose", function ( event, ui ) {
+				++counter.elementClose;
+				ok( true, "elementClose: ok" );
+			});
+
+			$taskbar.find( "[data-button-name=languageSelect]" ).trigger( "click" );
+
+			$taskbar.find( "[data-button-name=clock]" ).trigger( "click" );
+
+			deepEqual(
+				[ counter.elementOpen, counter.elementClose ],
+				[ 2, 1 ],
+				"2 elementOpen, 1 elementClose fired."
+			);
+
+			// teardown
+			$taskbar.taskbar( "option", "elementOpen", null );
+			$taskbar.taskbar( "option", "elementClose", null );
+			$taskbar.find( "[data-button-name=clock]" ).trigger( "click" );
+
+			$taskbar.taskbar( "option", "languageSelect", prev );
+			$taskbar.taskbar( "option", "clock", prev2 );
+			$taskbar.taskbar( "option", "clockShowDatepicker", prev3 );
+			$taskbar.taskbar( "option", "elementOpen", prev4 );
+			$taskbar.taskbar( "option", "elementClose", prev5 );
+		});
+
+		test( "\"languageChange\"", function ( assert ) {
+			var prev = $taskbar.taskbar( "option", "language" );
+
+			expect( 1 );
+
+			$taskbar.taskbar( "option", "languageChange", function ( event, ui ) {
+				ok( true, "ok" );
+			});
+
+			$taskbar.taskbar( "option", "language", prev == "en" ? "pl" : "en" );
+			// change language twice - we only expect one event to fire
+			$taskbar.taskbar( "option", "language", prev == "en" ? "pl" : "en" );
+
+			// teardown
+			$taskbar.taskbar( "option", "languageChange", null );
+			$taskbar.taskbar( "option", "language", prev );
+		});
+
+		test( "\"menuItemFocus\", \"menuItemBlur\"", function( assert ) {
+			expect( 4 );
+
+			var prev = $taskbar.taskbar( "option", "startButtons" );
+
+			var counter = {
+				menuItemFocus: 0,
+				menuItemBlur: 0
+			};
+
+			$taskbar.taskbar( "option", "startButtons", true );
+
+			var $menu = getMenu();
+
+			$taskbar.prepend( $menu );
+
+			$taskbar.taskbar( "refresh" );
+
+			$taskbar.taskbar( "option", "menuItemFocus", function ( event, ui ) {
+				++counter.menuItemFocus;
+				ok( true, "menuItemFocus: ok" );
+			});
+
+			$taskbar.taskbar( "option", "menuItemBlur", function ( event, ui ) {
+				++counter.menuItemBlur;
+				ok( true, "menuItemBlur: ok" );
+			});
+
+			$taskbar.find( "[data-menu-button-for=test]" ).trigger( "click" );
+			$taskbar.find( "[data-menu-name=test] li:eq(0)" ).trigger( "mouseenter" );
+			$taskbar.find( "[data-menu-name=test] li:eq(1)" ).trigger( "mouseenter" );
+
+			deepEqual(
+				[ counter.menuItemFocus, counter.menuItemBlur ],
+				[ 2, 1 ],
+				"2 menuItemFocus, 1 menuItemBlur fired."
+			);
+
+			// teardown
+			$taskbar.taskbar( "option", "menuItemFocus", null );
+			$taskbar.taskbar( "option", "menuItemBlur", null );
+			$taskbar.find( "[data-menu-button-for=test]" ).trigger( "click" );
+			$taskbar.taskbar( "option", "startButtons", prev );
+		});
+
+		test( "\"beforeRequestFullscreen\", \"requestFullscreen\"", function ( assert ) {
+			expect( fullscreenAvailable ? 2 : 1 );
+
+			if ( ! fullscreenAvailable ) {
+				ok( true, "Fullscreen not available in browser." );
+				return;
+			}
+
+			var prev = $taskbar.taskbar( "option", "toggleFullscreen" );
+
+			$taskbar.taskbar( "option", {
+				toggleFullscreen: true,
+				beforeRequestFullscreen: function ( event, ui ) {
+					ok( true, "beforeRequestFullscreen: ok" );
+				},
+				requestFullscreen: function ( event, ui ) {
+					ok( true, "requestFullscreen: ok" );
+				}
+			});
+
+			$taskbar.find( "[data-button-name=toggleFullscreen]" )
+				.trigger( "click" );
+
+			// teardown
+			$taskbar.taskbar( "option", {
+				toggleFullscreen       : prev,
+				beforeRequestFullscreen: null,
+				      requestFullscreen: null
+			});
+		});
+
+		test( "\"resizeStart\", \"resize\", \"resizeStop\"", function ( assert ) {
+
+			var prev = $taskbar.taskbar( "option", "resizable" );
+
+			$taskbar.taskbar( "option", "resizable", true );
+
+			tests = {
+				resizeStart:         false,
+				resize:              false,
+				resizeStop:          false,
+			};
+
+			expect( Object.keys( tests ).length );
+
+			$.each( tests, testEvents );
+
+			var $handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			$handle
+				.trigger( "mouseenter" );
+
+			// resize
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dy: - $taskbar.outerHeight()
+				});
+
+			var $handle = $taskbar
+				.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+
+			// resive revert
+			$handle
+				.trigger( "mouseenter" )
+				.simulate( "drag", {
+					dy: $taskbar.outerHeight()
+				});
+
+			$taskbar.taskbar( "option", "resizable", prev );
+		});
+
+		test( "\"sortableStart\", \"sortableSort\", \"sortableChange\", \"sortableStop\"", function () {
+			var $window;
+			var $window2;
+
+			var prev = $taskbar.taskbar( "option", "windowButtonsSortable" );
+			$taskbar.taskbar( "option", "windowButtonsSortable", true );
+
+			$window = $( "<div></div>" ).window();
+			$window2 = $( "<div></div>" ).window();
+
+			var $button  = $taskbar.taskbar( "button", $window );
+			var $button2 = $taskbar.taskbar( "button", $window2 );
+
+			var events;
+
+			var resetEventsCounters = function () {
+				events = {
+					sortableStart : 0,
+					sortableSort  : 0,
+					sortableChange: 0,
+					sortableStop  : 0
+				};
+			};
+
+			resetEventsCounters();
+
+			var eventsNames = [ "sortableStart", "sortableSort", "sortableChange", "sortableStop" ];
+			var eventsNamesCancelable = [ "sortableChange", "sortableStop" ];
+
+			var eventsHandlers = {};
+
+			$.each( eventsNames, function ( index, eventName ) {
+				eventsHandlers[ eventName ] = function () {
+					++events[ eventName ];
+				}
+			});
+
+			$taskbar.taskbar( "option", $.extend({
+				windowButtonsSortable: true
+			}, eventsHandlers));
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: + 3
+			}));
+
+			equal(
+				events.sortableStart,
+				1,
+				"Drag button 1. \"sortableStart\" triggered once."
+			);
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				moves: 50,
+				dx   : $button.outerWidth() * 1.5,
+			}));
+
+			ok(
+				events.sortableSort > 50 && events.sortableSort < 60,
+				"Drag button 1 with 50 simulated moves. \"sortableSort\" triggered more than 50 and less than 60 times."
+			);
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				moves: 2,
+				dx   : $button.outerWidth() * 1.5,
+				dy   : 5
+			}));
+
+			equal(
+				events.sortableChange,
+				1,
+				"Drag button 1 with 2 simulated moves. \"sortableChange\" triggered once."
+			);
+
+			deepEqual(
+				[ events.sortableStart, events.sortableStop ],
+				[ 3, 3 ],
+				"3 \"sortableStart\", 3 \"sortableStop\" triggered so far."
+			);
+
+			resetEventsCounters();
+
+			ok( true, "Reset counters, call preventDefault() in \"sortableChange\" handler." );
+
+			$taskbar.taskbar( "option", "sortableChange", function ( event ) {
+				++events.sortableChange;
+				event.preventDefault();
+			});
+
+			var prevAllLength;
+			var nextAllLength;
+
+			prevAllLength = $button.prevAll().length;
+			nextAllLength = $button.nextAll().length;
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				moves: 2,
+				dx   : - $button.outerWidth() * 1.5,
+				dy   : 5
+			}));
+
+			deepEqual(
+				[ $button.prevAll().length, $button.nextAll().length, events.sortableChange ],
+				[ prevAllLength, nextAllLength, 1 ],
+				"\"sortableChange\" triggered, but button position did not changed."
+			);
+
+			resetEventsCounters();
+
+			ok( true, "Reset counters, call preventDefault() in \"sortableStop\" handler." );
+
+			prevAllLength = $button.prevAll().length;
+			nextAllLength = $button.nextAll().length;
+
+			$button.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				moves: 2,
+				dx   : - $button.outerWidth() * 1.5,
+				dy   : 5
+			}));
+
+			$taskbar.taskbar( "option", "sortableStop", function ( event ) {
+				++events.sortableStop;
+				event.preventDefault();
+			});
+
+			deepEqual(
+				[ $button.prevAll().length, $button.nextAll().length, events.sortableStop ],
+				[ prevAllLength, nextAllLength, 1 ],
+				"\"sortableStop\" triggered, but button position did not changed."
+			);
+
+			// teardown
+			$.each( eventsNames, function ( index, eventName ) {
+				$taskbar.taskbar( "option", "eventName", null );
+			});
+
+			$window.window( "close" );
+			$window2.window( "close" );
+
+			$taskbar.taskbar( "option", "windowButtonsSortable", prev );
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar sortable events - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar with default settings and events loggins
+	$( ".taskbar" ).taskbar({
+		// log events happening
+		sortableStart: function () {
+			demo.log( "sortableStart" );
+		},
+		sortableSort: function () {
+			// log sortableSort once in a while, no log flooding
+			if ( Math.random() < 0.05 ) {
+				demo.log( "sortableSort" );
+			}
+		},
+		sortableChange: function () {
+			demo.log( "sortableChange" );
+		},
+		sortableStop: function () {
+			demo.log( "sortableStop" );
+		}
+	});
+
+	// initialize 3 windows and minimize them
+	$( ".window" )
+		.window()
+		.window( "minimize", false );
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows when different sortable events are fired.
+		<br><br>
+		Sort window buttons and observe log output.
+	</div>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Selected dialog tests from jQuery UI | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div id="qunit-fixture">
+	<div id="window1"></div>
+	<div id="window2"></div>
+	<div id="form-window" title="Profile Information">
+		<!-- create a spacer to ensure there's enough space to scroll -->
+		<div style="height: 250px;">...</div>
+		<fieldset>
+			<legend>Please share some personal information</legend>
+			<label for="favorite-animal">Your favorite animal</label><input id="favorite-animal">
+			<label for="favorite-color">Your favorite color</label><input id="favorite-color">
+		</fieldset>
+		<div role="group" aria-describedby="section2">
+			<p id="section2">Some more (optional) information</p>
+			<label for="favorite-food">Favorite food</label><input id="favorite-food">
+		</div>
+	</div>
+	<div class="wrap" id="wrap1"></div>
+	<div class="wrap" id="wrap2"></div>
+</div>
+
+<script src="../common/jquery.ui.testsuite.js"></script>
+<script src="../common/jquery.ui.dialog.helpers.js"></script>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var is111 = parseFloat( $.ui.version ) >= 1.11;
+
+		module( "core" );
+
+		var windowPrototype = $.simone.window.prototype;
+
+		test("title id", function() {
+			expect(1);
+
+			var titleId,
+				element = $("<div></div>").window();
+
+			titleId = element.window("widget").find(".ui-dialog-title").attr("id");
+			ok( /ui-id-\d+$/.test( titleId ), "auto-numbered title id");
+			element.remove();
+		});
+
+		test( "ARIA", function() {
+			expect( 4 );
+
+			var element = $( "<div></div>" ).window(),
+				wrapper = element.window( "widget" );
+			equal( wrapper.attr( "role" ), "dialog", "dialog role" );
+			equal( wrapper.attr( "aria-labelledby" ), wrapper.find( ".ui-dialog-title" ).attr( "id" ) );
+			equal( wrapper.attr( "aria-describedby" ), element.attr( "id" ), "aria-describedby added" );
+			element.remove();
+
+			element = $("<div><div aria-describedby='section2'><p id='section2'>descriotion</p></div></div>").window();
+			strictEqual( element.window( "widget" ).attr( "aria-describedby" ), undefined, "no aria-describedby added, as already present in markup" );
+			element.remove();
+		});
+
+		test("widget method", function() {
+			expect( 1 );
+			var dialog = $("<div>").appendTo("#qunit-fixture").window();
+			deepEqual(dialog.parent()[0], dialog.window("widget")[0]);
+			dialog.remove();
+		});
+
+		asyncTest( "focus tabbable", function() {
+			expect(is111 ? 6 : 4 );
+			var element,
+				options = {
+					buttons: [{
+						text: "Ok",
+						click: $.noop
+					}]
+				};
+
+			function checkFocus( markup, options, testFn, next ) {
+
+				// Support: IE8
+				// For some reason the focus doesn't get set properly if we don't
+				// focus the body first.
+				$( "body" ).focus();
+
+				element = $( markup ).window( options );
+				setTimeout(function() {
+					testFn();
+					if ( next !== null ) {
+						element.remove();
+						setTimeout( next );
+					} else {
+						start();
+					}
+				});
+			}
+
+			function step1() {
+				element = $( "<div><input><input></div>" ).window( options );
+				setTimeout(function() {
+					var input = element.find( "input:last" ).focus().blur();
+					element.data( dataPrefix + "window" )._focusTabbable();
+					setTimeout(function() {
+						equal( document.activeElement, input[ 0 ],
+							"1. an element that was focused previously." );
+						element.remove();
+						setTimeout( step2 );
+					});
+				});
+			}
+
+			function step2() {
+				checkFocus( "<div><input><input autofocus></div>", options, function() {
+					equal( document.activeElement, element.find( "input" )[ 1 ],
+						"2. first element inside the dialog matching [autofocus]" );
+				}, step3 );
+			}
+
+			function step3() {
+				checkFocus( "<div><input><input></div>", options, function() {
+					equal( document.activeElement, element.find( "input" )[ 0 ],
+						"3. tabbable element inside the content element" );
+				}, step4 );
+			}
+
+			function step4() {
+				checkFocus( "<div>text</div>", options, function() {
+					equal( document.activeElement,
+						element.window( "widget" ).find( ".ui-dialog-buttonpane button" )[ 0 ],
+						"4. tabbable element inside the buttonpane" );
+				}, step7 );
+			}
+
+			// Window default bevaviour: no focus on close button
+			// function step5() {
+			// 	checkFocus( "<div>text</div>", {}, function() {
+			// 		equal( document.activeElement,
+			// 			element.window( "widget" ).find( ".ui-dialog-titlebar .ui-dialog-titlebar-close" )[ 0 ],
+			// 			"5. the close button" );
+			// 	}, step6 );
+			// }
+
+			// Window itself is not focussable
+			// function step6() {
+			// 	element = $( "<div>text</div>" ).window({
+			// 		autoOpen: false
+			// 	});
+			// 	element.window( "widget" ).find( ".ui-dialog-titlebar-close" ).hide();
+			// 	element.window( "open" );
+			// 	setTimeout(function() {
+			// 		equal( document.activeElement, element.parent()[ 0 ], "6. the window itself" );
+			// 		element.remove();
+			// 		setTimeout( step7 );
+			// 	});
+			// }
+
+			function step7() {
+				element = $( "<div><input name='0'><input name='1' autofocus></div>" ).window({
+					// window: open() was removed, use moveToTop() instead
+					moveToTop: function() {
+						var inputs = $( this ).find( "input" );
+						inputs.last().keydown(function( event ) {
+							event.preventDefault();
+							inputs.first().focus();
+						});
+					}
+				});
+				setTimeout(function() {
+					var inputs = element.find( "input" );
+					equal( document.activeElement, inputs[ 1 ], "Focus starts on second input" );
+					inputs.last().simulate( "keydown", { keyCode: $.ui.keyCode.TAB });
+					if ( ! is111 ) {
+						start();
+						element.remove();
+						return;
+					}
+					setTimeout(function() {
+						equal( document.activeElement, inputs[ 0 ],
+							"Honor preventDefault, allowing custom focus management" );
+						element.remove();
+						start();
+					}, 50 );
+				});
+			}
+
+			is111 ? step1() : step2();
+		});
+
+		test( "#7960: resizable handles below modal overlays", function() {
+			expect( 1 );
+
+			var resizable = $( "<div>" ).resizable(),
+				dialog = $( "<div>" ).window({ modal: true }),
+				resizableZindex = parseInt( resizable.find( ".ui-resizable-handle" ).css( "zIndex" ), 10 ),
+				overlayZindex = parseInt( $( ".ui-widget-overlay" ).css( "zIndex" ), 10 );
+
+			ok( resizableZindex < overlayZindex, "Resizable handles have lower z-index than modal overlay" );
+			dialog.window( "destroy" );
+		});
+
+		asyncTest( "Prevent tabbing out of dialogs", function() {
+			expect( 3 );
+
+			var element = $( "<div><input name='0'><input name='1'></div>" ).window(),
+				inputs = element.find( "input" );
+
+			// Remove close button to test focus on just the two buttons
+			element.window( "widget" ).find( ".ui-button").remove();
+
+			function checkTab() {
+				equal( document.activeElement, inputs[ 0 ], "Tab key event moved focus within the modal" );
+
+				// check shift tab
+				$( document.activeElement ).simulate( "keydown", { keyCode: $.ui.keyCode.TAB, shiftKey: true });
+				setTimeout( checkShiftTab );
+			}
+
+			function checkShiftTab() {
+				equal( document.activeElement, inputs[ 1 ], "Shift-Tab key event moved focus back to second input" );
+
+				element.remove();
+				setTimeout( start );
+			}
+
+			inputs[ 1 ].focus();
+			setTimeout(function() {
+				equal( document.activeElement, inputs[ 1 ], "Focus set on second input" );
+				inputs.eq( 1 ).simulate( "keydown", { keyCode: $.ui.keyCode.TAB });
+
+				setTimeout( checkTab );
+			});
+		});
+
+		if ( windowPrototype._versionOf( "dialog", ">=", "1.10.1" ) ) {
+			asyncTest( "#9048: multiple modal dialogs opened and closed in different order", function() {
+				expect( 1 );
+				$( "#window1, #window2" ).window({ autoOpen: false, modal:true });
+				$( "#window1" ).window( "open" );
+				$( "#window2" ).window( "open" );
+				$( "#window1" ).window( "close" );
+				setTimeout(function() {
+					$( "#window2" ).window( "close" );
+					$( "#favorite-animal" ).focus();
+					ok( true, "event handlers cleaned up (no errors thrown)" );
+					start();
+				});
+			});
+		}
+
+		asyncTest( "interaction between overlay and other dialogs: dialog logic does not apply to window", function() {
+			expect( 0 );
+			start();
+		});
+
+		module( "events" );
+
+		test("open: dialog login does not apply to window", function() {
+			expect(0);
+		});
+
+
+		test( "focus: dialog login does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("dragStart", function() {
+			expect(9);
+
+			var handle,
+				element = $("<div></div>").window({
+					dragStart: function(ev, ui) {
+						ok(true, "dragging fires dragStart callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.type, "windowdragstart", "event type in callback");
+						ok(ui.position !== undefined, "ui.position in callback");
+						ok(ui.offset !== undefined, "ui.offset in callback");
+					}
+				}).bind("windowdragstart", function(ev, ui) {
+					ok(true, "dragging fires windowdragstart event");
+					equal(this, element[0], "context of event");
+					ok(ui.position !== undefined, "ui.position in callback");
+					ok(ui.offset !== undefined, "ui.offset in callback");
+				});
+
+			handle = $(".ui-dialog-titlebar", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		test("drag", function() {
+			expect(9);
+			var handle,
+				hasDragged = false,
+				element = $("<div></div>").window({
+					drag: function(ev, ui) {
+						if (!hasDragged) {
+							ok(true, "dragging fires drag callback");
+							equal(this, element[0], "context of callback");
+							equal(ev.type, "windowdrag", "event type in callback");
+							ok(ui.position !== undefined, "ui.position in callback");
+							ok(ui.offset !== undefined, "ui.offset in callback");
+
+							hasDragged = true;
+						}
+					}
+				}).one("windowdrag", function(ev, ui) {
+					ok(true, "dragging fires windowdrag event");
+					equal(this, element[0], "context of event");
+					ok(ui.position !== undefined, "ui.position in callback");
+					ok(ui.offset !== undefined, "ui.offset in callback");
+				});
+
+			handle = $(".ui-dialog-titlebar", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		test("dragStop", function() {
+			expect(9);
+
+			var handle,
+				element = $("<div></div>").window({
+					dragStop: function(ev, ui) {
+						ok(true, "dragging fires dragStop callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.type, "windowdragstop", "event type in callback");
+						ok(ui.position !== undefined, "ui.position in callback");
+						ok(ui.offset !== undefined, "ui.offset in callback");
+					}
+				}).bind("windowdragstop", function(ev, ui) {
+					ok(true, "dragging fires windowdragstop event");
+					equal(this, element[0], "context of event");
+					ok(ui.position !== undefined, "ui.position in callback");
+					ok(ui.offset !== undefined, "ui.offset in callback");
+				});
+
+			handle = $(".ui-dialog-titlebar", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		test("resizeStart", function() {
+			expect(13);
+
+			var handle,
+				element = $("<div></div>").window({
+					resizeStart: function(ev, ui) {
+						ok(true, "resizing fires resizeStart callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.type, "windowresizestart", "event type in callback");
+						ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+						ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+						ok(ui.position !== undefined, "ui.position in callback");
+						ok(ui.size !== undefined, "ui.size in callback");
+					}
+				}).bind("windowresizestart", function(ev, ui) {
+					ok(true, "resizing fires windowresizestart event");
+					equal(this, element[0], "context of event");
+					ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+					ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+					ok(ui.position !== undefined, "ui.position in callback");
+					ok(ui.size !== undefined, "ui.size in callback");
+				});
+
+			handle = $(".ui-resizable-se", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		test("resize", function() {
+			expect(13);
+			var handle,
+				hasResized = false,
+				element = $("<div></div>").window({
+					resize: function(ev, ui) {
+						if (!hasResized) {
+							ok(true, "resizing fires resize callback");
+							equal(this, element[0], "context of callback");
+							equal(ev.type, "windowresize", "event type in callback");
+							ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+							ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+							ok(ui.position !== undefined, "ui.position in callback");
+							ok(ui.size !== undefined, "ui.size in callback");
+
+							hasResized = true;
+						}
+					}
+				}).one("windowresize", function(ev, ui) {
+					ok(true, "resizing fires windowresize event");
+					equal(this, element[0], "context of event");
+					ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+					ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+					ok(ui.position !== undefined, "ui.position in callback");
+					ok(ui.size !== undefined, "ui.size in callback");
+				});
+
+			handle = $(".ui-resizable-se", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		test("resizeStop", function() {
+			expect(13);
+
+			var handle,
+				element = $("<div></div>").window({
+					resizeStop: function(ev, ui) {
+						ok(true, "resizing fires resizeStop callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.type, "windowresizestop", "event type in callback");
+						ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+						ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+						ok(ui.position !== undefined, "ui.position in callback");
+						ok(ui.size !== undefined, "ui.size in callback");
+					}
+				}).bind("windowresizestop", function(ev, ui) {
+					ok(true, "resizing fires windowresizestop event");
+					equal(this, element[0], "context of event");
+						ok(ui.originalPosition !== undefined, "ui.originalPosition in callback");
+						ok(ui.originalSize !== undefined, "ui.originalSize in callback");
+						ok(ui.position !== undefined, "ui.position in callback");
+						ok(ui.size !== undefined, "ui.size in callback");
+				});
+
+			handle = $(".ui-resizable-se", element.window("widget"));
+			TestHelpers.window.drag(element, handle, 50, 50);
+			element.remove();
+		});
+
+		asyncTest("close", function() {
+			expect(10);
+
+			var element = $("<div></div>").window({
+				close: function(ev, ui) {
+					ok(true, ".window('close') fires close callback");
+					equal(this, element[0], "context of callback");
+					equal(ev.type, "windowclose", "event type in callback");
+					// not applicable to window
+					// deepEqual(ui, {}, "ui hash in callback");
+				}
+			}).bind("windowclose", function(ev, ui) {
+				ok(true, ".window('close') fires windowclose event");
+				equal(this, element[0], "context of event");
+				// not applicable to window
+				// deepEqual(ui, {}, "ui hash in event");
+			});
+			element.window("close");
+			element.remove();
+
+			// Close event with an effect
+			element = $("<div></div>").window({
+				hide: 10,
+				close: function(ev, ui) {
+					ok(true, ".window('close') fires close callback");
+					equal(this, element[0], "context of callback");
+					equal(ev.type, "windowclose", "event type in callback");
+					// not applicable to window
+					// deepEqual(ui, {}, "ui hash in callback");
+					start();
+				}
+			}).bind("windowclose", function(ev, ui) {
+				ok(true, ".window('close') fires windowclose event");
+				equal(this, element[0], "context of event");
+				// not applicable to window
+				// deepEqual(ui, {}, "ui hash in event");
+			});
+			element.window("close");
+		});
+
+		test("beforeClose", function() {
+			expect(14);
+
+			var element = $("<div></div>").window({
+				beforeClose: function(ev, ui) {
+					ok(true, ".window('close') fires beforeClose callback");
+					equal(this, element[0], "context of callback");
+					equal(ev.type, "windowbeforeclose", "event type in callback");
+					deepEqual(ui, {}, "ui hash in callback");
+					return false;
+				}
+			});
+
+			element.window("close");
+			ok( element.window("widget").is(":visible"), "beforeClose callback should prevent dialog from closing");
+			element.remove();
+
+			element = $("<div></div>").window();
+			element.window("option", "beforeClose", function(ev, ui) {
+				ok(true, ".window('close') fires beforeClose callback");
+				equal(this, element[0], "context of callback");
+				equal(ev.type, "windowbeforeclose", "event type in callback");
+				deepEqual(ui, {}, "ui hash in callback");
+				return false;
+			});
+			element.window("close");
+
+			ok( element.window("widget").is(":visible"), "beforeClose callback should prevent dialog from closing");
+			element.remove();
+
+			element = $("<div></div>").window().bind("windowbeforeclose", function(ev, ui) {
+				ok(true, ".window('close') triggers windowbeforeclose event");
+				equal(this, element[0], "context of event");
+				deepEqual(ui, {}, "ui hash in event");
+				return false;
+			});
+			element.window("close");
+			ok( element.window("widget").is(":visible"), "windowbeforeclose event should prevent dialog from closing");
+			element.remove();
+		});
+
+		// #8789 and #8838
+		asyncTest("ensure dialog's container doesn't scroll on resize and focus", function() {
+			expect(2);
+
+			var element = $("#window1").window(),
+				initialScroll = $(window).scrollTop();
+			element.window("option", "height", 600);
+			equal($(window).scrollTop(), initialScroll, "scroll hasn't moved after height change");
+			setTimeout( function(){
+				$(".ui-dialog-titlebar-close").simulate("mousedown");
+				equal($(window).scrollTop(), initialScroll, "scroll hasn't moved after focus moved to dialog");
+				element.window("destroy");
+				start();
+			}, 500);
+		});
+
+		test("#5184: isOpen in windowclose event is true: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("ensure dialog keeps focus when clicking modal overlay: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		module("methods");
+
+		test("init", function() {
+			expect(6);
+
+			$("<div></div>").appendTo("body").window().remove();
+			ok(true, ".window() called on element");
+
+			$([]).window().remove();
+			ok(true, ".window() called on empty collection");
+
+			$("<div></div>").window().remove();
+			ok(true, ".window() called on disconnected DOMElement - never connected");
+
+			$("<div></div>").appendTo("body").remove().window().remove();
+			ok(true, ".window() called on disconnected DOMElement - removed");
+
+			var element = $("<div></div>").window();
+			element.window("option", "foo");
+			element.remove();
+			ok(true, "arbitrary option getter after init");
+
+			$("<div></div>").window().window("option", "foo", "bar").remove();
+			ok(true, "arbitrary option setter after init");
+		});
+
+		test("destroy", function() {
+			// skip some nasty IE bugs in iframes
+			// the buggy behaviour is present only in IE10 and only in iframe,
+			// so it's farily safe to assume it's Trident's reggresion, not Simone's
+			var skipFormWindow = navigator.appVersion.indexOf("MSIE 10") > -1 && location != top.location;
+
+			expect( skipFormWindow ? 13 : 16 );
+
+			var element, element2;
+
+			$( "#window1, #form-window" ).hide();
+			domEqual( "#window1", function() {
+				var dialog = $( "#window1" ).window().window( "destroy" );
+				equal( dialog.parent()[ 0 ], $( "#qunit-fixture" )[ 0 ], "Window moved back (1)." );
+				equal( dialog.index(), 0, "Window is at 0 index (1)." );
+			}, "#window1 equal to #window1 after window().window(\"destroy\") (1)");
+
+			if ( ! skipFormWindow ) {
+				domEqual( "#form-window", function() {
+					var dialog = $( "#form-window" ).window().window( "destroy" );
+					equal( dialog.parent()[ 0 ], $( "#qunit-fixture" )[ 0 ], "Window moved back (2)." );
+					equal( dialog.index(), 2, "Window is at 2 index (2)." );
+				}, "#form-window equal to #window1 after window().window(\"destroy\")");
+			}
+
+			// Ensure dimensions are restored (#8119)
+			$( "#window1" ).show().css({
+				width: "400px",
+				minHeight: "100px",
+				height: "200px"
+			});
+			domEqual( "#window1", function() {
+				$( "#window1" ).window().window( "destroy" );
+			}, "#window1 equal to #window1 after window().window(\"destroy\") (2)" );
+
+			// Don't throw errors when destroying a never opened modal dialog (#9004)
+			$( "#window1" ).window({ autoOpen: false, modal: true }).window( "destroy" );
+			equal( $( ".ui-widget-overlay" ).length, 0, "overlay does not exist" );
+			equal( is111 ? $( document ).data( "ui-dialog-overlays" ) : $.ui.dialog.overlayInstances, is111 ? undefined : 0, "ui-dialog-overlays equals the number of open overlays");
+
+			element = $( "#window1" ).window({ modal: true }),
+			element2 = $( "#window2" ).window({ modal: true });
+			// window: only one overlay can be present at a time
+			equal( $( ".ui-widget-overlay" ).length, 1, "overlays created when dialogs are open and on top" );
+			equal( is111 ? $( document ).data( "ui-dialog-overlays" ) : $.ui.dialog.overlayInstances, 1, "ui-dialog-overlays equals the number of open overlays" );
+			// use ( "minimize", false ); instead of ( "close" );
+			element.window( "minimize", false );
+			equal( $( ".ui-widget-overlay:visible" ).length, 1, "overlay remains after closing one dialog" );
+			// does not apply to window
+			// equal( $( document ).data( "ui-dialog-overlays" ), 1, "ui-dialog-overlays equals the number of open overlays" );
+			element.window( "destroy" );
+			equal( $( ".ui-widget-overlay" ).length, 1, "overlay remains after destroying one dialog" );
+			equal( is111 ? $( document ).data( "ui-dialog-overlays" ) : $.ui.dialog.overlayInstances, 1, "ui-dialog-overlays equals the number of open overlays" );
+			element2.window( "destroy" );
+			equal( $( ".ui-widget-overlay" ).length, 0, "overlays removed when all dialogs are destoryed" );
+			equal( is111 ? $( document ).data( "ui-dialog-overlays" ) : $.ui.dialog.overlayInstances, is111 ? undefined : 0, "ui-dialog-overlays equals the number of open overlays" );
+		});
+
+		//
+		asyncTest("#9000: Dialog leaves broken event handler after close/destroy in certain cases: dialog logic does not apply to window", function() {
+			expect( 0 );
+			start();
+		});
+
+		test("#4980: Destroy should place element back in original DOM position", function(){
+			expect( 2 );
+			var container = $("<div id='container'><div id='modal'>Content</div></div>"),
+				modal = container.find("#modal");
+			modal.window();
+			ok(!$.contains(container[0], modal[0]), "dialog should move modal element to outside container element");
+			modal.window("destroy");
+			ok($.contains(container[0], modal[0]), "window(destroy) should place element back in original DOM position");
+		});
+
+		test( "enable/disable disabled", function() {
+			expect( 4 );
+			var element = $( "<div></div>" ).window();
+			element.window( "disable" );
+			equal(element.window( "option", "disabled" ), false, "disable method doesn't do anything" );
+			ok( !element.window( "widget" ).hasClass( "ui-dialog-disabled" ), "disable method doesn't add ui-dialog-disabled class" );
+			ok( !element.window( "widget" ).hasClass( "ui-state-disabled" ), "disable method doesn't add ui-state-disabled class" );
+			ok( !element.window( "widget" ).attr( "aria-disabled" ), "disable method doesn't add aria-disabled" );
+
+			// teardown
+			element.window( "destroy" );
+		});
+
+		test("close: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("isOpen: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("moveToTop", function() {
+			expect( 2 );
+			function order() {
+				var actual = $( ".ui-dialog" ).map(function() {
+					return +$( this ).css( "z-index" );
+				}).get();
+				deepEqual( actual, $.makeArray( arguments ) );
+			}
+			var window1, window2,
+				focusOn = "window1";
+			window1 = $( "#window1" ).window({
+				focus: function() {
+					equal( focusOn, "window1", "window1: okay" );
+				}
+			});
+			focusOn = "window2";
+			window2 = $( "#window2" ).window({
+				focus: function() {
+					equal( focusOn, "window2", "window2: okay" );
+				}
+			});
+
+			// window: remove handlers before destroy, otherwise window flow
+			// would focus window2 on window1 destruction
+			window1.window( "option", "focus", null );
+			window2.window( "option", "focus", null );
+
+			// teardown
+			window1.window( "destroy" );
+			window2.window( "destroy" );
+			return;
+			// windows order works differently in window
+			order( 100, 101 );
+			focusOn = "window1";
+			window1.window( "moveToTop" );
+			order( 102, 101 );
+		});
+
+		test( "moveToTop: content scroll stays intact", function() {
+			expect( 2 );
+			var otherDialog = $( "#window1" ).window(),
+				scrollDialog = $( "#form-window" ).window({
+					height: 200
+				});
+			scrollDialog.scrollTop( 50 );
+			equal( scrollDialog.scrollTop(), 50 );
+
+			otherDialog.window( "moveToTop" );
+			equal( scrollDialog.scrollTop(), 50 );
+
+			otherDialog.window( "destroy" );
+			scrollDialog.window( "destroy" );
+		});
+
+		test("open: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("#6137: window('open') causes form elements to reset on IE7: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		asyncTest( "#8958: dialog can be opened while opening: dialog logic does not apply to window", function() {
+			expect( 0 );
+			start();
+		});
+
+		test("#5531: dialog width should be at least minWidth on creation", function () {
+			expect( 4 );
+			var element = $("<div></div>").window({
+					width: 200,
+					minWidth: 300
+				});
+
+			equal(element.window("option", "width"), 300, "width is minWidth");
+			element.window("option", "width", 200);
+			equal(element.window("option", "width"), 300, "width unchanged when set to < minWidth");
+			element.window("option", "width", 320);
+			equal(element.window("option", "width"), 320, "width changed if set to > minWidth");
+			element.remove();
+
+			element = $("<div></div>").window({
+					minWidth: 300
+				});
+			ok(element.window("option", "width") >=  300, "width is at least 300");
+			element.remove();
+
+		});
+
+		module( "options" );
+
+		test( "appendTo", function() {
+			expect( 14 );
+			var detached = $( "<div>" ),
+				element = $( "#window1" ).window({
+					modal: true
+				});
+			equal( element.window( "widget" ).parent()[0], document.body, "defaults to body" );
+			equal( $( ".ui-widget-overlay" ).parent()[0], document.body, "overlay defaults to body" );
+			element.window( "destroy" );
+
+			element.window({
+				appendTo: ".wrap",
+				modal: true
+			});
+			equal( element.window( "widget" ).parent()[0], $( "#wrap1" )[0], "first found element" );
+			equal( $( ".ui-widget-overlay" ).parent()[0], $( "#wrap1" )[0], "overlay first found element" );
+			equal( $( "#wrap2 .ui-dialog" ).length, 0, "only appends to one element" );
+			equal( $( "#wrap2 .ui-widget-overlay" ).length, 0, "overlay only appends to one element" );
+			element.window( "destroy" );
+
+			element.window({
+				appendTo: null,
+				modal: true
+			});
+			equal( element.window( "widget" ).parent()[0], document.body, "null" );
+			equal( $( ".ui-widget-overlay" ).parent()[0], document.body, "overlay null" );
+			element.window( "destroy" );
+
+			element.window({
+				autoOpen: false,
+				modal: true
+			}).window( "option", "appendTo", "#wrap1" ).window( "open" );
+			equal( element.window( "widget" ).parent()[0], $( "#wrap1" )[0], "modified after init" );
+			equal( $( ".ui-widget-overlay" ).parent()[0], $( "#wrap1" )[0], "overlay modified after init" );
+			element.window( "destroy" );
+
+			element.window({
+				appendTo: detached,
+				modal: true
+			});
+			equal( element.window( "widget" ).parent()[0], detached[0], "detached jQuery object" );
+			equal( detached.find( ".ui-widget-overlay" ).parent()[0], detached[0], "overlay detached jQuery object" );
+			element.window( "destroy" );
+
+			element.window({
+				appendTo: detached[0],
+				modal: true
+			});
+			equal( element.window( "widget" ).parent()[0], detached[0], "detached DOM element" );
+			equal( detached.find( ".ui-widget-overlay" ).parent()[0], detached[0], "overlay detached DOM element" );
+			element.window( "destroy" );
+		});
+
+		test("autoOpen:: dialog logic does not apply to window", function() {
+			expect(0);
+		});
+
+		test("buttons", function() {
+			expect(21);
+
+			var btn, i, newButtons,
+				buttons = {
+					"Ok": function( ev ) {
+						ok(true, "button click fires callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.target, btn[0], "event target");
+					},
+					"Cancel": function( ev ) {
+						ok(true, "button click fires callback");
+						equal(this, element[0], "context of callback");
+						equal(ev.target, btn[1], "event target");
+					}
+				},
+				element = $("<div></div>").window({ buttons: buttons });
+
+			btn = element.window( "widget" ).find( ".ui-dialog-buttonpane button" );
+			equal(btn.length, 2, "number of buttons");
+
+			i = 0;
+			$.each(buttons, function( key ) {
+				equal(btn.eq(i).text(), key, "text of button " + (i+1));
+				i++;
+			});
+
+			ok(btn.parent().hasClass("ui-dialog-buttonset"), "buttons in container");
+			ok(element.parent().hasClass("ui-dialog-buttons"), "dialog wrapper adds class about having buttons");
+
+			btn.trigger("click");
+
+			newButtons = {
+				"Close": function( ev ) {
+					ok(true, "button click fires callback");
+					equal(this, element[0], "context of callback");
+					equal(ev.target, btn[0], "event target");
+				}
+			};
+
+			deepEqual(element.window("option", "buttons"), buttons, ".window('option', 'buttons') getter");
+			element.window("option", "buttons", newButtons);
+			deepEqual(element.window("option", "buttons"), newButtons, ".window('option', 'buttons', ...) setter");
+
+			btn = element.window( "widget" ).find( ".ui-dialog-buttonpane button" );
+			equal(btn.length, 1, "number of buttons after setter");
+			btn.trigger("click");
+
+			i = 0;
+			$.each(newButtons, function( key ) {
+				equal(btn.eq(i).text(), key, "text of button " + (i+1));
+				i += 1;
+			});
+
+			element.window("option", "buttons", null);
+			btn = element.window( "widget" ).find( ".ui-dialog-buttonpane button" );
+			equal(btn.length, 0, "all buttons have been removed");
+			equal(element.find(".ui-dialog-buttonset").length, 0, "buttonset has been removed");
+			equal(element.parent().hasClass("ui-dialog-buttons"), false, "dialog wrapper removes class about having buttons");
+
+			element.remove();
+		});
+
+		test("buttons - advanced", function() {
+			expect( 7 );
+
+			var buttons,
+				element = $("<div></div>").window({
+					buttons: [
+						{
+							text: "a button",
+							"class": "additional-class",
+							id: "my-button-id",
+							click: function() {
+								equal(this, element[0], "correct context");
+							},
+							icons: {
+								primary: "ui-icon-cancel"
+							},
+							showText: false
+						}
+					]
+				});
+
+			buttons = element.window( "widget" ).find( ".ui-dialog-buttonpane button" );
+			equal(buttons.length, 1, "correct number of buttons");
+			equal(buttons.attr("id"), "my-button-id", "correct id");
+			equal(buttons.text(), "a button", "correct label");
+			ok(buttons.hasClass("additional-class"), "additional classes added");
+			deepEqual( buttons.button("option", "icons"), { primary: "ui-icon-cancel", secondary: null } );
+			equal( buttons.button( "option", "text" ), false );
+			buttons.click();
+
+			element.remove();
+		});
+
+		if ( windowPrototype._versionOf( "dialog", ">=", "1.10.1" ) ) {
+			test("#9043: buttons with Array.prototype modification", function() {
+				expect( 1 );
+				Array.prototype.test = $.noop;
+				var element = $( "<div></div>" ).window();
+				equal( element.window( "widget" ).find( ".ui-dialog-buttonpane" ).length, 0,
+					"no button pane" );
+				element.remove();
+				delete Array.prototype.test;
+			});
+		}
+
+		test("closeOnEscape", function() {
+			expect( 6 );
+			var element = $("<div></div>").window({ closeOnEscape: false });
+			ok(true, "closeOnEscape: false");
+			ok(element.window("widget").is(":visible") && !element.window("widget").is(":hidden"), "dialog is open before ESC");
+			element.simulate("keydown", { keyCode: $.ui.keyCode.ESCAPE })
+				.simulate("keypress", { keyCode: $.ui.keyCode.ESCAPE })
+				.simulate("keyup", { keyCode: $.ui.keyCode.ESCAPE });
+			ok(element.window("widget").is(":visible") && !element.window("widget").is(":hidden"), "dialog is open after ESC");
+
+			element.remove();
+
+			element = $("<div></div>").window({ closeOnEscape: true });
+			ok(true, "closeOnEscape: true");
+			ok(element.window("widget").is(":visible") && !element.window("widget").is(":hidden"), "dialog is open before ESC");
+			element.simulate("keydown", { keyCode: $.ui.keyCode.ESCAPE })
+				.simulate("keypress", { keyCode: $.ui.keyCode.ESCAPE })
+				.simulate("keyup", { keyCode: $.ui.keyCode.ESCAPE });
+			try {
+				element.window("widget");
+			} catch( e ) {
+
+			}
+			ok(true, "dialog is closed after ESC");
+		});
+
+		test("closeText: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("dialogClass", function() {
+			expect( 6 );
+
+			var element = $("<div></div>").window();
+				equal(element.window("widget").is(".foo"), false, "dialogClass not specified. foo class added");
+			element.remove();
+
+			element = $("<div></div>").window({ dialogClass: "foo" });
+				equal(element.window("widget").is(".foo"), true, "dialogClass in init. foo class added");
+			element.window( "option", "dialogClass", "foobar" );
+				equal( element.window("widget").is(".foo"), false, "dialogClass changed, previous one was removed" );
+				equal( element.window("widget").is(".foobar"), true, "dialogClass changed, new one was added" );
+			element.remove();
+
+			element = $("<div></div>").window({ dialogClass: "foo bar" });
+				equal(element.window("widget").is(".foo"), true, "dialogClass in init, two classes. foo class added");
+				equal(element.window("widget").is(".bar"), true, "dialogClass in init, two classes. bar class added");
+			element.remove();
+		});
+
+		test("draggable", function() {
+			expect(4);
+
+			var element = $("<div></div>").window({ draggable: false });
+
+				TestHelpers.window.testDrag(element, 50, -50, 0, 0);
+				element.window("option", "draggable", true);
+				TestHelpers.window.testDrag(element, 50, -50, 50, -50);
+			element.remove();
+
+			element = $("<div></div>").window({ draggable: true });
+				TestHelpers.window.testDrag(element, 50, -50, 50, -50);
+				element.window("option", "draggable", false);
+				TestHelpers.window.testDrag(element, 50, -50, 0, 0);
+			element.remove();
+		});
+
+		test("height: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		asyncTest( "hide, #5860 - don't leave effects wrapper behind", function() {
+			expect( 1 );
+			// use ( "minimize", false ); instead of ( "close" );
+			$( "#window1" ).window({ hide: "clip" }).window( "minimize", false ).window( "destroy" );
+			setTimeout(function() {
+				equal( $( ".ui-effects-wrapper" ).length, 0 );
+				start();
+			}, 500);
+		});
+
+		test("maxHeight: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("maxWidth", function() {
+			expect(3);
+
+			var element = $("<div></div>").window({ maxWidth: 200 });
+				TestHelpers.window.drag(element, ".ui-resizable-e", 1000, 1000);
+				closeEnough(element.window("widget").width(), 200, 1, "maxWidth");
+			element.remove();
+
+			element = $("<div></div>").window({ maxWidth: 200 });
+				TestHelpers.window.drag(element, ".ui-resizable-w", -1000, -1000);
+				closeEnough(element.window("widget").width(), 200, 1, "maxWidth");
+			element.remove();
+
+			element = $("<div></div>").window({ maxWidth: 200 }).window("option", "maxWidth", 300);
+				TestHelpers.window.drag(element, ".ui-resizable-w", -1000, -1000);
+				closeEnough(element.window("widget").width(), 300, 1, "maxWidth");
+			element.remove();
+		});
+
+		test("minHeight", function() {
+			expect(3);
+
+			var element = $("<div></div>").window({ minHeight: 10 });
+				TestHelpers.window.drag(element, ".ui-resizable-s", -1000, -1000);
+				closeEnough(element.window("widget").height(), 10, 1, "minHeight");
+			element.remove();
+
+			element = $("<div></div>").window({ minHeight: 10 });
+				TestHelpers.window.drag(element, ".ui-resizable-n", 1000, 1000);
+				closeEnough(element.window("widget").height(), 10, 1, "minHeight");
+			element.remove();
+
+			element = $("<div></div>").window({ minHeight: 10 }).window("option", "minHeight", 30);
+				TestHelpers.window.drag(element, ".ui-resizable-n", 1000, 1000);
+				closeEnough(element.window("widget").height(), 30, 1, "minHeight");
+			element.remove();
+		});
+
+		test("minWidth", function() {
+			expect(3);
+
+			var element = $("<div></div>").window({ minWidth: 10 });
+				TestHelpers.window.drag(element, ".ui-resizable-e", -1000, -1000);
+				closeEnough(element.window("widget").width(), 10, 1, "minWidth");
+			element.remove();
+
+			element = $("<div></div>").window({ minWidth: 10 });
+				TestHelpers.window.drag(element, ".ui-resizable-w", 1000, 1000);
+				closeEnough(element.window("widget").width(), 10, 1, "minWidth");
+			element.remove();
+
+			element = $("<div></div>").window({ minWidth: 30 }).window("option", "minWidth", 30);
+				TestHelpers.window.drag(element, ".ui-resizable-w", 1000, 1000);
+				closeEnough(element.window("widget").width(), 30, 1, "minWidth");
+			element.remove();
+		});
+
+		test( "position, default center on window", function() {
+			expect( 2 );
+
+			// dialogs alter the window width and height in FF and IE7
+			// so we collect that information before creating the dialog
+			// Support: FF, IE7
+			var winWidth = $( window ).width(),
+				winHeight = $( window ).height(),
+				element = $("<div></div>").window(),
+				dialog = element.window("widget"),
+				offset = dialog.offset();
+			// window: higher tolerance 1 -> 10
+			closeEnough( offset.left, Math.round( winWidth / 2 - dialog.outerWidth() / 2 ) + $( window ).scrollLeft(), 10, "dialog left position of center on window on initilization" );
+			closeEnough( offset.top, Math.round( winHeight / 2 - dialog.outerHeight() / 2 ) + $( window ).scrollTop(), 10, "dialog top position of center on window on initilization" );
+			element.remove();
+		});
+
+		test( "position, right bottom at right bottom via ui.position args", function() {
+			expect( 2 );
+
+			// dialogs alter the window width and height in FF and IE7
+			// so we collect that information before creating the dialog
+			// Support: FF, IE7
+			var winWidth = $( window ).width(),
+				winHeight = $( window ).height(),
+				element = $("<div></div>").window({
+					position: {
+						my: "right bottom",
+						at: "right bottom"
+					}
+				}),
+				dialog = element.window("widget"),
+				offset = dialog.offset();
+
+			// window: higher tolerance 1 -> 10
+			closeEnough( offset.left, winWidth - dialog.outerWidth() + $( window ).scrollLeft(), 10, "dialog left position of right bottom at right bottom on initilization" );
+			// window: add taskbar height
+			closeEnough( offset.top, winHeight - dialog.outerHeight() - $taskbar.outerHeight() + $( window ).scrollTop(), 10, "dialog top position of right bottom at right bottom on initilization" );
+			element.remove();
+		});
+
+
+		// window: changed top from 400 to 40, left from 600 to 60,
+		// window has containment and values so high would likely collide
+		test( "position, at another element", function() {
+			expect( 4 );
+			var parent = $("<div></div>").css({
+					position: "absolute",
+					top: 40,
+					left: 60,
+					height: 10,
+					width: 10
+				}).appendTo("body"),
+
+				element = $("<div></div>").window({
+					position: {
+						my: "left top",
+						at: "left top",
+						of: parent,
+						collision: "none"
+					}
+				}),
+
+				dialog = element.window("widget"),
+				offset = dialog.offset();
+
+			// window: increase tolerance
+			closeEnough( offset.left, 60, 10, "dialog left position at another element on initilization" );
+			closeEnough( offset.top, 40, 10, "dialog top position at another element on initilization" );
+
+			element.window("option", "position", {
+					my: "left top",
+					at: "right bottom",
+					of: parent,
+					collision: "none"
+			});
+
+			offset = dialog.offset();
+
+			// window: increase tolerance
+			closeEnough( offset.left, 70, 10, "dialog left position at another element via setting option" );
+			closeEnough( offset.top, 50, 10, "dialog top position at another element via setting option" );
+
+			element.remove();
+			parent.remove();
+		});
+
+		test("resizable", function() {
+			expect(4);
+
+			var element = $("<div></div>").window();
+				TestHelpers.window.shouldResize(element, 50, 50, "[default]");
+				element.window("option", "resizable", false);
+				TestHelpers.window.shouldResize(element, 0, 0, "disabled after init");
+			element.remove();
+
+			element = $("<div></div>").window({ resizable: false });
+				TestHelpers.window.shouldResize(element, 0, 0, "disabled in init options");
+				element.window("option", "resizable", true);
+				TestHelpers.window.shouldResize(element, 50, 50, "enabled after init");
+			element.remove();
+		});
+
+		test( "title: dialog logic does not apply to window", function() {
+			expect( 0 );
+		});
+
+		test("width", function() {
+			expect(3);
+
+			var element = $("<div></div>").window();
+				closeEnough(element.window("widget").width(), 300, 1, "default width");
+			element.remove();
+
+			element = $("<div></div>").window({width: 437 });
+				closeEnough(element.window("widget").width(), 437, 1, "explicit width");
+				element.window("option", "width", 438);
+				closeEnough(element.window("widget").width(), 438, 1, "explicit width after init");
+			element.remove();
+		});
+
+		test("#4826: setting resizable false toggles resizable on dialog", function() {
+			expect(6);
+			var i,
+				element = $("<div></div>").window({ resizable: false });
+
+			TestHelpers.window.shouldResize(element, 0, 0, "[default]");
+			for (i=0; i<2; i++) {
+				// use ( "minimize", false ); instead of ( "close" );
+				// use ( "show", false ); instead of ( "open" );
+				element.window( "minimize", false ).window( "show", false );
+				TestHelpers.window.shouldResize(element, 0, 0, "initialized with resizable false toggle ("+ (i+1) +")");
+			}
+			element.remove();
+
+			element = $("<div></div>").window({ resizable: true, minHeight: 50, height: 150 });
+			TestHelpers.window.shouldResize(element, 50, 50, "[default]");
+			for (i=0; i<2; i++) {
+				// use ( "minimize", false ); instead of ( "close" );
+				// use ( "show", false ); instead of ( "open" );
+				element.window( "minimize", false ).window("option", "resizable", false).window( "show", false );
+				TestHelpers.window.shouldResize(element, 0, 0, "set option resizable false toggle ("+ (i+1) +")");
+			}
+			element.remove();
+
+		});
+
+		asyncTest( "#8051 - 'Explode' dialog animation causes crash in IE 6, 7 and 8: IE 6-8 is not supported by window", function() {
+			expect( 0 );
+			start();
+		});
+
+		asyncTest( "#4421 - Focus lost from dialog which uses show-effect: \"show\" option is not supported by window", function() {
+			expect( 0 );
+			start();
+		});
+
+		asyncTest( "Open followed by close during show effect: \"show\" option is not supported by window", function() {
+			expect( 0 );
+			start();
+		});
+	});
+</script>
+
+</body>
+</html>

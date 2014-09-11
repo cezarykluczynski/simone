@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Styling guide | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Styling guide</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#base-css">Base CSS</a></li>
+			<li><a href="#z-indexes">Z-indexes</a></li>
+			<li><a href="#taskbar">Taskbar</a></li>
+			<li><a href="#window">Window</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				This page describes how Simone CSS can be customized.
+			</p>
+			<p>
+				<strong>Note:</strong> This page is likely to be extended in the future, to reflect real world changes that people are making to Simone CSS. If you created a custom theme for this plugin yourself, or you can't find styling tips you're looking for, please <a href="issues.html#discussions">create an issue</a> and describe your experience, so this page can become more thorough.
+			</p>
+
+			<span id="base-css" class="anchor-fix"></span>
+			<h2>Base CSS</h2>
+
+			<p>
+				Simone can be customized using CSS. This page describes the key points in which customization can be made. A good base for creating new theme for this plugin is a <a href="http://jqueryui.com/themeroller/">custom theme made with jQuery UI ThemeRoller</a>.
+			</p>
+
+			<p>
+				<strong>Important:</strong> it's highly recommended that you don't modify native Simone CSS, and instead place your modifications in separate files. This way, when new version is <a href="download.html">downloaded</a>, your changes would not be overwritten.
+			</p>
+
+			<span id="z-indexes" class="anchor-fix"></span>
+			<h2>Z-indexes</h2>
+
+			<p>
+				Default z-index for <a href="taskbar.html">taskbars</a> is <code class="language-css">10000</code>.
+			</p>
+			<p>
+				Default z-index for <a href="window.html">windows</a> is <code class="language-css">100</code>.
+			</p>
+			<p>
+				Both can be changes freely, but when changing windows z-index, remember to change taskbar's <a href="taskbar.html#option-windowsInitialZIndex">windowsInitialZIndex</a> option to reflect new value. It's recommended to do it using <a href="#method-taskbarSetup">taskbarSetup</a> method before initializing any taskbars, so new setting is shared by all future instances of taskbar widget.
+			</p>
+			<p>
+				Z-indexes of <code class="language-css">.simone-taskbar-droppable, .simone-taskbar-button-tooltip.ui-tooltip, .simone-taskbar-with-opened-elements, .simone-taskbar-resizing</code> should be changed to be 1 higher than those of taskbars.
+			</p>
+
+			<span id="taskbar" class="anchor-fix"></span>
+			<h2>Taskbar</h2>
+
+			<p>
+				<code class="language-css">.simone-taskbar-resizing</code> is applied to <a href="taskbar.html#option-resizable">resizable</a> mask when taskbar is resizing.
+			</p>
+			<p>
+				<code class="language-css">.simone-taskbar-dragging</code> is applied to taskbar <a href="taskbar.html#option-draggable">draggable</a> helper is being dragged.
+			</p>
+			<p>
+				<code class="language-css">.simone-taskbar-droppable</code> is a class applied to droppable containers, and opacity and/or background color could be set for it.
+			</p>
+
+			<span id="window" class="anchor-fix"></span>
+			<h2>Window</h2>
+
+			<p>
+				<code class="language-css">.simone-taskbar-window-minimize-all-hover, .simone-taskbar-window-minimize-all-unhover</code> are classes that are applied to all windows when taskbar's <a href="taskbar.html#option-minimizeAll">minimizeAll</a> button is hovered and <a href="taskbar.html#option-minimizeAllHoverOpaqueWindows">minimizeAllHoverOpaqueWindows</a> is set to <code class="language-javascript">true</code>.
+			</p>
+			<p>
+				<code class="language-css">.simone-window-overlay.ui-widget-overlay</code> opacity and/or background color can be modified for windows that has <a href="window.html#option-embeddedContent">embeddedContent</a> set to <code class="language-javascript">true</code>, or for which <a href="window.html#option-confirmClose">confirmClose</a> is in progress.
+			</p>
+
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

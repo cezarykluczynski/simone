@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Languages and localization | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		test( "Basic i18n usage", function ( assert ) {
+			$taskbar.taskbar( "option", "language", "en" );
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "confirmCloseYes" ),
+				$.simone.taskbar.prototype.options.localization.en.confirmCloseYes,
+				"Key with no variable."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "newWindowNext", {
+					":counter": "Test"
+				}),
+				$.simone.taskbar.prototype.options.localization.en.newWindowNext
+					.replace( ":counter", "Test" ),
+				"Key with variable."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "newWindowNext", {
+					counter: "3"
+				}),
+				$.simone.taskbar.prototype.options.localization.en.newWindowNext
+					.replace( ":counter", "3" ),
+				"Key with variable with unprefixed name."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "multipleWindowButton", {
+					":counter": "2",
+					":title"  : "News"
+				}),
+				$.simone.taskbar.prototype.options.localization.en.multipleWindowButton
+					.replace( ":counter", "2" )
+					.replace( ":title", "News" ),
+				"Key with mutiple variables."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "multipleWindowButton", {
+					counter: "2",
+					title  : "News"
+				}),
+				$.simone.taskbar.prototype.options.localization.en.multipleWindowButton
+					.replace( ":counter", "2" )
+					.replace( ":title", "News" ),
+				"Key with mutiple variables with unprefixed names."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "confirmCloseYes", null, "pl" ),
+				$.simone.taskbar.prototype.options.localization.pl.confirmCloseYes,
+				"Key for different language, with no variables."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "newWindowNext", {
+					":counter": "Test"
+				}, "pl" ),
+				$.simone.taskbar.prototype.options.localization.pl.newWindowNext
+					.replace( ":counter", "Test" ),
+				"Key for different language, with variable."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "newWindowNext", {
+					counter: "3"
+				}, "pl" ),
+				$.simone.taskbar.prototype.options.localization.pl.newWindowNext
+					.replace( ":counter", "3" ),
+				"Key for different language, with variable with unprefixed name."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "multipleWindowButton", {
+					":counter": "2",
+					":title"  : "News"
+				}, "pl" ),
+				$.simone.taskbar.prototype.options.localization.pl.multipleWindowButton
+					.replace( ":counter", "2" )
+					.replace( ":title", "News" ),
+				"Key for different language, with mutiple variables."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "multipleWindowButton", {
+					counter: "2",
+					title  : "News"
+				}, "pl" ),
+				$.simone.taskbar.prototype.options.localization.pl.multipleWindowButton
+					.replace( ":counter", "2" )
+					.replace( ":title", "News" ),
+				"Key for different language, with mutiple variables with unprefixed names."
+			);
+		});
+
+		test( "System buttons translations", function ( assert ) {
+			$taskbar.taskbar( "option", "language", "en" );
+
+			$taskbar.taskbar( "option", {
+				minimizeAll: true,
+				networkMonitor: true,
+				languageSelect: true,
+				toggleFullscreen: true
+			});
+
+			expect( 11 );
+
+			$.each( [ "en", "pl" ], function ( index, langCode ) {
+				if ( langCode === "pl" ) {
+					$taskbar.taskbar( "option", "language", "pl" );
+
+					ok( true, "Change language to pl." );
+				}
+
+				assert.equal(
+					$taskbar.find( "[data-button-name=minimizeAll]" ).find( ".ui-button-text" ).text(),
+					$.simone.taskbar.prototype.options.localization[ langCode ].minimizeAll,
+					"Minimize all button has the right text."
+				);
+
+				assert.ok(
+					    $taskbar.find( "[data-button-name=networkMonitor]" ).find( ".ui-button-text" ).text()
+					=== $.simone.taskbar.prototype.options.localization[ langCode ].networkMonitorOnline
+					||  $taskbar.find( "[data-button-name=networkMonitor]" ).find( ".ui-button-text" ).text()
+					=== $.simone.taskbar.prototype.options.localization[ langCode ].networkMonitorOffline,
+					"Network monitor button has the right text."
+				);
+
+				if ( fullscreenAvailable ) {
+					assert.ok(
+						    $taskbar.find( "[data-button-name=toggleFullscreen]" ).find( ".ui-button-text" ).text()
+						=== $.simone.taskbar.prototype.options.localization[ langCode ].toggleFullscreenEnter
+						||  $taskbar.find( "[data-button-name=toggleFullscreen]" ).find( ".ui-button-text" ).text()
+						=== $.simone.taskbar.prototype.options.localization[ langCode ].toggleFullscreenLeave,
+						"Toggle fullscreen button has the right text."
+					);
+				} else {
+					assert.ok( true, "Toggle fullscreen button not available in the browser." );
+				}
+
+				assert.equal(
+					$taskbar.find( "[data-button-name=languageSelect]" ).find( ".ui-button-text" ).text(),
+					$.simone.taskbar.prototype.options.localization[ langCode ].slug,
+					"Language select button has the right slug."
+				);
+
+				assert.equal(
+					$taskbar.find( "[data-button-name=languageSelect]" ).attr( "title" ),
+					$.simone.taskbar.prototype.options.localization[ langCode ].languageSelect,
+					"Language select button has the right text."
+				);
+			});
+		});
+
+		test( "Windows buttons translations", function ( assert ) {
+			var name       = "Window name";
+			var secondName = "Window header";
+			var thirdName  = "Window title";
+
+			$taskbar.taskbar( "option", "localization.en.windowTitle", name );
+			$taskbar.taskbar( "option", "language", "en" );
+
+			var $window = $( "<div></div>" ).window({
+				titleLocalized: "windowTitle"
+			});
+
+			var windowId = $window.attr( "id" );
+
+			assert.equal(
+				$taskbar.find( "[data-window-id=" + windowId + "] .ui-button-text" ).text(),
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Window button has the same title as window, set via titleLocalized."
+			);
+
+			$window.window( "option", "title", secondName );
+
+			assert.equal(
+				$taskbar.find( "[data-window-id=" + windowId + "] .ui-button-text" ).text(),
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Window button has the same title as window, set via title."
+			);
+
+			$taskbar.taskbar( "option", "localization.en.windowTitle2", thirdName );
+
+			$window.window( "option", "titleLocalized", "windowTitle2" );
+			$window.window( "option", "title", null );
+
+			assert.equal(
+				$taskbar.find( "[data-window-id=" + windowId + "] .ui-button-text" ).text(),
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Window button has the same title as window, set via titleLocalized, with title != null."
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "Fallback language", function ( assert ) {
+			var fallback = "Fallback";
+
+			$taskbar.taskbar( "option", "localization.en.fallback", fallback );
+			$taskbar.taskbar( "option", "language", "pl" );
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "fallback" ),
+				fallback,
+				"Key with no variable."
+			);
+
+			var fallbackKey = "Fallback :key";
+
+			$taskbar.taskbar( "option", "localization.en.fallbackKey", fallbackKey );
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "fallbackKey", {
+					":key": "test"
+				}),
+				fallbackKey
+					.replace( ":key", "test" ),
+				"Key with variable."
+			);
+
+			var fallbackKeys = "Fallback :key, :key2";
+
+			$taskbar.taskbar( "option", "localization.en.fallbackKeys", fallbackKeys );
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "fallbackKeys", {
+					":key": "test",
+					":key2": "word"
+				}),
+				fallbackKeys
+					.replace( ":key", "test" )
+					.replace( ":key2", "word" ),
+				"Key with variables."
+			);
+
+			assert.equal(
+				$taskbar.taskbar( "i18n", "fallbackKeyNonExisting" ),
+				$.simone.taskbar.prototype._cnst.missingTranslation,
+				"Non-existing key."
+			);
+		});
+
+		test( "Window translations", function ( assert ) {
+			$taskbar.taskbar( "option", "language", "en" );
+
+			var $window = $( "<div></div>" ).window();
+
+			var close2 = "Close2";
+			var maximize2 = "Maximize2";
+			var minimize2 = "Minimize2";
+			var restore2 = "Restore2";
+
+			$window.window( "option", "durations.maximize", false );
+			$window.window( "option", "durations.restore", false );
+			$window.window( "restore" );
+
+			$taskbar.taskbar( "option", "localization.en.close", close2 );
+			$taskbar.taskbar( "option", "localization.en.maximize", maximize2 );
+			$taskbar.taskbar( "option", "localization.en.minimize", minimize2 );
+			$taskbar.taskbar( "option", "localization.en.restore", restore2 );
+
+			assert.equal(
+				$window.parent().find( "[data-button-name=maximize] .ui-button-text" ).text(),
+				restore2,
+				"Maximize button has the correct text when window is restored."
+			);
+
+			$window.window( "maximize" );
+
+			assert.equal(
+				$window.parent().find( "[data-button-name=maximize] .ui-button-text" ).text(),
+				restore2,
+				"Maximize button has the correct text when window is maximize."
+			);
+
+			$window.window( "restore" );
+
+			assert.equal(
+				$window.parent().find( "[data-button-name=close] .ui-button-text" ).text(),
+				close2,
+				"Close button has the correct text when window is maximize."
+			);
+
+			assert.equal(
+				$window.parent().find( "[data-button-name=minimize] .ui-button-text" ).text(),
+				minimize2,
+				"Minimize button has the correct text when window is maximize."
+			);
+
+			$window.window( "close" );
+		});
+	});
+</script>
+
+</body>
+</html>

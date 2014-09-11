@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window interactions - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar and log all relevant events
+	$( ".taskbar" ).taskbar();
+
+	// initialize window
+	$( ".window" ).window({
+		title: "Draggable/resizable",
+		containment: "visible",
+		width: 500,
+		height: 300,
+		dragStart: function( event, ui ) {
+			demo.log( "dragStart" );
+		},
+		drag: function( event, ui ) {
+			// log drag once in a while, no log flooding
+			if ( Math.random() < 0.05 ) {
+				demo.log( "drag" );
+			}
+		},
+		dragStop: function( event, ui ) {
+			demo.log( "dragStop" );
+		},
+		resizeStart: function( event, ui ) {
+			demo.log( "resizeStart" );
+		},
+		resize: function( event, ui ) {
+			// log resize once in a while, no log flooding
+			if ( Math.random() < 0.05 ) {
+				demo.log( "resize" );
+			}
+		},
+		resizeStop: function( event, ui ) {
+			demo.log( "resizeStop" );
+		},
+	});
+
+	// allow containment change on user request
+	$( ".switch-containment" ).on( "click", function () {
+		// save to variable
+		var containment = $( ".window" ).window( "option", "containment" );
+
+		// toggle value
+		containment = containment === "viewport" ? "visible" : "viewport";
+
+		console.log(containment);
+
+		// set new value
+		$( ".window" ).window( "option", "containment", containment );
+
+		// set new value to button that's been just clicked
+		$( this ).find( "span.state" ).text( "\"" + containment + "\"" );
+	}).button();
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo show how window draggable and resizable works,
+		and also when different related events are fired.
+	</div>
+
+	<button class="switch-containment">
+		Switch containment (currently: <span class="state">"visible"</span>)
+	</button>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

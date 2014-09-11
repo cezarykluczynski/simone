@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "windowButtonsIconsOnly" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize bottom taskbar with "windowButtonsIconsOnly" set to true
+	$( ".taskbar" ).taskbar({
+		windowButtonsIconsOnly: true
+	});
+
+	// initialize bottom taskbar with "windowButtonsIconsOnly" set to false
+	// (the default setting)
+	$( ".taskbar2" ).taskbar({
+		horizontalStick: "top left"
+	});
+
+	// bind two windows to top taskbar
+	$( ".window:gt(1)" ).window({
+		icons: {
+			main: "ui-icon-suitcase"
+		},
+		taskbar: ".taskbar2"
+	});
+
+	// bind two windows to bottom taskbar
+	$( ".window:lt(2)" ).window({
+		icons: {
+			main: "ui-icon-note"
+		}
+	});
+
+	// by default, window has no main icon,  so in conjuction with
+	// "windowButtonsIconsOnly" it will have a blank icon (ui-icon-blank);
+	// blank icon does not tak space in window titlebar, their only used
+	// in taskbar's window button
+	$( ".window-no-icon" ).window({
+		title: "Blank icon"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+<div class="window-no-icon"></div>
+
+<div class="demo">
+	<div class="description">
+		Taskbar on the top has
+		"<a href="../../docs/taskbar.html#option-windowButtonsIconsOnly">windowButtonsIconsOnly</a>"
+		set to false.
+		<br><br>
+		Taskbar on the bottom has "windowButtonsIconsOnly" set to false.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

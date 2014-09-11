@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "dropOnExisting" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// make both taskbars draggable
+	$.simone.taskbarSetup({
+		draggable: true
+	});
+
+	// create top taskbar, one that would not drop on existing taskbar
+	// ("dropOnExisting" if set to false by default)
+	$( ".taskbar" ).taskbar({
+		horizontalStick: "top left",
+		buttons: {
+			noDrop: {}
+		},
+		buttonsOrder: [ "noDrop" ]
+	});
+
+	// .taskbar2 has "dropOnExisting" set to true and it will cover .taskbar
+	// when it's dropped on it, but is we would to switch their DOM order and
+	// not set the z-index to 10005, it  would be the other way around
+	$( ".taskbar2" ).taskbar({
+		dropOnExisting: true,
+		buttons: {
+			drop: {}
+		},
+		buttonsOrder: [ "drop" ]
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+/* set higher z-index to taskbar that should cover other taskbars,
+   when you have"dropOnExisting" set to true */
+.taskbar2 {
+	z-index: 10005;
+}
+</style>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Taskbar placed originally on the top edge cannot be dropped on taskbar
+		originally placed on the bottom, but taskbar from bottom edge can be
+		dropped on taskbar from top edge.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

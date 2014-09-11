@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window flow - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize window with default options
+	$( ".window-default" ).window({
+		title: "Default options"
+	});
+
+	// initialize window with custom animation durations
+	$( ".window-custom" ).window({
+		title: "Custom durations",
+		durations: {
+			maximize: 1000,
+			minimize: 500,
+			restore: false,
+			show: "fast"
+		}
+	});
+
+	// bind "maximize" method with custom duration
+	$( ".quick-maximize" ).on( "click", function () {
+		// 75 milliseconds is enough for user to notice animation,
+		// on most devices anyway
+		$( ".window-custom" ).window( "maximize", 75 );
+	}).button();
+
+	// bind "minimize" method with custom duration
+	$( ".slow-minimize" ).on( "click", function () {
+		// let's make it really slow, like 3 seconds
+		$( ".window-custom" ).window( "minimize", 3000 );
+	}).button();
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window-default"></div>
+<div class="window-custom">
+	<button class="quick-maximize">
+		Quick maximize
+	</button>
+
+	<button class="slow-minimize">
+		Slow minimize
+	</button>
+</div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows window flow: maximizing, minimizing, restoring
+		and showing.
+		<br><br>
+		"Default options" is a window with default options, where
+		"Custom durations" is a window with some custom animation
+		<a href="../../docs/window.html#option-durations">durations</a> set.
+		Refer to "Code required" window to see details.
+		<br><br>
+		Custom buttons in "Custom durations" window will trigger methods
+		<a href="../../docs/window.html#method-maximize">maximize</a>
+		and <a href="../../docs/window.html#method-minimize">minimize</a>
+		with custom durations.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

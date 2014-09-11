@@ -1,0 +1,108 @@
+html body {
+	font-size: 12px;
+	margin: inherit;
+	margin-top: 45px;
+	height: auto;
+	position: static;
+	min-width: 960px;
+}
+
+html body.stick-to-top {
+	margin-top: 0;
+}
+
+/* some minimal dimensions are required,
+   otherwise tests that require space will fail */
+.qunit-composite-suite,
+body:not(.all) {
+	min-height: 350px;
+}
+
+/* List of all test suites, not be covered by iframe */
+body.all.in-progress {
+	margin-bottom: 350px;
+}
+
+/* QUnit, not to be covered by taskbar */
+body:not(.all) {
+	margin-bottom: 40px;
+}
+
+body.no-top-bar .fixed {
+	display: none;
+}
+
+body.no-top-bar {
+	margin-top: 0px;
+}
+
+body.all #qunit-header {
+	border-radius: 0;
+}
+
+body.index {
+	font-size: 12px;
+}
+
+.warning {
+	position: fixed;
+	top: 70px;
+	left: 60%;
+	width: 40%;
+	z-index: 20;
+	font-size: 20px;
+	background: #FFFEB1;
+	border: 1px solid black;
+	text-align: center;
+	padding: .5em;
+	line-height: 1.4em;
+	box-sizing: border-box;
+	z-index: 10900;
+}
+
+.warning.error {
+	background-color: red;
+}
+
+.warning p {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	font-size: 1em;
+}
+
+.warning p + p {
+	margin-top: 1em;
+}
+
+#qunit {
+	position: relative;
+}
+
+#qunit-header.no-top-radius {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+/* overwrite some of Foundation's CSS */
+#qunit select {
+	width: auto;
+	display: inline;
+	height: auto;
+	background: #fff;
+	line-height: inherit;
+	margin: 0;
+	padding: 0;
+	-webkit-appearance: menulist !important;
+	margin-right: .5em;
+}
+
+.top-bar {
+	min-width: 960px;
+}
+
+main {
+	margin: 2rem;
+	margin-top: calc(2rem + 45px);
+	font-size: 12px;
+}

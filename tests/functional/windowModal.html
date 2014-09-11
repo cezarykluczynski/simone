@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Modal window | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+	<div class="coverable"></div>
+	<div class="not-coverable"></div>
+</div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<style>
+/* used for testing "modalOverlaySetsCreated" */
+.coverable,
+.not-coverable {
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	top: 0;
+	display: none;
+	/* set z-index explicitly so IE won't return "auto",
+	   instead of number when using $.css() */
+	z-index: 0;
+}
+
+.coverable {
+	left: 0;
+	background-color: red;
+}
+
+.not-coverable {
+	background-color: yellow;
+	right: 0;
+}
+</style>
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var create_modal = function() {
+			return $( "<div></div>" )
+				.prependTo( "body" )
+				.window({
+					modal: true
+				});
+		};
+
+		test( "\"modal\": true, false", function () {
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window({
+					modal: true
+				});
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-modal" ), $window.window( "modalOverlay" ).length ],
+				[ true, 1 ],
+				"Create modal. Modal overlay created, window is modal."
+			);
+
+			$window.window( "option", "modal", false );
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-modal" ), $window.window( "modalOverlay" ).length ],
+				[ false, 0 ],
+				"Convert window to non-modal via setter. Modal overlay destroyed, window isn't modal."
+			);
+
+			$window.window( "option", "modal", true );
+
+			deepEqual(
+				[ $window.parent().hasClass( "simone-window-modal" ), $window.window( "modalOverlay" ).length ],
+				[ true, 1 ],
+				"Convert window to modal via setter. Modal overlay created, window is modal."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "modal overlay click vs \"minimizable\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window({
+					modal: true,
+					minimizable: false,
+					durations: {
+						minimize: false
+					}
+				});
+
+			var $overlay =  $window.window( "modalOverlay" );
+
+
+			$overlay.trigger( "click" );
+
+			ok(
+				$window.window( "minimized" ) === false,
+				"Create unminimizable modal. Trigger click on overlay. Modal not minimized."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"modalOverlay\" option", function () {
+			var $window,
+			$window2,
+			$window3,
+			$elems,
+			$windows,
+			$taskbars,
+			zIndex,
+			zIndexWindows,
+			zIndexTaskbars,
+			zIndexWindowsTaskbar,
+			zIndexTaskbar;
+
+			$window2 = $( "<div></div>" ).window();
+
+			$taskbar2.taskbar({
+				horizontalStick: "top left"
+			});
+
+			$window3 = $( "<div></div>" ).window({
+				taskbar: $taskbar2
+			});
+
+			$window = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlay: "all"
+			});
+
+			var uuid = $window.data( $.simone.window.prototype._cnst.dataPrefix + "window" ).uuid;
+
+			// all
+			$elems = $( ".simone-taskbar, .simone-window" ).not( $window.parent() );
+			zIndex = $taskbar.taskbar( "option", "windowsInitialZIndex" );
+
+			$elems.each( function () {
+				zIndex = Math.max( zIndex, parseInt( $( this ).css( "zIndex" ), 10) );
+			});
+
+			ok(
+				parseInt( $window.parent().css( "zIndex" ), 10 ) > zIndex,
+				"\"modalOverlay\" = \"all\", all windows except modal and and taskbars covered"
+			);
+
+			// viewport
+			$window.window( "option", "modalOverlay", "viewport" );
+
+			$windows = $( ".simone-window" ).not( $window.parent() );
+			$taskbars = $( ".simone-taskbar" );
+
+			zIndexWindows = $taskbar.taskbar( "option", "windowsInitialZIndex" );
+
+			$windows.each( function () {
+				zIndexWindows = Math.max( zIndexWindows, parseInt( $( this ).css( "zIndex" ), 10 ) );
+			});
+
+			ok(
+				parseInt( $( ".ui-widget-overlay[data-window-uuid=" + uuid + "]").css( "zIndex" ), 10 ) > zIndexWindows,
+				"\"modalOverlay\" = \"viewport\", all windows except modal covered"
+			);
+
+			zIndexTaskbars = $taskbar.taskbar( "option", "windowsInitialZIndex" );
+
+			$taskbars.each( function () {
+				zIndexTaskbars = Math.max( zIndexTaskbars, parseInt( $( this ).css( "zIndex" ), 10 ) );
+			});
+
+			ok(
+				parseInt( $( ".ui-widget-overlay[data-window-uuid=" + uuid + "]").css( "zIndex" ), 10 ) < zIndexTaskbars,
+				"\"modalOverlay\" = \"viewport\", all taskbars not covered"
+			);
+
+			// $taskbar2
+			$window.window( "option", "modalOverlay", $taskbar2 );
+
+			var $windowsTaskbar = $windows.add( $taskbar );
+
+			zIndexWindowsTaskbar = $taskbar.taskbar( "option", "windowsInitialZIndex" );
+
+			$windowsTaskbar.each( function () {
+				zIndexWindowsTaskbar = Math.max( zIndexWindowsTaskbar, parseInt( $( this ).css( "zIndex" ), 10) );
+			});
+
+			zIndexTaskbar = $taskbar.taskbar( "option", "windowsInitialZIndex" );
+
+			$taskbar2.each( function () {
+				zIndexTaskbar = Math.max( zIndexTaskbar, parseInt( $( this ).css( "zIndex" ), 10) );
+			});
+
+			ok(
+				parseInt( $( ".ui-widget-overlay[data-window-uuid=" + uuid + "]").css( "zIndex" ), 10 ) > zIndexWindowsTaskbar,
+				"\"modalOverlay\" = $taskbar2, all windows except modal covered, $taskbar covered"
+			);
+
+			ok(
+				parseInt( $( ".ui-widget-overlay[data-window-uuid=" + uuid + "]").css( "zIndex" ), 10 ) < zIndexTaskbar,
+				"\"modalOverlay\" = $taskbar2, $taskbar2 not covered"
+			);
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+			$window3.window( "close" );
+			$taskbar2.taskbar( "destroy" );
+		});
+
+		test( "\"modalOverlay\" method", function () {
+			var $window;
+			var $window2;
+			var $modalOverlay;
+
+			$window = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlay: "all"
+			});
+
+			$modalOverlay = $window.window( "modalOverlay" );
+
+			deepEqual(
+				[ $modalOverlay.length, $modalOverlay instanceof $ ],
+				[ 1, true ],
+				"Open modal window 1. Method \"modalOverlay\" return jQuery object with length 1."
+			);
+
+			$window2 = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlay: "all"
+			});
+
+			$modalOverlay = $window2.window( "modalOverlay" );
+
+			deepEqual(
+				[ $modalOverlay.length, $modalOverlay instanceof $ ],
+				[ 1, true ],
+				"Open modal window 2. Method \"modalOverlay\" return jQuery object with length 1."
+			);
+
+			$modalOverlay = $window.window( "modalOverlay" );
+
+			deepEqual(
+				[ $modalOverlay.length, $modalOverlay instanceof $ ],
+				[ 0, true ],
+				"Check window 1. Method \"modalOverlay\" return jQuery object with length 0."
+			);
+
+			$window.window( "show", false );
+
+			$modalOverlay = $window.window( "modalOverlay" );
+
+			deepEqual(
+				[ $modalOverlay.length, $modalOverlay instanceof $ ],
+				[ 1, true ],
+				"Show window 1 via window( \"show\", false ). Method \"modalOverlay\" return jQuery object with length 1."
+			);
+
+			$modalOverlay = $window2.window( "modalOverlay" );
+
+			deepEqual(
+				[ $modalOverlay.length, $modalOverlay instanceof $ ],
+				[ 0, true ],
+				"Check window 2. Method \"modalOverlay\" return jQuery object with length 0."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+		});
+
+		test( "Multiple modals", function () {
+			var $window;
+			var $window2;
+			var $window3;
+
+			$window = create_modal();
+
+			var $overlay = $window.window( "modalOverlay" );
+
+			equal(
+				$overlay.length,
+				1,
+				"Modal created. Overlay found."
+			);
+
+			ok(
+				parseInt( $taskbar.css( "zIndex" ), 10 ) < parseInt( $overlay.css( "zIndex" ), 10 ),
+				"Taskbar hidden beneath overlay."
+			);
+
+			$window3 = $( "<div></div>" ).window();
+
+			ok(
+				parseInt( $window3.parent().css( "zIndex" ), 10 ) < parseInt( $overlay.css( "zIndex" ), 10 ),
+				"Open non-modal window. Window is beneath modal overlay."
+			);
+
+			$window2 = create_modal();
+
+			var $overlay2 = $window2.window( "modalOverlay" );
+
+			ok(
+				parseInt( $taskbar.css( "zIndex" ), 10 ) < parseInt( $overlay2.css( "zIndex" ), 10 ),
+				"Open second modal. Taskbar hidden beneath overlay."
+			);
+
+			ok(
+				! $window.parent().is( ":visible" ),
+				"Previous modal is hidden."
+			);
+
+			$window3
+				.window( "show", false )
+				.window( "moveToTop" );
+
+			ok(
+				parseInt( $window2.parent().css( "zIndex" ), 10 ) > parseInt( $overlay2.css( "zIndex" ), 10 ),
+				"Move non-modal on top. Modal has higher z-index than overlay."
+			);
+
+			ok(
+				parseInt( $window3.parent().css( "zIndex" ), 10 ) < parseInt( $overlay2.css( "zIndex" ), 10 ),
+				"Non modal window is beneath overlay."
+			);
+
+			var prev = $taskbar.taskbar( "option", "propagateWindowBlur" );
+			$taskbar.taskbar( "option", "propagateWindowBlur", true );
+
+			$( window ).trigger( "blur" );
+
+			ok(
+				! $window2.parent().hasClass( "simone-window-top" ),
+				"Set taskbar propagateWindowBlur to true. Blur main window. Modal has no class \"simone-window-top\"."
+			);
+
+			ok(
+				parseInt( $window2.parent().css( "zIndex" ), 10 ) > parseInt( $overlay2.css( "zIndex" ), 10 ),
+				"Modal has higher z-index than overlay."
+			);
+
+			$taskbar.taskbar( "option", "propagateWindowBlur", prev );
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+			$window3.window( "close" );
+		});
+
+		test( "Modal z-index stay in place", function () {
+			var $window;
+			var $window2;
+			var $window3;
+
+			var zIndexBefore;
+			var zIndexAfter;
+
+			$window = create_modal();
+
+			zIndexBefore = parseInt( $window.parent().css( "zIndex" ) );
+
+			$window2 = create_modal();
+
+			ok(
+				$window2.parent().hasClass( "simone-window-top" ),
+				"Create 2 modals. Second modal is on top."
+			);
+
+			equal(
+				parseInt( $window2.parent().css( "zIndex" ) ),
+				zIndexBefore,
+				"Create second modal." +
+				" Window 2 z-index is equal to window 1 z-index on init."
+			);
+
+			$.each( [ 1, 2, 3 ], function( arrayIndex, index ) {
+				$window
+					.window( "show", false )
+					.window( "moveToTop" );
+
+				equal(
+					parseInt( $window.parent().css( "zIndex" ) ),
+					zIndexBefore,
+					"Move window 1 to top." +
+					" Window 1 z-index is equal to window 2 z-index on init. (" + index + ")."
+				);
+
+				// return false;
+
+				$window2
+					.window( "show", false )
+					.window( "moveToTop" );
+
+				equal(
+					parseInt( $window2.parent().css( "zIndex" ) ),
+					zIndexBefore,
+					"Move window 2 to top." +
+					" Window 2 z-index is equal to what it was before. (" + index + ")."
+				);
+			});
+
+			$window
+				.window( "show", false )
+				.window( "moveToTop" );
+
+			equal(
+				parseInt( $window.parent().css( "zIndex" ) ),
+				zIndexBefore,
+				"Move window 1 to top." +
+				" Window 1 z-index is equal to window 2 z-index on init."
+			);
+
+			$window3 = create_modal();
+
+			ok(
+				$window3.parent().hasClass( "simone-window-top" ),
+				"Create third modal. Third modal is on top."
+			);
+
+			equal(
+				parseInt( $window3.parent().css( "zIndex" ) ),
+				zIndexBefore,
+				"Third modal z-index is equal to second modal z-index set on it's init."
+			);
+
+			$.each( [ 1, 2, 3 ], function( arrayIndex, index ) {
+				$window
+					.window( "restore", false )
+					.window( "moveToTop" );
+
+				equal(
+					parseInt( $window.parent().css( "zIndex" ) ),
+					zIndexBefore,
+					"Move window 1 to top." +
+					" Window 1 z-index is equal to window 1 z-index on init. (" + index + ")."
+				);
+
+				$window2
+					.window( "restore", false )
+					.window( "moveToTop" );
+
+				equal(
+					parseInt( $window2.parent().css( "zIndex" ) ),
+					zIndexBefore,
+					"Move window 2 to top." +
+					" Window 2 z-index is equal to window 1 z-index on init. (" + index + ")."
+				);
+
+				$window3
+					.window( "restore", false )
+					.window( "moveToTop" );
+
+				equal(
+					parseInt( $window3.parent().css( "zIndex" ) ),
+					zIndexBefore,
+					"Move window 3 to top." +
+					" Window 3 z-index is equal to window 1 z-index on init. (" + index + ")."
+				);
+			});
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+			$window3.window( "close" );
+		});
+
+		test( "\"modalOverlaySetsCreated\" event: create 2 windows, taskbar and 2 custom divs", function () {
+			var $window;
+			var $window2;
+
+			var $window2 = $( "<div></div>" ).window();
+
+			var $coverable = $( ".coverable" );
+			var $notCoverable = $( ".not-coverable" );
+
+			$coverable.show();
+			$notCoverable.show();
+
+			$taskbar2.taskbar({
+				horizontalStick: "top left"
+			});
+
+			$window = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlaySetsCreated: function( event, ui ) {
+					ui.$setCover = ui.$setCover.add( $coverable );
+					ui.$setNoCover = ui.$setNoCover.add( $taskbar2.taskbar( "widget" ) );
+					ui.$setNoCover = ui.$setNoCover.add( $notCoverable );
+				}
+			});
+
+			var uuid = $window.data( dataPrefix + "window" ).uuid;
+
+			ok(
+				$coverable.hasClass( "simone-covered-by-overlay-" + uuid ),
+				"Custom element 1 was joined to the set by adding to $ui.$setCover."
+			);
+
+			ok(
+				$taskbar2.taskbar( "widget" ).hasClass( "simone-not-covered-by-overlay-" + uuid ),
+				"Taskbar 2 removed from not set by adding to ui.$setNoCover."
+			);
+
+			console.log( $notCoverable.css( "zIndex" ), $window.window( "modalOverlay" ).css( "zIndex" ) );
+
+			ok(
+				parseInt( $notCoverable.css( "zIndex" ), 10 )
+				> parseInt( $window.window( "modalOverlay" ).css( "zIndex" ), 10 ),
+				"Second custom element added to ui.$setNoCover, and it's over modal overlay."
+			);
+
+			ok(
+				$notCoverable.hasClass( "simone-not-covered-by-overlay-" + uuid ),
+				"Second element has the right class."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$coverable.hide();
+			$notCoverable.hide();
+			$window2.window( "close" );
+			$taskbar2.taskbar( "destroy" );
+		});
+
+		test( "toggling \"modal\" option", function () {
+			expect( 17 );
+
+			var $window;
+			var $window2;
+			var $window3;
+
+			$window = $( "<div></div>" ).window({
+				modalOverlay: "all"
+			});
+
+			$window2 = $( "<div></div>" ).window({
+				position: {
+					my: "left center",
+					at: "left center"
+				}
+			});
+
+			$window3 = $( "<div></div>" ).window({
+				position: {
+					my: "right center",
+					at: "right center"
+				}
+			});
+
+			ok( true, "Create 3 windows. None is modal. The first one will be used as modal." );
+
+			$.each( [ true, false, true, false ], function ( key, modal ) {
+
+				if ( key < 3 ) {
+					$window.window( "option", "modal", modal );
+					var $overlay = $window.window( "modalOverlay" );
+					ok( true, "Set \"modal\" option to " + modal + "." );
+				} else {
+					$window.window( "close" );
+					ok( true, "Close modal." );
+				}
+
+				if ( modal ) {
+					ok(
+						parseInt( $taskbar.css( "zIndex" ), 10 ) < parseInt( $overlay.css( "zIndex" ), 10 ),
+						"Taskbar is under the overlay."
+					);
+
+					ok(
+						parseInt( $window2.parent().css( "zIndex" ), 10 ) < parseInt( $overlay.css( "zIndex" ), 10 ),
+						"Window 2 is under the overlay."
+					);
+
+					ok(
+						parseInt( $window3.parent().css( "zIndex" ), 10 ) < parseInt( $overlay.css( "zIndex" ), 10 ),
+						"Window 3 is under the overlay."
+					);
+				} else {
+					ok(
+						$taskbar.attr( "class" ).indexOf( "covered-by-overlay" ) === -1,
+						"Taskbar not covered by overlay."
+					)
+
+					ok(
+						$window2.parent().attr( "class" ).indexOf( "covered-by-overlay" ) === -1,
+						"Window 1 not covered by overlay."
+					)
+
+					ok(
+						$window3.parent().attr( "class" ).indexOf( "covered-by-overlay" ) === -1,
+						"Window 2 not covered by overlay."
+					)
+				}
+			});
+
+			$window2.window( "destroy" );
+			$window3.window( "destroy" );
+		});
+
+		test( "Active button kept for two \"modalOverlay\": \"viewport\" modals opened in a row.", function () {
+			var $window;
+			var $window2;
+
+			var $window3;
+			var $window4;
+
+			$window3 = $( "<div></div>" ).window({
+				group: "test"
+			});
+			$window4 = $( "<div></div>" ).window({
+				group: "test"
+			});
+
+			$window = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlay: "viewport"
+			});
+
+			ok(
+				$window.window( "button" ).hasClass( "ui-state-active" ),
+				"Open first modal. First modal's button is active."
+			);
+
+			$window2 = $( "<div></div>" ).window({
+				modal: true,
+				modalOverlay: "viewport"
+			});
+
+			ok(
+				$window2.window( "button" ).hasClass( "ui-state-active" ),
+				"Open second modal. Second modal's button is active."
+			);
+
+			$window.window( "button" )
+				.trigger( "mouseenter" )
+				.trigger( "mouseleave" );
+
+			ok(
+				! $window.window( "button" ).hasClass( "ui-state-active" ),
+				"Trigger mouseenter and mouseleave on first window button. First modal's button is not active."
+			);
+
+			var overlayZIndexBefore = $window2.window( "modalOverlay" ).css( "zIndex" );
+
+			$window3.window( "moveToTop" );
+
+			ok( true, "Move non-modal to top." );
+
+			equal(
+				$window2.window( "modalOverlay" ).css( "zIndex" ),
+				overlayZIndexBefore,
+				"Second modal overlay z-index stay the same."
+			);
+
+			ok(
+				$window2.window( "button" ).hasClass( "ui-state-active" ),
+				"Second modal's button is active."
+			);
+
+			ok(
+				$window2.parent().hasClass( "simone-window-top" ),
+				"Second modal is on top."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+			$window3.window( "destroy" );
+			$window4.window( "destroy" );
+		});
+	});
+</script>
+
+</body>
+</html>

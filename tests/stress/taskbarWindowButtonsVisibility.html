@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Windows buttons visibility - Simone test</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-random-data">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar({
+			toggleFullscreen: true,
+			clock           : true,
+			buttons         : {
+				basket: {
+					label: "Basket",
+				}
+			},
+			buttonsOrder: [ "basket" ]
+		});
+
+		var fontSizeToSet = 9;
+		var starFontSize = 10;
+		var endFontSize = 16;
+
+		for ( var fontSize = starFontSize; fontSize <= endFontSize; fontSize++ ) {
+			var rowsCount    = parseInt(Math.random() * 2, 10) + 1;
+			var windowsCount = parseInt(Math.random() * 20, 10) + 10;
+
+			asyncTest( "Initialize " + windowsCount + " windows, set rows number to " + rowsCount + ", set font size to "+ fontSize +", check if last window button is visible.", function ( assert ) {
+				$taskbar.css( "fontSize", ++fontSizeToSet + "px");
+				var taskbar = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+				var $container = $taskbar.find( ".simone-taskbar-window-buttons-container" );
+
+				$taskbar.taskbar( "option", "horizontalRows", rowsCount );
+
+				for( var j = 1; j <= windowsCount; j++ ) {
+					$( "<div></div>" ).lorem().window({
+						title: $('<span/>').lorem().text().substr(0,Math.random() * 100),
+						autoOpen: j === windowsCount
+					});
+				}
+
+				setTimeout(function () {
+					var extendedLastButtonOffset = taskbar._extendedPosition.call( $container.children( ":last" ), "offset" );
+					var extendedContainerOffset  = taskbar._extendedPosition.call( $container.parent(), "offset" );
+
+					assert.ok( extendedLastButtonOffset.bottom < extendedContainerOffset.bottom + extendedLastButtonOffset.height / 2,
+						"Last window button is visible." );
+
+					var $windows = $taskbar.taskbar( "windows" );
+
+					$windows.each(function () {
+						$( this ).window( "close" );
+					})
+
+					setTimeout(function () {
+						start();
+					}, 3000 );
+				}, 3000 );
+			});
+		}
+
+		asyncTest( "Set horizontalRows to 1, set font size to 12px.", function ( assert ) {
+			$taskbar.css( "fontSize", "12px").taskbar( "option", "horizontalRows", 1 );
+
+			assert.ok( true, "Done." );
+
+			start();
+		});
+	});
+</script>
+
+</body>
+</html>

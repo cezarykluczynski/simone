@@ -1,0 +1,3590 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Taskbar | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body>
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="options">Options</h3>
+		<ul class="side-nav">
+			<li><a href="#option-autoHide">autoHide</a></li>
+			<li><a href="#option-buttons">buttons</a></li>
+			<li><a href="#option-buttonsOrder">buttonsOrder</a></li>
+			<li><a href="#option-buttonsTooltips">buttonsTooltips</a></li>
+			<li><a href="#option-clock">clock</a></li>
+			<li><a href="#option-clockShowDatepicker">clockShowDatepicker</a></li>
+			<li><a href="#option-debug">debug</a>
+				<ul>
+					<li><a href="#option-debug.environment">debug.environment</a></li>
+					<li><a href="#option-debug.options">debug.options</a></li>
+					<li><a href="#option-debug.localization">debug.localization</a></li>
+				</ul>
+			</li>
+			<li><a href="#option-draggable">draggable</a></li>
+			<li><a href="#option-draggableBetweenEdges">draggableBetweenEdges</a></li>
+			<li><a href="#option-dropOnExisting">dropOnExisting</a></li>
+			<li><a href="#option-durations">durations</a>
+				<ul>
+					<li><a href="#option-durations.buttonsTooltipsHide">durations.buttonsTooltipsHide</a></li>
+					<li><a href="#option-durations.buttonsTooltipsShow">durations.buttonsTooltipsShow</a></li>
+					<li><a href="#option-durations.autoHideDelay">durations.autoHideDelay</a></li>
+					<li><a href="#option-durations.autoHideHide">durations.autoHideHide</a></li>
+					<li><a href="#option-durations.autoHideShow">durations.autoHideShow</a></li>
+				</ul>
+			</li>
+			<li><a href="#option-fallbackLanguage">fallbackLanguage</a></li>
+			<li><a href="#option-icons">icons</a>
+				<ul>
+					<li><a href="#option-icons.clock">icons.clock</a></li>
+					<li><a href="#option-icons.languageSelect">icons.languageSelect</a></li>
+					<li><a href="#option-icons.menuWindowClose">icons.menuWindowClose</a></li>
+					<li><a href="#option-icons.minimizeAll">icons.minimizeAll</a></li>
+					<li><a href="#option-icons.networkMonitorOffline">icons.networkMonitorOffline</a></li>
+					<li><a href="#option-icons.networkMonitorOnline">icons.networkMonitorOnline</a></li>
+					<li><a href="#option-icons.startButton">icons.startButton</a></li>
+					<li><a href="#option-icons.startButtonSet">icons.startButtonSet</a></li>
+					<li><a href="#option-icons.toggleFullscreenOff">icons.toggleFullscreenOff</a></li>
+					<li><a href="#option-icons.toggleFullscreenOn">icons.toggleFullscreenOn</a></li>
+				</ul>
+			</li>
+			<li><a href="#option-horizontalRowHeight">horizontalRowHeight</a></li>
+			<li><a href="#option-horizontalRows">horizontalRows</a></li>
+			<li><a href="#option-horizontalRowsMax">horizontalRowsMax</a></li>
+			<li><a href="#option-horizontalRowsMin">horizontalRowsMin</a></li>
+			<li><a href="#option-horizontalStick">horizontalStick</a></li>
+			<li><a href="#option-horizontalWidth">horizontalWidth</a></li>
+			<li><a href="#option-language">language</a></li>
+			<li><a href="#option-languages">languages</a></li>
+			<li><a href="#option-languageSelect">languageSelect</a></li>
+			<li><a href="#option-localization">localization</a></li>
+			<li><a href="#option-menuAutoOpenOnBrowse">menuAutoOpenOnBrowse</a></li>
+			<li><a href="#option-minimizeAll">minimizeAll</a></li>
+			<li><a href="#option-minimizeAllHoverOpaqueWindows">minimizeAllHoverOpaqueWindows</a></li>
+			<li><a href="#option-networkMonitor">networkMonitor</a></li>
+			<li><a href="#option-orientation">orientation</a></li>
+			<li><a href="#option-propagateWindowBlur">propagateWindowBlur</a></li>
+			<li><a href="#option-resizable">resizable</a></li>
+			<li><a href="#option-resizableHandleOverflow">resizableHandleOverflow</a></li>
+			<li><a href="#option-resolveCollisions">resolveCollisions</a></li>
+			<li><a href="#option-startButtons">startButtons</a></li>
+			<li><a href="#option-systemButtonsOrder">systemButtonsOrder</a></li>
+			<li><a href="#option-toggleFullscreen">toggleFullscreen</a></li>
+			<li><a href="#option-verticalColumns">verticalColumns</a></li>
+			<li><a href="#option-verticalColumnsMax">verticalColumnsMax</a></li>
+			<li><a href="#option-verticalColumnsMin">verticalColumnsMin</a></li>
+			<li><a href="#option-verticalColumnWidth">verticalColumnWidth</a></li>
+			<li><a href="#option-verticalHeight">verticalHeight</a></li>
+			<li><a href="#option-verticalStick">verticalStick</a></li>
+			<li><a href="#option-viewportMargins">viewportMargins</a></li>
+			<li><a href="#option-windowButtonsIconsOnly">windowButtonsIconsOnly</a></li>
+			<li><a href="#option-windowButtonsSortable">windowButtonsSortable</a></li>
+			<li><a href="#option-windowsContainment">windowsContainment</a></li>
+			<li><a href="#option-windowsInitialZIndex">windowsInitialZIndex</a></li>
+		</ul>
+
+		<h3 id="events">Events</h3>
+		<ul class="side-nav">
+			<li class="every"><a href="#event-every">every event</a></li>
+			<li><a href="#event-autoHideStart">autoHideStart</a></li>
+			<li><a href="#event-autoHideProgress">autoHideProgress</a></li>
+			<li><a href="#event-autoHideStop">autoHideStop</a></li>
+			<li><a href="#event-create">create</a></li>
+			<li><a href="#event-debugLogAdd">debugLogAdd</a></li>
+			<li><a href="#event-bind">bind</a></li>
+			<li><a href="#event-unbind">unbind</a></li>
+			<li><a href="#event-dragStart">dragStart</a></li>
+			<li><a href="#event-drag">drag</a></li>
+			<li><a href="#event-dragStop">dragStop</a></li>
+			<li><a href="#event-beforeDrop">beforeDrop</a></li>
+			<li><a href="#event-drop">drop</a></li>
+			<li><a href="#event-beforeDroppableOver">beforeDroppableOver</a></li>
+			<li><a href="#event-droppableOver">droppableOver</a></li>
+			<li><a href="#event-beforeDroppableOut">beforeDroppableOut</a></li>
+			<li><a href="#event-droppableOut">droppableOut</a></li>
+			<li><a href="#event-elementOpen">elementOpen</a></li>
+			<li><a href="#event-elementClose">elementClose</a></li>
+			<li><a href="#event-languageChange">languageChange</a></li>
+			<li><a href="#event-menuItemFocus">menuItemFocus</a></li>
+			<li><a href="#event-menuItemBlur">menuItemBlur</a></li>
+			<li><a href="#event-beforeRefresh">beforeRefresh</a></li>
+			<li><a href="#event-refresh">refresh</a></li>
+			<li><a href="#event-beforeRequestFullscreen">beforeRequestFullscreen</a></li>
+			<li><a href="#event-requestFullscreen">requestFullscreen</a></li>
+			<li><a href="#event-resizeStart">resizeStart</a></li>
+			<li><a href="#event-resize">resize</a></li>
+			<li><a href="#event-resizeStop">resizeStop</a></li>
+			<li><a href="#event-sortableStart">sortableStart</a></li>
+			<li><a href="#event-sortableSort">sortableSort</a></li>
+			<li><a href="#event-sortableChange">sortableChange</a></li>
+			<li><a href="#event-sortableStop">sortableStop</a></li>
+		</ul>
+
+		<h3 id="methods">Methods</h3>
+		<ul class="side-nav">
+			<li><a href="#method-blurWindows">blurWindows</a></li>
+			<li><a href="#method-button">button</a></li>
+			<li><a href="#method-destroy">destroy</a></li>
+			<li><a href="#method-hide">hide</a></li>
+			<li><a href="#method-hideSubordinates">hideSubordinates</a></li>
+			<li><a href="#method-instance">instance</a></li>
+			<li><a href="#method-i18n">i18n</a></li>
+			<li><a href="#method-minimizeAll">minimizeAll</a></li>
+			<li><a href="#method-option">option</a></li>
+			<li><a href="#method-refresh">refresh</a></li>
+			<li><a href="#method-show">show</a></li>
+			<li><a href="#method-taskbarSetup">taskbarSetup</a></li>
+			<li><a href="#method-windows">windows</a></li>
+			<li><a href="#method-widget">widget</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="widget with-tos">
+
+	<h2>Introduction</h2>
+		<p>
+			This is documentation for <strong>taskbar</strong> widget.
+		</p>
+
+	<h2>Options</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Option name and values</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="option-autoHide" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">autoHide</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code>, <code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Autohide is a feature that allows hiding of a taskbar when it's not needed.
+					</p>
+					<p>
+						Taskbar will be visible when user moves mouse to the edge of the screen, or mouse hovers over a taskbar, or interaction is in progress (like draggable, resizable, or sortable), or when taskbar has an opened element (a menu, or the datepicker). Otherwise, taskbar will start hiding after a certain period of time, configured in <a href="#option-durations.autoHideDelay">durations.autoHideDelay</a> option, with a animation length configured in <a href="#option-durations.autoHideHide">durations.autoHideHide</a>. When mouse pointer is moved to browser window edge, taskbar will start showing with an animation length configured in <a href="#option-durations.autoHideShow">durations.autoHideShow</a>.
+					</p>
+					<p>
+						Taskbar with <code class="language-javascript">autoHide</code> set to <code class="language-javascript">true</code> are not counted in when <a href="#option-windowsContainment">windowsContainment</a> is calculated, because, for the most time, they are not visible.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-durations.autoHideDelay">durations.autoHideDelay</a><br>
+						<a href="#option-durations.autoHideHide">durations.autoHideHide</a><br>
+						<a href="#option-durations.autoHideShow">durations.autoHideShow</a>
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-autoHideStart">autoHideStart</a><br>
+						<a href="#event-autoHideProgress">autoHideProgress</a><br>
+						<a href="#event-autoHideStop">autoHideStop</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-show">show</a><br>
+						<a href="#method-hide">hide</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarAutoHide.html">Taskbar autoHide</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-buttons" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">buttons</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					object
+				</td>
+				<td>
+					<p>
+						This option holds custom buttons that can be inserted into the taskbar. Custom buttons can be hold in two containers: user buttons container and system buttons container. User buttons container is a container after start buttons container, but before window buttons container, and the system buttons container is the last one (looking from left—in horizontal taskbar, and looking from top—in vertical taskbars).
+					</p>
+					<p>
+						This option only holds buttons config. Buttons order is configured in <a href="#option-buttonsOrder">buttonsOrder</a> and <a href="#option-systemButtonsOrder">systemButtonsOrder</a> options. Buttons can by configured only once, and then inserted or removed into both containers multiple times. Buttons can be changed after initialization. See related demo for details.
+					</p>
+					<p>
+						After buttons is first prepended, an <code class="language-javascript">$element</code> property is added to it, representing jQuery object of button. Handlers can be binded to this object.
+					</p>
+					<p>
+						It's recommended for this object keys not to be numeric.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-buttonsOrder">buttonsOrder</a><br>
+						<a href="#option-systemButtonsOrder">systemButtonsOrder</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarButtons.html">Taskbar buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-buttonsOrder" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">buttonsOrder</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">[]</code><br><br>
+					Allowed values:<br>
+					array of keys from <a href="#option-buttons">buttons</a> option
+				</td>
+				<td>
+					<p>
+						Array of strings coresponding to keys in <a href="#option-buttons">buttons</a> option, or to the names of system buttons. See the default value of <a href="#option-systemButtonsOrder">systemButtonsOrder</a> for full list of system buttons.
+					</p>
+					<p>
+						Buttons, both custom and system, present in this array will be visible. Buttons not present will not be visible.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-buttons">buttons</a><br>
+						<a href="#option-systemButtonsOrder">systemButtonsOrder</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarButtons.html">Taskbar buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-buttonsTooltips" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">buttonsTooltips</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether to show jQuery UI Tooltip on button's hover. This applies to start buttons, custom buttons, window buttons and system buttons.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-clock" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">clock</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Native button that display current time.
+					<p>
+						Time format and clock tooltip date format is configured per language, using <code class="language-javascript">clockDateFormat</code> and <code class="language-javascript">clockTimeFormat</code> keys in <a href="#option-localization">localization</a> option for every language.
+					</p>
+					<p>
+						Available formats for <code class="language-javascript">clockTimeFormat</code> can be <a href="http://trentrichardson.com/examples/timepicker/#tp-formatting">found here</a>.
+					</p>
+					<p>
+						Available formats for <code class="language-javascript">clockDateFormat</code> can be <a href="http://api.jqueryui.com/datepicker/#utility-formatDate">found here</a>. Date formatting depends on jQuery UI Datepicker localization files.
+					</p>
+					<p>
+						Clock can have datepicker, configured in <a href="#option-clockShowDatepicker">clockShowDatepicker</a> option.
+					</p>
+					<p>
+						Clock is probably reduntant, but useful for application that are designed to be used in <a href="#option-toggleFullscreen">fullscreen mode</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-clockShowDatepicker">clockShowDatepicker</a><br>
+						<a href="#option-buttonsOrder">buttonsOrder</a><br>
+						<a href="#option-systemButtonsOrder">systemButtonsOrder</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarSystemButtons.html">Taskbar system buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-clockShowDatepicker" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">clockShowDatepicker</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether to show datepicker when <a href="#option-clock">clock</a> button is clicked. Setting this option to <code class="language-javascript">true</code> will have no visible effect if no clock is present in the taskbar, either when <a href="#option-clock">clock</a> option is set to false, or when both <a href="#option-buttonsOrder">buttonsOrder</a> and <a href="#option-systemButtonsOrder">systemButtonsOrder</a> does not contain clock.
+					</p>
+					<p>
+						Datepicker has no real function other than presenting dates.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-debug" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">debug</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	environment: true,
+<!--			-->	options: true,
+<!--			-->	localization: true
+<!--			-->}</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+				<td>
+					<p>
+						This is a object holding settings for debug functionality. Every key in this object is responsible for a one type of messages. See detailed options for more information.
+					</p>
+					<p>
+						It's recommended to have debug turned on in development mode. This way at least some problems can by identified early on.
+					<p>
+						Details:<br>
+						<a href="#option-debug.environment">debug.environment</a><br>
+						<a href="#option-debug.options">debug.options</a><br>
+						<a href="#option-debug.localization">debug.localization</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-debugLogAdd">debugLogAdd</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-debug.environment" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">debug.environment</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						This option is responsible for debug messages related to environment. Things like missing jQuery plugins and missing stylesheets are in this category.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-debugLogAdd">debugLogAdd</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-debug.options" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">debug.options</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						This option is responsible for debug related to options being passed to both taskbar and window instances. Things like invalid option values and unkown options and events will be reported when <code class="language-javascript">debug.options</code> if set to <code class="language-javascript">true</code>.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-debugLogAdd">debugLogAdd</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-debug.localization" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">debug.localization</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						This option is responsible for reporting missing translations and missing languages. Have it on when you're using bulit in internationalization capabilities to make sure translation are thorough.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-debugLogAdd">debugLogAdd</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-draggable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">draggable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code><br>
+					<code class="language-javascript">"horizontal"</code><br>
+					<code class="language-javascript">"vertical"</code><br>
+					<code class="language-javascript">"orientation"</code>
+				</td>
+				<td>
+					<p>
+						Whether a taskbar should be draggable. Taskbar cannot be dragged freely. It can be dropped only on main window edges. Other options, <a href="#option-draggableBetweenEdges">draggableBetweenEdges</a> and <a href="#option-dropOnExisting">dropOnExisting</a> has effect on behaviour configured via this option.
+					</p>
+					<p>
+						<code class="language-javascript">false</code> means that taskbar is not draggable.
+					</p>
+					<p>
+						<code class="language-javascript">true</code> means that taskbar is draggable.
+					</p>
+					<p>
+						<code class="language-javascript">"horizontal"</code> means that taskbar is draggable, but only horizontally—from top edge to bottom edge and vice versa, and optionally <a href="option-draggableBetweenEdges">between edges</a>.
+					</p>
+					<p>
+						<code class="language-javascript">"vertical"</code> means that taskbar is draggable, but only vertically—from left to right edge and vice versa, and optionally <a href="option-draggableBetweenEdges">between edges</a>.
+					</p>
+					<p>
+						<code class="language-javascript">"vertical"</code> means that taskbar is draggable, but only within the current orientation that's been set via API, and optionally <a href="option-draggableBetweenEdges">between edges</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-draggableBetweenEdges">draggableBetweenEdges</a><br>
+						<a href="#option-dropOnExisting">dropOnExisting</a><br>
+						<a href="#option-resolveCollisions">resolveCollisions</a>
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-dragStart">dragStart</a><br>
+						<a href="#event-drag">drag</a><br>
+						<a href="#event-dragStop">dragStop</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggable.html">Draggable taskbars</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-draggableBetweenEdges" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">draggableBetweenEdges</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether a taskbar can be dragged along the current main window edge it's sticking to.
+					</p>
+					<p>
+						User will see difference beetwen <code class="language-javascript">false</code> and <code class="language-javascript">true</code> settings if <a href="#option-orientation">horizontal</a> taskbar has <a href="#option-horizontalWidth">horizontalWidth</a> set to something other than 100%, or <a href="#option-orientation">vertical</a> taskbar has <a href="#option-verticalHeight">verticalHeight</a> set to something other than 100%. When the longer taskbar edge is 100%, this option has no visible effect.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-draggable">draggable</a><br>
+						<a href="#option-dropOnExisting">dropOnExisting</a><br>
+						<a href="#option-resolveCollisions">resolveCollisions</a>
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-dragStart">dragStart</a><br>
+						<a href="#event-drag">drag</a><br>
+						<a href="#event-dragStop">dragStop</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggableBetweenEdges.html">Taskbars draggable between edges</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-dropOnExisting" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">dropOnExisting</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether a taskbar can be dropped on a windows edge that has a taskbar already. It's not recommended to set this option to <code class="language-javascript">true</code>, as it could be later hard to detect for user that he moved one taskbar over another.
+					<p>
+						With this option set to <code class="language-javascript">true</code>, and with default equal z-indexes, a taskbar that was once covered will be invisible until taskbar on top of it is moved away. Also, with this option set to <code class="language-javascript">true</code> and with default equal z-indexes, a taskbar can be dragged onto another and immediately disappear when dropped, because DOM position of taskbar it is dropped on gives it the higher priority in CSS stack.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-draggable">draggable</a><br>
+						<a href="#option-draggableBetweenEdges">draggableBetweenEdges</a><br>
+						<a href="#option-resolveCollisions">resolveCollisions</a>
+					</p>
+				</td>
+			</tr>
+
+
+			<tr>
+				<td>
+					<span id="option-durations" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	buttonsTooltipsHide : true,
+<!--			-->	buttonsTooltipsShow : true,
+<!--			-->	autoHideDelay       : 1200,
+<!--			-->	autoHideHide        : "slow",
+<!--			-->	autoHideShow        : "fast"
+<!--			-->},</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+
+				<td>
+					<p>
+						This is a object holding various animation durations. Every key in this object is responsible for duration of one particular animation. See detailed options for more information.
+					</p>
+					<p>
+						<strong>Note:</strong> Changing duration when animation is in progress will not change duration of this animation. This is the intended behaviour. If you need to end animation immediately, use <a href="#method-show">show</a>, or <a href="#method-hide">hide</a> methods with a parameter <code class="language-javascript">false</code>.
+					</p>
+					<p>
+						Details:<br>
+						<a href="#option-durations.buttonsTooltipsHide">durations.buttonsTooltipsHide</a><br>
+						<a href="#option-durations.buttonsTooltipsShow">durations.buttonsTooltipsShow</a><br>
+						<a href="#option-durations.autoHideDelay">durations.autoHideDelay</a><br>
+						<a href="#option-durations.autoHideHide">durations.autoHideHide</a><br>
+						<a href="#option-durations.autoHideShow">durations.autoHideShow</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.buttonsTooltipsHide" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.buttonsTooltipsHide</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-hide">valid value for jQuery UI Tooltip's "hide" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						This duration will be propagated to <a href="#option-buttonsTooltips">tooltips</a> <a href="http://api.jqueryui.com/tooltip/#option-hide">hide</a> option.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.buttonsTooltipsShow" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.buttonsTooltipsShow</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-show">valid value for jQuery UI Tooltip's "show" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						This duration will be propagated to <a href="#option-buttonsTooltips">tooltips</a> <a href="http://api.jqueryui.com/tooltip/#option-show">show</a> option.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.autoHideDelay" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.autoHideDelay</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">1200</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jquery.com/animate/#duration">valid jQuery animation</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						This is a delay between the last action that clears a taskbar for autohide and an actual autohide start.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarAutoHide.html">Taskbar autoHide</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.autoHideHide" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.autoHideHide</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"slow"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jquery.com/animate/#duration">valid jQuery animation</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						This is a speed of autohide hidding.
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-hide">hide</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarAutoHide.html">Taskbar autoHide</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.autoHideShow" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.autoHideShow</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"fast"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jquery.com/animate/#duration">valid jQuery animation</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						This is a speed of autohide showing.
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-show">show</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarAutoHide.html">Taskbar autoHide</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-fallbackLanguage" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">fallbackLanguage</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"en"</code><br><br>
+					Allowed values:<br>
+					any key from <a href="#option-localization">localization</a> option
+				</td>
+				<td>
+					<p>
+						When looking for translations, first a dictionary for language passed in <a href="#option-language">language</a> option will be checked, but when this fails, this option will be used as language to search for translations.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-language">language</a><br>
+						<a href="#option-languages">languages</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	clock                : null,
+<!--			-->	languageSelect       : null,
+<!--			-->	menuWindowClose      : "ui-icon-closethick",
+<!--			-->	minimizeAll          : "ui-icon-minusthick",
+<!--			-->	networkMonitorOffline: "ui-icon-alert",
+<!--			-->	networkMonitorOnline : "ui-icon-signal",
+<!--			-->	startButton          : null,
+<!--			-->	startButtonSet       : "ui-icon-circle-triangle",
+<!--			-->	toggleFullscreenOff  : "ui-icon-arrow-4-diag",
+<!--			-->	toggleFullscreenOn   : "ui-icon-arrow-4-diag"
+<!--			-->}</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+
+				<td>
+					<p>
+						Details:<br>
+						<a href="#option-icons.clock">icons.clock</a><br>
+						<a href="#option-icons.languageSelect">icons.languageSelect</a><br>
+						<a href="#option-icons.menuWindowClose">icons.menuWindowClose</a><br>
+						<a href="#option-icons.minimizeAll">icons.minimizeAll</a><br>
+						<a href="#option-icons.networkMonitorOffline">icons.networkMonitorOffline</a><br>
+						<a href="#option-icons.networkMonitorOnline">icons.networkMonitorOnline</a><br>
+						<a href="#option-icons.startButton">icons.startButton</a><br>
+						<a href="#option-icons.startButtonSet">icons.startButtonSet</a><br>
+						<a href="#option-icons.toggleFullscreenOff">icons.toggleFullscreenOff</a><br>
+						<a href="#option-icons.toggleFullscreenOn">icons.toggleFullscreenOn</a>
+					</p>
+					<p>
+						Related demos:<br>
+						<a href="../demos/technical/icons.html">Icons</a><br>
+						<a href="../demos/technical/iconsFamfamfam.html">famfamfam iconset</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.clock" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.clock</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-clock">clock</a> button.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-clock">clock</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.languageSelect" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.languageSelect</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-languageSelect">languageSelect</a> button.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-languageSelect">languageSelect</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.menuWindowClose" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.menuWindowClose</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-closethick"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						This icon will be used for window group menus close button.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowGroups.html">Window groups</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.minimizeAll" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.minimizeAll</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-minusthick"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-minimizeAll">minimizeAll</a> button.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-minimizeAll">minimizeAll</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.networkMonitorOffline" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.networkMonitorOffline</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-alert"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-networkMonitor">networkMonitor</a> button, when current connection state is offline.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-networkMonitor">networkMonitor</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.networkMonitorOnline" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.networkMonitorOnline</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-signal"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-networkMonitor">networkMonitor</a> button, when current connection state is online.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-networkMonitor">networkMonitor</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.startButton" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.startButton</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for all start buttons in a taskbar. If this option is not <code class="language-javascript">null</code>, it will be used for start buttons icon. Otherwise, <a href="#option-icons.startButtonSet">icons.startButtonSet</a> will be used.
+					</p>
+					<p>
+						This option will have no visible effect if there are no start buttons, either none are prepended to taskbar, or <a href="#option-startButtons">startButtons</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.startButtonSet" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.startButtonSet</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-circle-triangle"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"ui-icon-arrow-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrow-2"</code><br>
+					<code class="language-javascript">"ui-icon-arrowrefresh-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrowreturn-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrowreturnthick-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrowstop-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrowthick-1"</code><br>
+					<code class="language-javascript">"ui-icon-arrowthick-2"</code><br>
+					<code class="language-javascript">"ui-icon-arrowthickstop-1"</code><br>
+					<code class="language-javascript">"ui-icon-carat-1"</code><br>
+					<code class="language-javascript">"ui-icon-carat-2"</code><br>
+					<code class="language-javascript">"ui-icon-circle-triangle"</code><br>
+					<code class="language-javascript">"ui-icon-triangle-1"</code><br>
+					<code class="language-javascript">"ui-icon-triangle-2"</code>
+				</td>
+				<td>
+					<p>
+						Icon set for all start buttons in a taskbar. This option will only be used if <a href="#option-icons.startButtonSet">icons.startButtonSet</a> is set to <code class="language-javascript">null</code>.
+					</p>
+					<p>
+						If this option is in effect, depending on taskbar edge, different icon will be used for start menus. Button arrow will always point toward the center of window.
+					</p>
+					<p>
+						Horizontal taskbar with <a href="#option-horizontalStick">horizontalStick</a> set to <code class="language-javascript">"bottom left"</code> will have, for example, <code class="language-javascript">"ui-icon-triangle-2-n"</code> icon set to start buttons, and a vertical taskbar with <a href="#option-verticalStick">verticalStick</a> set to <code class="language-javascript">"top right"</code> will have, for example, <code class="language-javascript">"ui-icon-carat-2-w"</code> icon set to start buttons.
+					</p>
+					<p>
+						This option will have no visible effect if there are no start buttons, either none are prepended to taskbar, or <a href="#option-startButtons">startButtons</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.toggleFullscreenOff" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.toggleFullscreenOff</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-arrow-4-diag"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-toggleFullscreen">toggleFullscreen</a> button, when browser is not in fullscreen mode.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-toggleFullscreen">toggleFullscreen</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.toggleFullscreenOn" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.toggleFullscreenOn</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-arrow-4-diag"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for <a href="#option-toggleFullscreen">toggleFullscreen</a> button, when browser is in fullscreen mode.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-toggleFullscreen">toggleFullscreen</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalRowHeight" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalRowHeight</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"auto"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"auto"</code> (recommended)<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Total height, including borders, of a single taskbar row, when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>.
+					</p>
+					<p>
+						It's recommended for this option to be set to <code class="language-javascript">"auto"</code>, as it gives good and consistent effects with different jQuery UI Themes, but integer value is also supported.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-horizontalRows">horizontalRows</a><br>
+						<a href="#option-horizontalRowsMax">horizontalRowsMax</a><br>
+						<a href="#option-horizontalRowsMin">horizontalRowsMin</a><br>
+						<a href="#option-horizontaltick">horizontaltick</a><br>
+						<a href="#option-horizontalWidth">horizontalWidth</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalRows" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalRows</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">1</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Number of rows when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>. Value can be changed by user if <a href="#option-resizable">resizable</a> is set to <code class="language-javascript">true</code> and user resizes taskbar.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-horizontalRowHeight">horizontalRowHeight</a><br>
+						<a href="#option-horizontalRowsMax">horizontalRowsMax</a><br>
+						<a href="#option-horizontalRowsMin">horizontalRowsMin</a><br>
+						<a href="#option-horizontaltick">horizontaltick</a><br>
+						<a href="#option-horizontalWidth">horizontalWidth</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalRowsMax" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalRowsMax</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">2</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Maximum numer of rows when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>.
+					</p>
+					<p>
+						This will have effect on <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-horizontalRowHeight">horizontalRowHeight</a><br>
+						<a href="#option-horizontalRows">horizontalRows</a><br>
+						<a href="#option-horizontalRowsMin">horizontalRowsMin</a><br>
+						<a href="#option-horizontaltick">horizontaltick</a><br>
+						<a href="#option-horizontalWidth">horizontalWidth</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalRowsMin">
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalRowsMin</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">1</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Minimum numer of rows when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>.
+					</p>
+					<p>
+						This will have effect on <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-horizontalRowHeight">horizontalRowHeight</a><br>
+						<a href="#option-horizontalRows">horizontalRows</a><br>
+						<a href="#option-horizontalRowsMax">horizontalRowsMax</a><br>
+						<a href="#option-horizontaltick">horizontaltick</a><br>
+						<a href="#option-horizontalWidth">horizontalWidth</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalStick" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalStick</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"bottom left"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"bottom left"</code><br>
+					<code class="language-javascript">"bottom right"</code><br>
+					<code class="language-javascript">"top left"</code><br>
+					<code class="language-javascript">"top right"</code>
+				</td>
+				<td>
+					<p>
+						Edges to which taskbar will stick when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>.
+					</p>
+					<p>
+						This option will have no effect when <a href="#option-horizontalWidth">horizontalWidth</a> is set to <code class="language-javascript">"100%"</code>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-draggableBetweenEdges">draggableBetweenEdges</a><br>
+						<a href="#option-horizontalRowHeight">horizontalRowHeight</a><br>
+						<a href="#option-horizontalRows">horizontalRows</a><br>
+						<a href="#option-horizontalRowsMax">horizontalRowsMax</a><br>
+						<a href="#option-horizontalRowsMin">horizontalRowsMin</a><br>
+						<a href="#option-horizontalWidth">horizontalWidth</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggableBetweenEdges.html">Taskbars draggable between edges</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-horizontalWidth" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">horizontalWidth</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"100%"</code><br><br>
+					Allowed values:<br>
+					percent, for example <code class="language-javascript">"80%"</code><br>
+					integer (for pixels)
+				</td>
+				<td>
+					<p>
+						Taskbar width when in horizontal mode.
+					</p>
+					<p>
+						Percentage values (always as string, for example <code class="language-javascript">"80%"</code>) and integers are supported.
+					</p>
+					<p>
+						Integer value for this option is not recommended, because your users can have all the different screen resolution.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-draggableBetweenEdges">draggableBetweenEdges</a><br>
+						<a href="#option-horizontalRowHeight">horizontalRowHeight</a><br>
+						<a href="#option-horizontalRows">horizontalRows</a><br>
+						<a href="#option-horizontalRowsMax">horizontalRowsMax</a><br>
+						<a href="#option-horizontalRowsMin">horizontalRowsMin</a><br>
+						<a href="#option-horizontaltick">horizontaltick</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggableBetweenEdges.html">Taskbars draggable between edges</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-language" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">language</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"en"</code><br><br>
+					Allowed values:<br>
+					any key from <a href="#option-localization">localization</a> option object
+				</td>
+				<td>
+					<p>
+						Main language from which all translations will be taken. This language will be used for all taskbar translations and translation for all windows bound to this taskbar.
+					</p>
+					<p>
+						<strong>Note:</strong> rebinding window to another taskbar via the <a href="window.html#option-taskbar">taskbar</a> window option changes it translations (like buttons or confirm close) to those of new taskbar.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-fallbackLanguage">fallbackLanguage</a><br>
+						<a href="#option-languages">languages</a><br>
+						<a href="#option-localization">localization</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-languages" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">languages</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">[ "en" ]</code><br><br>
+					Allowed values:<br>
+					array containing some or all keys from <a href="#option-localization">localization</a> option
+				</td>
+				<td>
+					<p>
+						Languages available for <a href="#option-languageSelect">languageSelect</a> widget.
+					</p>
+					<p>
+						Values in this array has to match keys in <a href="option-localization">localization</a> option object.
+					</p>
+					</p>
+						<strong>Note:</strong> Having only one item in this array does not disable <a href="#option-languageSelect">languageSelect</a> option. Passing an empty array does, however.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-fallbackLanguage">fallbackLanguage</a><br>
+						<a href="#option-language">language</a><br>
+						<a href="#option-languageSelect">languageSelect</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-languageChange">languageChange</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-languageSelect" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">languageSelect</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						System button that will let user change language to one of the languages passed in <a href="#option-languages">languages</a> option.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-language">language</a><br>
+						<a href="#option-languages">languages</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-languageChange">languageChange</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarSystemButtons.html">Taskbar system buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-localization" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">localization</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">{}</code><br><br>
+					Allowed values:<br>
+					object
+				</td>
+				<td>
+					<p>
+						This option hold all localizations. This option is extended by every language file added to Simone. See <a href="translation.html">translations documentation</a> for more details on how this works.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-language">language</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-languageChange">languageChange</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-menuAutoOpenOnBrowse" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">menuAutoOpenOnBrowse</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						When set to <code class="language-javascript">true</code>, hovering over taskbar button that have menu or datepicker connected to it will open that menu or datepicker, if a menu or datepicker is already opened on that taskbar.
+					</p>
+					<p>
+						When set to <code class="language-javascript">false</code>, only clicking a button with a connected menu or datepicker shows that connected element.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href ="../demos/functional/taskbarMenuAutoOpenOnBrowse.html">Taskbar "menuAutoOpenOnBrowse" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-minimizeAll" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">minimizeAll</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						System button that allow to minimize all windows, and therefore exposing the viewport. Internally, clicking this button call <a href="method-minimizeAll">minimizeAll</a> method.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-minimizeAllHoverOpaqueWindows">minimizeAllHoverOpaqueWindows</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-minimizeAll">minimizeAll</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-minimizeAllHoverOpaqueWindows" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">minimizeAllHoverOpaqueWindows</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Setting this option to <code class="language-javascript">true</code> will change the opacity of all windows when <a href="#option-minimizeAll">minimizeAll</a> button is hovered by user.
+					</p>
+					<p>
+						Settings this option to <code class="language-javascript">false</code> will have generate no effect when <a href="#option-minimizeAll">minimizeAll</a> button is hovered by user.
+					</p>
+					<p>
+						Opacity used in this effect can be changed. <a href="stylingGuide.html#window">Styling guide has a section</a> regarding this.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/basic.html">Basic</a> – basic functionality covers this effect
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-networkMonitor" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">networkMonitor</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						System button that is connected to browser <code class="language-javascript">navigator.onLine</code> property and <code class="language-javascript">document.ononline</code>/<code class="language-javascript">document.onoffline</code> events.
+					</p>
+					<p>
+						If <code class="language-javascript">navigator.onLine</code> is undefined, this button will not be shown, even if <code class="language-javascript">networkMonitor</code> is set to <code class="language-javascript">true</code>.
+					</p>
+					<p>
+						<strong>Note:</strong> Some browsers implement an API that this button is using incorrectly. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine.onLine">this page</a> for details.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarSystemButtons.html">Taskbar system buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-orientation" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">orientation</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"horizontal"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"horizontal"</code><br>
+					<code class="language-javascript">"vertical"</code>
+				</td>
+				<td>
+					<p>
+						Tells taskbar to stretch either horizontally or vertically. Horizontal taskbar will stretch on bottom or top edge of the main window. Vertical taskbar will strech on or right edge of the main window.
+					</p>
+					<p>
+						Both settings implements some of the taskbar features differently. For example, horizontal taskbar with multiple rows will have buttons in each row, while vertical taskbar will always have button in one column. Window buttons on horizontal taskbar will be resized to fit their container, where on vertical taskbar a scrollbar will be used when there are too many buttons.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggable.html">Draggable taskbars</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-propagateWindowBlur" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">propagateWindowBlur</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether window blur event should propagate to windows binded to taskbar, and blur the window being currently on top.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/propagateWindowBlur.html">Taskbar "propagateWindowBlur" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-resizable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">resizable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Determines if taskbar is resizable.
+					</p>
+					<p>
+						Taskbar cannot by resized freely. It can only be resized by a row, if <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>, or by a column, if <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"vertical"</code>.
+					</p>
+					<p>
+						Resizable is constrained by <a href="#option-horizontalRowsMin">horizontalRowsMin</a> and <a href="#option-horizontalRowsMax">horizontalRowsMax</a> options when taskbar is in horizontal mode, and by <a href="#option-verticalColumnsMin">verticalColumnsMin</a> and <a href="#option-verticaColumnsMax">verticaColumnsMax</a> options when taskbar is in vertical mode.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-resizableHandleOverflow">resizableHandleOverflow</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarResizable.html">Resizable taskbars</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-resizableHandleOverflow" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">resizableHandleOverflow</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">2</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						How much pixels on each side will the resizable handle have. This value is also used for <a href="#option-autoHide">autoHide</a> to define the space on which user can hover to start showing taskbar.
+					</p>
+					<p>
+						It's recommended not to change this value, because it's optimal from UX point of view. Values >=4 would render windows that stick to a taskbar unresizable on the edge touching taskbar. Values lower than 1 are not supported and will be corrected to 1.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-resizable">resizable</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-resolveCollisions" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">resolveCollisions</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Should the colliding taskbar be resized to not cover one another, or should no action be taken when taskbar overlap each other.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-dropOnExisting">dropOnExisting</a><br>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-startButtons" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">startButtons</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether or not start buttons should be visible.
+					</p>
+					<p>
+						By default, taskbar has no start menus and they ought to be created. See related demo for code examples on how to build and manipulate start buttons and start menus.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarStartButtons.html">Taskbar start buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-systemButtonsOrder" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">systemButtonsOrder</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">[ "languageSelect",
+<!--				-->"networkMonitor",
+<!--				-->"toggleFullscreen",
+<!--				-->"clock",
+<!--				-->"minimizeAll" ]</code><br><br>
+					Allowed values:<br>
+					array containing system buttons names and optionally keys from <a href="#option-buttons">buttons</a> option
+				</td>
+				<td>
+					<p>
+						Array of strings coresponding to keys in <a href="#option-buttons">buttons</a> option or to the names of system buttons. See the default value of this option for full list of system buttons.
+					</p>
+					<p>
+						Buttons, both custom and system, present in this array will be visible. Buttons not present will not be visible.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-buttons">buttons</a><br>
+						<a href="#option-buttonsOrder">buttonsOrder</a>
+					</p>
+					<p>
+						Related demos:<br>
+						<a href="../demos/technical/taskbarButtons.html">Taskbar buttons</a><br>
+						<a href="../demos/functional/taskbarSystemButtons.html">Taskbar system buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-toggleFullscreen" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">toggleFullscreen</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Native button connected to browser fullscreen API.
+					</p>
+					<p>
+						If fullscreen API is not available in the browser, this button will not be shown, even if <code class="language-javascript">toggleFullscreen</code> is set to <code class="language-javascript">true</code>.
+					</p>
+					<p>
+						When this button is clicked by user (<strong>note:</strong> this action cannot be triggered programatically), a fullscreen is requested (when browser is not in fullscreen mode), or fullscreen exit is requested (when browser is in fullscreen mode). Requesting fullscreen mode does not necessary means that browser will go fullscreen, and requesting fullscreen does not necessary means that browser will leave fullscreen.
+					</p>
+					<p>
+						This button will also hold current fullscreen mode status.
+					</p>
+					<p>
+						See <a href="http://caniuse.com/fullscreen">this page</a> for list of browsers implementing fullscreen API.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeRequestFullscreen">beforeRequestFullscreen</a><br>
+						<a href="#event-requestFullscreen">requestFullscreen</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarSystemButtons.html">Taskbar system buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-windowButtonsIconsOnly" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">windowButtonsIconsOnly</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Should the window buttons have only icons, or should icons and labels by used on window buttons.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarWindowButtonsIconsOnly.html">Taskbar "windowButtonsIconsOnly" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalColumns" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalColumns</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">1</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Number of columns when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"vertical"</code>. Value can be changed by user if <a href="#option-resizable">resizable</a> is set to <code class="language-javascript">true</code> and user resizes taskbar.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumnsMax">verticalColumnsMax</a><br>
+						<a href="#option-verticalColumnsMin">verticalColumnsMin</a><br>
+						<a href="#option-verticalColumnsWidth">verticalColumnsWidth</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a><br>
+						<a href="#option-verticalStick">verticalStick</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalColumnsMax" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalColumnsMax</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">2</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Maximum numer of columns when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"vertical"</code>.
+					</p>
+					<p>
+						This will have effect on <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumns">verticalColumns</a><br>
+						<a href="#option-verticalColumnsMin">verticalColumnsMin</a><br>
+						<a href="#option-verticalColumnsWidth">verticalColumnsWidth</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a><br>
+						<a href="#option-verticalStick">verticalStick</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalColumnsMin" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalColumnsMin</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">1</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Minimum numer of columns when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"vertical"</code>.
+					</p>
+					<p>
+						This will have effect on <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumns">verticalColumns</a><br>
+						<a href="#option-verticalColumnsMax">verticalColumnsMax</a><br>
+						<a href="#option-verticalColumnsWidth">verticalColumnsWidth</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a><br>
+						<a href="#option-verticalStick">verticalStick</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalColumnWidth" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalColumnWidth</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">100</code><br><br>
+					Allowed values:<br>
+					percent, for example <code class="language-javascript">"10%"</code><br>
+					integer (for pixels)
+				</td>
+				<td>
+					<p>
+						Total width, including borders, of a single taskbar column, when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"vertical"</code>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumns">verticalColumns</a><br>
+						<a href="#option-verticalColumnsMax">verticalColumnsMax</a><br>
+						<a href="#option-verticalColumnsMin">verticalColumnsMin</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a><br>
+						<a href="#option-verticalStick">verticalStick</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSmoothVerticalResizable.html">Smooth resizable on vertical taskbar</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalHeight" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalHeight</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"100%"</code><br><br>
+					Allowed values:<br>
+					percent, for example <code class="language-javascript">"80%"</code><br>
+					integer (for pixels)
+				</td>
+				<td>
+					<p>
+						Taskbar height when in horizontal mode.
+					</p>
+					<p>
+						Percentage values (always as string, for example <code class="language-javascript">"80%"</code>) and integers are supported.
+					</p>
+					<p>
+						Integer value for this option is not recommended, because your users can have all the different screen resolutions.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumns">verticalColumns</a><br>
+						<a href="#option-verticalColumnsMax">verticalColumnsMax</a><br>
+						<a href="#option-verticalColumnsMin">verticalColumnsMin</a><br>
+						<a href="#option-verticalColumnsWidth">verticalColumnsWidth</a><br>
+						<a href="#option-verticalStick">verticalStick</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggableBetweenEdges.html">Taskbars draggable between edges</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-verticalStick" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">verticalStick</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"top right"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"bottom left"</code><br>
+					<code class="language-javascript">"bottom right"</code><br>
+					<code class="language-javascript">"top left"</code><br>
+					<code class="language-javascript">"top right"</code>
+				</td>
+				<td>
+					<p>
+						Edges to which taskbar will stick when <a href="#option-orientation">orientation</a> is set to <code class="language-javascript">"horizontal"</code>.
+					</p>
+					<p>
+						This option will have no effect when <a href="#option-verticalHeight">verticalHeight</a> is set to <code class="language-javascript">"100%"</code>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-verticalColumns">verticalColumns</a><br>
+						<a href="#option-verticalColumnsMax">verticalColumnsMax</a><br>
+						<a href="#option-verticalColumnsMin">verticalColumnsMin</a><br>
+						<a href="#option-verticalColumnsWidth">verticalColumnsWidth</a><br>
+						<a href="#option-verticalHeight">verticalHeight</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarDraggableBetweenEdges.html">Taskbars draggable between edges</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-viewportMargins" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">viewportMargins</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	top   : [ 0, "correct" ],
+<!--			-->	right : [ 0, "correct" ],
+<!--			-->	bottom: [ 0, "correct" ],
+<!--			-->	left  : [ 0, "correct" ]
+<!--			-->}</code></pre><br>
+					Allowed values:<br>
+					Object with structure as shown above
+				</td>
+				<td>
+					<p>
+						This option is used for changing window containment size. By default, all space that's not taken by taskbars is available to windows. However, this space can be shrinked, for example, to make space for top bar or other elements on the page.
+					</p>
+					<p>
+						This option is a object with four keys, one for every edge. Each edge is then an array with two values. First value is an integer, a pixel value of how much space on that edge should be taken from windows containment. Second values describes how should containment on that edge act in relation to taskbars on that edge. Four values are supported:
+						<ul>
+							<li><code class="language-javascript">"correct"</code> means that if any taskbar is present on a given edge, containment resulting from that taskbar will be used instead of given integer.</li>
+							<li><code class="language-javascript">"correctDown"</code> means that if any taskbar is present on a given edge, containment resulting from that taskbar will be used instead of given integer, but only if taskbar would take less space than the integer specified.</li>
+							<li><code class="language-javascript">"correctUp"</code> means that if any taskbar is present on a given edge, containment resulting from that taskbar will be used instead of given integer, but only if taskbar would take more space than the integer specified.</li>
+							<li><code class="language-javascript">"correctNone"</code> means that the integer setting is final and cannot be change by taskbar on a given edge.</li>
+						</ul>
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-windowsContainment">windowsContainment</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarViewportMargins.html">Taskbar "viewportMargins" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-windowButtonsSortable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">windowButtonsSortable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether or not the taskbar window buttons are sortable by the user, using <a href="http://jqueryui.com/sortable/">jQuery UI Sortable</a>.
+					</p>
+					<p>
+						Buttons are sortable within a single taskbar only.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/taskbarWindowButtonsSortable.html">Sortable window buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-windowsContainment" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">windowsContainment</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"viewport"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"viewport"</code><br>
+					<code class="language-javascript">"visible"</code>
+				</td>
+				<td>
+					<p>
+						Defines containment for all windows binded to taskbar. Two values are possible:
+						<ul>
+							<li><code class="language-javascript">"viewport"</code> means that existing taskbars (with <a href="#option-autoHide">autoHide</a> set to <code class="language-javascript">false</code>) will define boundaries in which windows will exist.</li>
+							<li><code class="language-javascript">"visible"</code> means that existing taskbars (with <a href="#option-autoHide">autoHide</a> set to <code class="language-javascript">false</code>) will define boundaries in which windows draggable handle will be accessible, giving ability to move it almost out of sight, but not to a point where is becomes unusable.</li>
+						</ul>
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-viewportMargins">viewportMargins</a>
+					</p>
+					<p>
+						<a href="window.html">Window</a> widget will inherit it's containment from this option, if window's <a href="window.html#option-containment">containment</a> option is set to <code class="language-javascript">"inherit"</code>, which is by default.
+					</p>
+					<p>
+						Related demos:<br>
+						<a href="../demos/functional/containments.html">Containments</a> – difference between both settings<br>
+						<a href="../demos/technical/taskbarViewportMargins.html">Taskbar "viewportMargins" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-windowsInitialZIndex" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">windowsInitialZIndex</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">100</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Initial z-index of windows bound to taskbar. If you want to change this option's value and you have multiple taskbars on one page, it's highly recommended that you change value for all current and future instances at once, for example, by calling the following code:
+					</p>
+					<p><pre><code class="language-javascript">// true passed as a first param is an instruction to propagate
+// options to instances, that is, an already created taskbars
+$.simone.taskbarSetup( true, {
+<!--			-->	windowsInitialZIndex: 3000
+<!--			-->});</code></pre>
+					</p>
+					<p>
+						Scenarios where taskbars does not have the save value of this option were not tested.
+					</p>
+					<p>
+						<strong>Tip:</strong> to change taskbar's z-index, use CSS.
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Events</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Event name and UI object</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="event-every" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">every event</code><br><br>
+					Every UI object contains:<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// widget instance; it's the same
+<!--				-->	// object jQuery widget instance()
+<!--				-->	// method returns since jQuery 1.11
+<!--				-->	instance  : { ... },
+<!--				-->	// jQuery object containing taskbar
+<!--				-->	taskbar   : $taskbar,
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						In addition to event-specific properties, every UI object contains <code class="language-javascript">$taskbar</code> and <code class="language-javascript">instance</code> properties, as shown on the left.
+					</p>
+					<p>
+						<code class="language-javascript">instance</code> is a jQuery UI taskbar widget instance. It's the same object that jQuery UI <code class="language-javascript">instance()</code> method return since jQuery UI 1.11.
+					</p>
+					<p>
+						<code class="language-javascript">$taskbar</code> is a jQuery object fo DOM element on which <code class="language-javascript">taskbar()</code> was called.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-autoHideStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">autoHideStart</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing handle,
+<!--				-->	// one on which mouseenter triggers
+<!--				-->	// taskbar show() when it's is hidden
+<!--				-->	handle    : $handle,
+<!--				-->	// whether it's hide that started
+<!--				-->	hide      : true,
+<!--				-->	// is it a quick hide? can only be
+<!--				-->	// true if triggerApi is true
+<!--				-->	quick     : false,
+<!--				-->	// whether it's show that started
+<!--				-->	show      : false,
+<!--				-->	// was this triggered by API, either
+<!--				-->	// hide or show method,
+<!--				-->	// or comes from user
+<!--				-->	triggerApi: false
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when auto hide move starts. It is triggered when taskbar starts hiding and when taskbar starts showing. <code class="language-javascript">ui.hide</code> tells which one it is.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-autoHideProgress" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">autoHideProgress</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing handle,
+<!--				-->	// one on which mouseenter triggers
+<!--				-->	// taskbar show() when it's is hidden
+<!--				-->	handle    : $handle,
+<!--				-->	// jQuery object containing taskbar
+<!--				-->	taskbar   : $taskbar,
+<!--				-->	// whether it's hide that started
+<!--				-->	hide      : true,
+<!--				-->	// widget instance
+<!--				-->	instance  : [ object ],
+<!--				-->	// whether it's show that started
+<!--				-->	show      : false,
+<!--				-->	// was this triggered by API, either
+<!--				-->	// hide or show method,
+<!--				-->	// or comes from user
+<!--				-->	triggerApi: true
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when auto hide move is in progress. It is triggered when taskbar starts hiding and when taskbar starts showing. <code class="language-javascript">ui.hide</code> tells which one it is.
+					</p>
+					<p>
+						This event is triggered during animation, so it can trigger only once or twice, or not trigger at all. Don't put any crucial code inside this event—the kind that has to be executed—or put it again in <a href="#event-autoHideStart">autoHideStart</a> or <a href="#event-autoHideStop">autoHideStop</a> event handlers.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-autoHideStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">autoHideStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing handle,
+<!--				-->	// one on which mouseenter triggers
+<!--				-->	// taskbar show() when it's is hidden
+<!--				-->	handle    : $handle,
+<!--				-->	// whether it's hide that started
+<!--				-->	hide      : false,
+<!--				-->	// is it a quick hide? can only be
+<!--				-->	// true if triggerApi is true
+<!--				-->	quick     : true,
+<!--				-->	// whether it's show that started
+<!--				-->	show      : true,
+<!--				-->	// was this triggered by API, either
+<!--				-->	// hide or show method,
+<!--				-->	// or comes from user
+<!--				-->	triggerApi: false
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when auto hide move stops. It is triggered when taskbar stops hiding and when taskbar stops showing. <code class="language-javascript">ui.hide</code> tells which one it is.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-create" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">create</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						This event if triggered when taskbar widget is successfully created.
+					</p>
+					<p>
+						This event if triggered only once, when widget has been fully created. For refreshes of taskbar, refer to <a href="#event-beforeRefresh">beforeRefresh</a> and <a href="#event-refresh">refresh</a> events.
+					</p>
+					<p>
+						This event will not be triggered if widget creation failed. If that happens, set <a href="#option-debug.environment">debug.environment</a> to <code class="language-javascript">true</code> and check the output of <a href="#event-debugLogAdd">debugLogAdd</a> event.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-debugLogAdd" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">debugLogAdd</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// natural text message,
+<!--				-->	// communicating what went wrong
+<!--				-->	message: "...",
+<!--				-->	// error level:
+<!--				-->	// 0 - error
+<!--				-->	// 1 - warning
+<!--				-->	// 2 - notice
+<!--				-->	level: 1,
+<!--				-->	levelName: "warning",
+<!--				-->	// error type:
+<!--				-->	// 0 - environment
+<!--				-->	// 1 - localization
+<!--				-->	// 2 - options
+<!--				-->	type: 2,
+<!--				-->	typeName: "options",
+<!--				-->	// could be taskbar or window
+<!--				-->	$target: $target
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when message is added to debug log.
+					</p>
+					<p>
+						When this event is cancelled, no message will be added to console.
+					</p>
+					<p>
+						Setting any of <a href="#option-debug">debug</a> object properties to false does not prevent this event, it does however prevent console output.
+					</p>
+					<p>
+						You can change error level (although it's not recommended, because <code class="language-javascript">ui.level = 0</code> means something is wrong with your code):
+					</p>
+					<pre><code class="language-javascript">$( ".taskbar" ).taskbar( "option", "debugLogAdd", function ( event, ui ) {
+<!--					-->	ui.level = ! ui.level ? 1 : ui.level;
+<!--					-->});</code></pre>
+					<p><br>
+					<code class="language-javascript">ui.level</code> can be also changed for other levels, so for example, certain warnings can be upgraded to more severe.
+					</p>
+					<p>
+						<code class="language-javascript">ui.level === 0</code> will call <code class="language-javascript">console.error</code>.
+					</p>
+					<p>
+						<code class="language-javascript">ui.level === 1</code> will call <code class="language-javascript">console.warning</code>.
+					</p>
+					<p>
+						<code class="language-javascript">ui.level === 2</code> will call <code class="language-javascript">console.log</code>.
+					</p>
+					<p>
+						User's interractions with taskbar can trigger debug messages, for example, when user performs action that require the use of i18n, but language or key in dictionary is missing.
+					</ul>
+					<p>
+						Related options:<br>
+						<a href="#option-debug">debug</a><br>
+						<a href="#option-debug.environment">debug.environment</a><br>
+						<a href="#option-debug.localization">debug.localization</a><br>
+						<a href="#option-debug.options">debug.options</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-bind" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">bind</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// window that was bound
+<!--				-->	$window: $window,
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is bound to taskbar.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-unbind" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">unbind</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// window that was unbound
+<!--				-->	$window: $window,
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is unbound from taskbar.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-dragStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">dragStart</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	},
+<!--				-->	// taskbar original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// taskbar original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	},
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar <a href="#option-draggable">draggable</a> starts.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-start">jQuery UI Draggable start event</a>.
+					</p>
+					<p>
+						Original draggable start event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-drag" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">drag</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 38,
+<!--				-->		top   : 456,
+<!--				-->	},
+<!--				-->	// taskbar original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// taskbar original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 38,
+<!--				-->		top   : 456,
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar <a href="#option-draggable">draggable</a> in in progress.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-drag">jQuery UI Draggable drag event</a>.
+					</p>
+					<p>
+						Original draggable drag event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-dragStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">dragStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 862,
+<!--				-->		top   : 304,
+<!--				-->	},
+<!--				-->	// taskbar original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// taskbar original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 1240,
+<!--				-->		top   : 29,
+<!--				-->	},
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 862,
+<!--				-->		top   : 204,
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar <a href="#option-draggable">draggable</a> stops.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-stop">jQuery UI Draggable stop event</a>.
+					</p>
+					<p>
+						Original draggable stop event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeDrop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeDrop</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar original stick,
+<!--				-->	// for current orientation
+<!--				-->	originalStick: "top right",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	},
+<!--				-->	// taskbar current stick
+<!--				-->	stick: "top left"
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered before taskbar draggable handler is dropped on droppable.
+					</p>
+					<p>
+						If this event is canceled, taskbar will not be moved from it's original position.
+					</p>
+					<p>
+						If this event is cancelled, <a href="#event-drop">drop</a> event will not trigger for current drag.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-drop">jQuery UI Droppable drop event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-drop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">drop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar original stick,
+<!--				-->	// for current orientation
+<!--				-->	originalStick: "top right",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	},
+<!--				-->	// taskbar current stick
+<!--				-->	stick: "top left"
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after taskbar draggable handler is dropped on droppable.
+					</p>
+					<p>
+						This event will not be triggered if <a href="#event-beforeDrop">beforeDrop</a> event was cancelled.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-drop">jQuery UI Droppable drop event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeDroppableOver" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeDroppableOver</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered before draggable helper enters droppable area.
+					</p>
+					<p>
+						If this event is canceled, taskbar droppable will not be highlighted.
+					</p>
+					<p>
+						If this event is cancelled, <a href="#event-droppableOver">droppableOver</a> event will not trigger this time.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-over">jQuery UI Droppable over event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-droppableOver" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">droppableOver</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after draggable helper enters droppable area.
+					</p>
+					<p>
+						This event will not be triggered if <a href="#event-beforeDroppableOver">beforeDroppableOver</a> event was cancelled.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-over">jQuery UI Droppable over event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeDroppableOut" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeDroppableOut</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered before draggable helper leaves droppable area.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-out">jQuery UI Droppable out event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-droppableOut" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">droppableOut</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// edge on which taskbar
+<!--				-->	// is being dropped
+<!--				-->	edge: "left",
+<!--				-->	// jQuery object containing
+<!--				-->	// draggable helper
+<!--				-->	helper    : $helper,
+<!--				-->	// taskbar current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 259
+<!--				-->	},
+<!--				-->	// taskbar current orientation
+<!--				-->	orientation: "vertical",
+<!--				-->	// original edge from which
+<!--				-->	// taskbar was dragged
+<!--				-->	originalEdge: "right",
+<!--				-->	// taskbar original orientation
+<!--				-->	originalOrientation: "vertical",
+<!--				-->	// taskbar current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 159
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after draggable helper leaves droppable area.
+					</p>
+					<p>
+						This event caries properties from <a href="http://api.jqueryui.com/droppable/#event-out">jQuery UI Droppable out event</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarDraggableEvents.html">Taskbar's draggable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-elementOpen" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">elementOpen</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// the element itself,
+<!--				-->	// like menu of datepicker
+<!--				-->	$element: $element,
+<!--				-->	// button that was used
+<!--				-->	// for opening the element
+<!--				-->	$button: $button
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when element, like start menu, or window group menu, or datepicker, is opened.
+					</p>
+					<p>
+						When this event is cancelled, element will not be opened.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSubordinatesEvents.html">Taskbar subordinates events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-elementClose" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">elementClose</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// the element itself,
+<!--				-->	// like menu of datepicker
+<!--				-->	$element: $element,
+<!--				-->	// button that was used
+<!--				-->	// for opening the element
+<!--				-->	$button: $button,
+<!--				-->	// whether the element was closed
+<!--				-->	// by opening other element on that
+<!--				-->	// taskbar
+<!--				-->	ui.closeByOpen: true
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when element, like start menu, or window group menu, or datepicker, is closed.
+					</p>
+					<p>
+						When this event is cancelled, element will not be closed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSubordinatesEvents.html">Taskbar subordinates events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-languageChange" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">languageChange</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// current language
+<!--				-->	ui.language: "pl",
+<!--				-->	// previous language
+<!--				-->	ui.originalLanguage: "en"
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar language change.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarLanguageChange.html">Taskbar "languageChange" event</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-menuItemBlur" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">menuItemBlur</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object of button
+<!--				-->	// connected to menu
+<!--				-->	// the item is child of
+<!--				-->	$button: $button,
+<!--				-->	// jQuery object of menu that
+<!--				-->	// blurred item is child of
+<!--				-->	$menu: $menu,
+<!--				-->	// jQuery object of item itself
+<!--				-->	$item: $item,
+<!--				-->	ui.closeByOpen: true
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when menu element from start menu, window group menu, or language select menu, is blurred.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSubordinatesEvents.html">Taskbar subordinates events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-menuItemFocus" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">menuItemFocus</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object of button
+<!--				-->	// connected to menu
+<!--				-->	// the item is child of
+<!--				-->	$button: $button,
+<!--				-->	// jQuery object of menu that
+<!--				-->	// focused item is child of
+<!--				-->	$menu: $menu,
+<!--				-->	// jQuery object of item itself
+<!--				-->	$item: $item,
+<!--				-->	ui.closeByOpen: true
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when menu element from start menu, window group menu, or language select menu, is focused.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSubordinatesEvents.html">Taskbar subordinates events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeRefresh" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeRefresh</code><br><br>
+					Cancelable: <strong>yes</strong> (although not recommended)<br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered before full refresh is performed on a taskbar.
+					</p>
+					<p>
+						This event can be triggered in many different scenarios, as full refresh is required by many option setters. Main window resize and other taskbar's collision resolving can trigger refresh too.
+					</p>
+					<p>
+						This event is cancellable, but cancelling it is not recommended unless you're sure what you're doing.
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-refresh">refresh</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-refresh" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">refresh</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after full refresh is performed on a taskbar.
+					</p>
+					<p>
+						This event can be triggered in many different scenarios, as full refresh is required by many option setters. Main window resize and other taskbar's collision resolving can trigger refresh too.
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-refresh">refresh</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeRequestFullscreen" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeRequestFullscreen</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// whether browser is currently
+<!--			-->	// in fullscreen mode
+<!--			-->	fullscreenEnabled: false
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered before fullscreen enter or fullscreen leave is requested from the browser.
+					</p>
+					<p>
+						Current fullscreen state is stored in <code class="language-javascript">ui.fullscreenEnabled</code> property, and the oposite state is requested.
+					</p>
+					<p>
+						<strong>Note:</strong> there is no API method for entering and leaving fullscreen, because it cannot be triggered programatically.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-requestFullscreen" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">requestFullscreen</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// whether browser is currently
+<!--			-->	// in fullscreen mode
+<!--			-->	fullscreenEnabled: false
+<!--			-->	// whether browser was in
+<!--			-->	// fullscreen mode before
+<!--			-->	// the request
+<!--			-->	fullscreenEnabledBefore: true
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after fullscreen enter or fullscreen leave is requested from the browser.
+					</p>
+					<p>
+						Current fullscreen state is stored in <code class="language-javascript">ui.fullscreenEnabled</code> property. State from before request was made is stored in <code class="language-javascript">ui.fullscreenEnabledBefore</code> property.
+					</p>
+					<p>
+						<strong>Note:</strong> there is no API method for entering and leaving fullscreen, because it cannot be triggered programatically.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resizeStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resizeStart</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// current number of rows
+<!--			-->	// or columns, depending
+<!--			-->	// on orientation
+<!--			-->	gridPosition: 1,
+<!--			-->	// item being resized
+<!--			-->	// instead of taskbar
+<!--			-->	helper: $helper,
+<!--			-->	// current orientation,
+<!--			-->	// "horizontal" or "vertical"
+<!--			-->	orientation: "horizontal",
+<!--			-->	// number of rows or columns
+<!--			-->	// on resize start
+<!--			-->	originalGridPosition: 1,
+<!--			-->	originalSizeAxis: 35,
+<!--			-->	sizeAxis: 35
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar resize starts.
+					</p>
+					<p>
+						<code class="language-javascript">ui.sizeAxis</code> and <code class="language-javascript">ui.originalSizeAxis</code> will have the same value, and also <code class="language-javascript">ui.gridPosition</code> and <code class="language-javascript">ui.originalGridPosition</code> will have the same value. Those values are present for consistency with <a href="#event-resize">resize</a> and <a href="#event-resizeStop">resizeStop</a>.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-start">jQuery UI Resizable start event</a>.
+					</p>
+					<p>
+						Original resizable start event object is passed.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resize</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// current number of rows
+<!--			-->	// or columns, depending
+<!--			-->	// on orientation
+<!--			-->	gridPosition: 1,
+<!--			-->	// item being resized
+<!--			-->	// instead of taskbar
+<!--			-->	helper: $helper,
+<!--			-->	// current orientation,
+<!--			-->	// "horizontal" or "vertical"
+<!--			-->	orientation: "horizontal",
+<!--			-->	// number of rows or columns
+<!--			-->	// on resize start
+<!--			-->	originalGridPosition: 2,
+<!--			-->	originalSizeAxis: 70,
+<!--			-->	sizeAxis: 35
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered during taskbar resize, when helper actually changes it size.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-resize">jQuery UI Resizable resize event</a>.
+					</p>
+					<p>
+						Original resizable resize event object is passed.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resizeStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resizeStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// current number of rows
+<!--			-->	// or columns, depending
+<!--			-->	// on orientation
+<!--			-->	gridPosition: 1,
+<!--			-->	// item being resized
+<!--			-->	// instead of taskbar
+<!--			-->	helper: $helper,
+<!--			-->	// current orientation,
+<!--			-->	// "horizontal" or "vertical"
+<!--			-->	orientation: "horizontal",
+<!--			-->	// number of rows or columns
+<!--			-->	// on resize start
+<!--			-->	originalGridPosition: 2,
+<!--			-->	originalSizeAxis: 70,
+<!--			-->	sizeAxis: 35
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar resize stops.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-stop">jQuery UI Resizable stop event</a>.
+					</p>
+					<p>
+						Original resizable stop event object is passed.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-sortableStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">sortableStart</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// clone of original button
+<!--			-->	helper: $helper,
+<!--			-->	// original button
+<!--			-->	item: $item,
+<!--			-->	// current helper offset
+<!--			-->	offset: {
+<!--			-->		left: 893,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper offset at
+<!--			-->	// sortable start
+<!--			-->	originalOffset: {
+<!--			-->		left: 893,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper position at
+<!--			-->	// sortable start
+<!--			-->	originalPosition: {
+<!--			-->		left: 642,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sortable placeholder
+<!--			-->	placeholder: $placeholder,
+<!--			-->	// current helper position
+<!--			-->	position: {
+<!--			-->		left: 642,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sender - currently null,
+<!--			-->	// because connected sortable
+<!--			-->	// is not supported
+<!--			-->	sender: null,
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when sortable starts.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSortableEvents.html">Taskbar sortable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-sortableSort" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">sortableSort</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// clone of original button
+<!--			-->	helper: $helper,
+<!--			-->	// original button
+<!--			-->	item: $item,
+<!--			-->	// current helper offset
+<!--			-->	offset: {
+<!--			-->		left: 780,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper offset at
+<!--			-->	// sortable start
+<!--			-->	originalOffset: {
+<!--			-->		left: 893,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper position at
+<!--			-->	// sortable start
+<!--			-->	originalPosition: {
+<!--			-->		left: 642,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sortable placeholder
+<!--			-->	placeholder: $placeholder,
+<!--			-->	// current helper position
+<!--			-->	position: {
+<!--			-->		left: 519,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sender - currently null,
+<!--			-->	// because connected sortable
+<!--			-->	// is not supported
+<!--			-->	sender: null,
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when sortable is in progress.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSortableEvents.html">Taskbar sortable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-sortableChange" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">sortableChange</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// clone of original button
+<!--			-->	helper: $helper,
+<!--			-->	// original button
+<!--			-->	item: $item,
+<!--			-->	// current helper offset
+<!--			-->	offset: {
+<!--			-->		left: 780,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper offset at
+<!--			-->	// sortable start
+<!--			-->	originalOffset: {
+<!--			-->		left: 893,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper position at
+<!--			-->	// sortable start
+<!--			-->	originalPosition: {
+<!--			-->		left: 642,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sortable placeholder
+<!--			-->	placeholder: $placeholder,
+<!--			-->	// current helper position
+<!--			-->	position: {
+<!--			-->		left: 519,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sender - currently null,
+<!--			-->	// because connected sortable
+<!--			-->	// is not supported
+<!--			-->	sender: null,
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when sortable items position changes.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSortableEvents.html">Taskbar sortable events</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-sortableStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">sortableStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// clone of original button
+<!--			-->	helper: $helper,
+<!--			-->	// original button
+<!--			-->	item: $item,
+<!--			-->	// current helper offset
+<!--			-->	offset: {
+<!--			-->		left: 780,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper offset at
+<!--			-->	// sortable start
+<!--			-->	originalOffset: {
+<!--			-->		left: 893,
+<!--			-->		top: 461
+<!--			-->	},
+<!--			-->	// helper position at
+<!--			-->	// sortable start
+<!--			-->	originalPosition: {
+<!--			-->		left: 642,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sortable placeholder
+<!--			-->	placeholder: $placeholder,
+<!--			-->	// current helper position
+<!--			-->	position: {
+<!--			-->		left: 519,
+<!--			-->		top: 2
+<!--			-->	},
+<!--			-->	// sender - currently null,
+<!--			-->	// because connected sortable
+<!--			-->	// is not supported
+<!--			-->	sender: null,
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when sortable stops.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/taskbarSortableEvents.html">Taskbar sortable events</a>
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Method name</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="method-blurWindows" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">blurWindows</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Blurs active window, regardless of taskbar it's bound to.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-button" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">button</code><br><br>
+					Parameter:<br>
+					jQuery object of window instance (mandatory)
+				</td>
+				<td>
+					<p>
+						Returns button connected to a window instance passed in first parameter, or empty jQuery object if passed value was not a jQuery object of valid window instance.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-destroy" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">destroy</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Removes the taskbar functionality completely. This will return the element back to its pre-init state.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-hide" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">hide</code><br><br>
+					Parameter:<br>
+					durations (optionally)
+				</td>
+				<td>
+					<p>
+						Starts hidding taskbar, with an optional duration.
+					</p>
+					<p>
+						If no duration is passed, current value of <a href="#option-durations.autoHideHide">durations.autoHideHide</a> is used.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-hideSubordinates" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">hideSubordinates</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Hides all subordinate elements of taskbar, like menus or datepicker.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-i18n" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">i18n</code><br><br>
+					Parameters:<br>
+					key (mandatory),<br>
+					values (optional),<br>
+					language (optional)
+				</td>
+				<td>
+					<p>
+						Return string from dictionary, based on key.
+					</p>
+						Optionally, a values can be passed as second parameter:
+					</p>
+						<pre><code class="language-javascript">$( ".taskbar" ).taskbar( "i18n", "closeAll", { process: "Timeschedule" });</code></pre>
+					<p>
+						Assuming that <code class="language-javascript">closeAll</code> value is <code class="language-javascript">"Are you sure want to close all windows opened by :process?"</code>, this method result will be <code class="language-javascript">"Are you sure want to close all windows opened by Timeschedule?"</code>
+					</p>
+					<p>
+						Optionally, language can be passed as third parameter, so, assuming that current taskbar language is English, the following code:
+					</p>
+						<pre><code class="language-javascript">$( ".taskbar" ).taskbar( "i18n", "minimize", {}, "pl" );</code></pre>
+					<p>
+						will return <code class="language-javascript">"Minimalizuj"</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-instance" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">instance</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p class="alert-box info since">
+						Available since jQuery UI 1.11.
+					</p>
+					<p>
+						Retrieves the taskbar's instance object. If the element does not have an associated instance, <code class="language-javascript">undefined</code> is returned.
+					</p>
+						Unlike other widget methods, <code class="language-javascript">instance()</code> is safe to call on any element after the dialog plugin has loaded.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-minimizeAll" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">minimizeAll</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Minimizes all windows, of all taskbars.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-minimizeAll">minimizeAll</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-option" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">option</code><br><br>
+					Parameters:<br>
+					option name (mandatory)<br>
+					option value (optional)
+				</td>
+				<td>
+					<p>
+						Serves as getter or a setter for options.
+					</p>
+					<p>
+						When only option name is passed, this method act as getter.
+					</p>
+					<pre><code class="language-javascript"> // initialize taskbar with default settings
+<!--				-->$( ".taskbar" ).taskbar();
+
+<!--				-->// languageSelect will be false, because that's the default option value
+<!--				-->var languageSelect = $( ".taskbar" ).taskbar( "option", "languageSelect" );</code></pre>
+					<p>
+						When option name and option value is passed, a new option value is set.
+					</p>
+					<pre><code class="language-javascript"> // initialize taskbar with default settings
+<!--				-->$( ".taskbar" ).taskbar();
+
+<!--				-->// languageSelect will from now on be true
+<!--				-->$( ".taskbar" ).taskbar( "option", "languageSelect", true );</code></pre>
+					<p>
+						Alternatively, an object can be passed as option name, acting as a setter:
+					</p>
+					<pre><code class="language-javascript">$( ".taskbar" ).taskbar( "option", {
+<!--				-->	orientation: "horizontal",
+<!--				-->	autoHide: false
+<!--				-->});</code></pre>
+					<p>
+						This will set both <code class="language-javascript">orientation</code> and <code class="language-javascript">autoHide</code> options.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-refresh" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">refresh</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Refreshes taskbar, rebuilding it in practice.
+					</p>
+					<p>
+						This method should be called after new menus are inserted into taskbar or after unused menus are removed. Adding or removing <code class="language-javascript">"simone-menu-hidden"</code> class from start menu falls into this category too.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeRefresh">beforeRefresh</a><br>
+						<a href="#event-refresh">refresh</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-show" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">show</code><br><br>
+					Parameter:<br>
+					durations (optionally)
+				</td>
+				<td>
+					<p>
+						Start showing taskbar, with an optional duration.
+					</p>
+					<p>
+						If no duration is passed, current value of <a href="#option-durations.autoHideShow">durations.autoHideShow</a> is used.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-taskbarSetup" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">taskbarSetup</code><br><br>
+					Parametes:<br>
+					options (mandatory)<br>
+					propagateToInstances (optional, passed as first parameter if used)
+				</td>
+				<td>
+					<p>
+						Changes the default taskbar setup, and optionally propagate changes to existing taskbar instances. See related demo for details on usage.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/setup.html">$.simone.taskbarSetup and $.simone.windowSetup methods</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-windows" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">windows</code><br><br>
+					Parametes:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns all windows bound to taskbar.
+					</p>
+					<p>
+						This method return elements on which <a href="window.html"><code class="language-javascript">window()</code></a> method was called, not the widgets.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-widget" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">widget</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns element on which <code class="language-javascript">taskbar()</code> method was called.
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+</main>
+
+</body>
+</html>

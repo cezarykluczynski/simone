@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Change left side of the title to match your test suite name -->
+<title>Unit/functional/stress test template | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body><!-- to display custom, messages,
+add classes like "warning-timeouts" etc. For the full list of available classes,
+search for "warnings" in config/tests.json -->
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<style>
+/* if there's any CSS to add to test, add them here,
+   remove this tag otherwise */
+</style>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		test( "", function () {
+			expect( 0 );
+
+			// You're tests go here
+		});
+	});
+</script>
+
+<!-- Last but not least, when you're done, remove the template comments. -->
+</body>
+</html>

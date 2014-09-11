@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window "maximizedDraggable" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize window with "maximizedDraggable" set to true (the default),
+	// then maximize it
+	$( ".window-maximizedDraggable" )
+		.window({
+			title: "True"
+		})
+		.window( "maximize", false );
+
+	// initialize window with "maximizedDraggable" set to false,
+	// then maximize it
+	$( ".window-notMaximizedDraggable" )
+		.window({
+			title: "False",
+			maximizedDraggable: false
+		})
+		.window( "maximize", false );
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window-maximizedDraggable"></div>
+<div class="window-notMaximizedDraggable"></div>
+
+<div class="demo">
+	<div class="description">
+		Window in this demo have different value of
+		"<a href="../../docs/window.html#option-maximizedDraggable">maximizedDraggable</a>"
+		option.
+		<br><br>
+		Maximize window and drag it by titlebar to feel the difference.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+{
+	"files": {
+		"functional/basic.html": {
+			"name": "Basics",
+			"description": "The most basic functionality: one taskbar and one window with no additional options.",
+			"tags": [
+				"type:functional", "widget:shared"
+			]
+		},
+		"functional/containments.html": {
+			"name": "Containments",
+			"description": "Difference between window \"containment\" option set to \"viewport\" and window \"containment\" options set to \"visible\".",
+			"tags": [
+				"type:functional", "widget:shared"
+			]
+		},
+		"technical/icons.html": {
+			"name": "Icons",
+			"description": "How to change icons on both taskbar and window.",
+			"tags": [
+				"type:technical", "widget:shared"
+			]
+		},
+		"technical/iconsFamfamfam.html": {
+			"name": "famfamfam iconset",
+			"description": "Famous famfamfam iconset used for supplying icons.",
+			"tags": [
+				"type:technical", "widget:shared"
+			]
+		},
+		"functional/propagateWindowBlur.html": {
+			"name": "Taskbar \"propagateWindowBlur\" option",
+			"description": "Difference between taskbar \"propagateWindowBlur\" option set to false and taskbar \"propagateWindowBlur\" options set to true.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"technical/setup.html": {
+			"name": "$.simone.taskbarSetup and $.simone.windowSetup methods",
+			"description": "Show how $.simone.taskbarSetup and $.simone.windowSetup can be used to change the default widgets setup, and how it can be optionally applied to existing widget instance.",
+			"tags": [
+				"type:technical", "widget:shared"
+			]
+		},
+		"functional/taskbarMenuAutoOpenOnBrowse.html": {
+			"name": "Taskbar \"menuAutoOpenOnBrowse\" option",
+			"description": "Difference between window \"menuAutoOpenOnBrowse\" option set to false and window \"menuAutoOpenOnBrowse\" options set to true.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarAutoHide.html": {
+			"name": "Taskbar autohide",
+			"description": "Two taskbars with autohide on, one with default durations, and one with custom durations.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarDraggable.html": {
+			"name": "Draggable taskbars",
+			"description": "Two draggable taskbars with default options.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarDraggableBetweenEdges.html": {
+			"name": "Taskbar draggable between edges",
+			"description": "Shows what it means that taskbar is draggable between edges.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarDropOnExisting.html": {
+			"name": "Taskbar \"dropOnExisting\" option",
+			"description": "Difference between \"dropOnExisting\": true and \"dropOnExisting\": false.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"technical/taskbarButtons.html": {
+			"name": "Taskbar buttons",
+			"description": "How custom taskbar buttons can be inserted and manipulated.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"technical/taskbarDraggableEvents.html": {
+			"name": "Taskbar's draggable events",
+			"description": "How taskbar's draggable can be programmed using draggable events and what events are related to draggable.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"technical/taskbarLanguageChange.html": {
+			"name": "Taskbar \"languageChange\" event",
+			"description": "Show how to propagate (or not propagate) \"languageChange\" event to other taskbars.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarResizable.html": {
+			"name": "Resizable taskbars",
+			"description": "Resizable posibilities of horizontal and vertical taskbar.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarResolveCollisions.html": {
+			"name": "Taskbar collisions resolving",
+			"description": "Three draggable taskbars, showing how collisions resolving works.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"technical/taskbarSmoothVerticalResizable.html": {
+			"name": "Smooth resizable on vertical taskbar",
+			"description": "How to make vertical resizable smooth.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"technical/taskbarSortableEvents.html": {
+			"name": "Taskbar sortable events",
+			"description": "Events related to taskbar sortable window buttons.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"technical/taskbarSubordinatesEvents.html": {
+			"name": "Taskbar subordinates events",
+			"description": "Events related to taskbar subordinate elements.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"functional/taskbarSystemButtons.html": {
+			"name": "Taskbar system buttons",
+			"description": "Shows all system buttons in one taskbar.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarWindowButtonsSortable.html": {
+			"name": "Sortable window buttons",
+			"description": "Difference between \"windowButtonsSortable\": true and \"windowButtonsSortable\": false.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"technical/taskbarStartButtons.html": {
+			"name": "Taskbar start buttons",
+			"description": "How to build and manipulate start menus.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"technical/taskbarViewportMargins.html": {
+			"name": "Taskbar \"viewportMargins\" option",
+			"description": "How to use different settings of \"viewportMargins\" to set windowsContainment size.",
+			"tags": [
+				"type:technical", "widget:taskbar"
+			]
+		},
+		"functional/taskbarWindowButtonsIconsOnly.html": {
+			"name": "Taskbar \"windowButtonsIconsOnly\" option",
+			"description": "Difference between \"windowButtonsIconsOnly\": true and \"windowButtonsIconsOnly\": false.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"technical/windowButtons.html": {
+			"name": "Window buttons",
+			"description": "Shows how buttons can be prepended to window using native functionality.",
+			"tags": [
+				"type:technical", "widget:window"
+			]
+		},
+		"functional/windowConfirmClose.html": {
+			"name": "Confirm close functionality",
+			"description": "Window confirm close functionality with some customization options.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowDurations.html": {
+			"name": "Window durations",
+			"description": "Shows how different durations are applied to window.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowEmbeddedContent.html": {
+			"name": "Window \"embeddedContent\" option",
+			"description": "Shows how windows containing embedded content, like iframe, Flash game, or QuickTime video, can be dealt with.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"technical/windowFlow.html": {
+			"name": "Window flow",
+			"description": "Demonstrates maximizing, minimizing, restoring, and showing.",
+			"tags": [
+				"type:technical", "widget:window"
+			]
+		},
+		"functional/windowGroups.html": {
+			"name": "Window groups",
+			"description": "Basic usage of window groups.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowMaximizedDraggable.html": {
+			"name": "Window \"maximizedDraggable\" option",
+			"description": "Difference between \"maximizedDraggable\": true and \"maximizedDraggable\": false.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"technical/windowModal.html": {
+			"name": "Modal windows",
+			"description": "Demonstrates modal functionality.",
+			"tags": [
+				"type:technical", "widget:window"
+			]
+		},
+		"functional/windowInteractions.html": {
+			"name": "Window interactions",
+			"description": "Demonstrates window interactions: draggable and resizable.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"technical/windowUnclosable.html": {
+			"name": "Unclosable window",
+			"description": "Shows what options should be applied to window to make it unclosable.",
+			"tags": [
+				"type:technical", "widget:window"
+			]
+		},
+		"templates/template.html": {
+			"name": "Demo template",
+			"description": "Template for creating new demos.",
+			"tags": [
+				"type:template"
+			]
+		}
+	}
+}

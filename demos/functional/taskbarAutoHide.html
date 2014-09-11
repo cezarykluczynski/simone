@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar autohide - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// taskbar with default settings
+	$( ".taskbar" ).taskbar({
+		autoHide: true
+	});
+
+	// taskbar with custom settings
+	$( ".taskbar2" ).taskbar({
+		// vertical taskbar on top
+		horizontalStick: "top left",
+		autoHide: true,
+		durations: {
+			// short waiting period
+			autoHideDelay: 100,
+			// slow hide
+			autoHideHide: 1500,
+			// immediate show
+			autoHideShow: false
+		}
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Two taskbar, both with autoHide feature on. Taskbar on the bottom
+		has the default settings, while taskbar on the top has custom durations
+		(note how false accounts for no animation and taskbar is shown immediately).
+	</div>
+</div>
+</div>
+
+</body>
+</html>

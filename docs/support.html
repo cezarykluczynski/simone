@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Support | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Support</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#stack-overflow">Stack Overflow</a></li>
+			<li><a href="#commercial-support">Commercial support</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				If the <a href="index.html">documentation</a> is not enough for you and you still need help, this page describes how you can get it.
+			</p>
+
+			<span id="stack-overflow" class="anchor-fix"></span>
+			<h2>StackOverflow</h2>
+
+			<p>
+				You can post your questions to <a href="http://stackoverflow.com/">Stack Overflow</a> and hope someone will answer.
+			</p>
+
+			<p>
+				When posting question to StackOverflow, use <a href="http://stackoverflow.com/tags/simone"><code>simone</code></a> tag. You might also want to use <a href="http://stackoverflow.com/tags/jquery"><code>jquery</code></a> and <a href="http://stackoverflow.com/tags/jquery"><code>jquery-ui</code></a> tags.
+			</p>
+
+			<span id="commercial-support" class="anchor-fix"></span>
+			<h2>Commercial support</h2>
+
+			<p>
+				If you required commercial support with implementing Simone in your application, or with any other issue related to Simone, you can contact Simone's author, Cezary Kluczyński, using <a data-json-key="author.email">this e-mail</a>.
+			</p>
+
+		</div>
+	</div>
+</main>
+
+<script>
+$( document ).ready( function () {
+	$( "[data-json-key=\"author.email\"]" ).attr( "href", "mailto:" + jQueryJSON.author.email );
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window "embeddedContent" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize window containing iframe with basic demo
+	$( ".window-demo" ).window({
+		embeddedContent: true,
+		// widget class is needed for applying styles to overlay
+		widgetClass: "window-demo-widget",
+		title: "Basic demo",
+		minWidth: 630,
+		minHeight: 340
+	});
+
+	// initialize window containing YouTube video
+	$( ".window-youtube" ).window({
+		embeddedContent: true,
+		title: "Video",
+		minWidth: 410,
+		minHeight: 250
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+/* center the iframe and remove borders */
+.simone-window-content iframe {
+	display: block;
+	margin: 0px auto;
+	border: none;
+}
+
+/* apply custom styles to overlay of window containing basic demo */
+.window-demo-widget .simone-window-content-overlay {
+	opacity: 0.3;
+	background: orange;
+}
+</style>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window-demo">
+	<!-- embed basic demo in an iframe -->
+	<iframe src="basic.html" width="600" height="300"></iframe>
+</div>
+
+
+<div class="window-youtube">
+	<!-- embed some YouTube video -->
+	<iframe src="//www.youtube.com/embed/2YBtspm8j8M" width="373" height="210">
+	</iframe>
+</div>
+
+
+<div class="demo">
+	<div class="description">
+		This demo shows how windows containing
+		"<a href="../../docs/taskbar.html#option-embeddedContent">embedded content</a>",
+		like iframe, Flash game, or QuickTime video, can be dealt with.
+		<br><br>
+		By setting embeddedContent option to true, whenever window is not
+		on top, an overlay is put over window, allowing to bring it back
+		to top when it's clicked. Normally, click event would not be propagated
+		from embedded content to DOM.
+		<br><br>
+		Window containing basic demo has a custom styles set to overlay,
+		while window containing video has the default styles.
+	</div>
+
+</div>
+</div>
+
+</body>
+</html>

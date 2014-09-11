@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "menuAutoOpenOnBrowse" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize both taskbars
+	$( ".taskbar, .taskbar2" ).taskbar({
+		// "minimizeAll" has no connected elements, so let's hide it
+		// for this demo
+		minimizeAll: false,
+		// "languageSelect" and "clock" have connected elements, we'll need those
+		languageSelect: true,
+		clock: true
+	});
+
+	// set "menuAutoOpenOnBrowse" to false, and move second taskbar to top edge
+	$( ".taskbar2" )
+		.taskbar( "option", {
+			menuAutoOpenOnBrowse: false,
+			horizontalStick: "top left"
+		});
+
+	// initialize 4 windows
+	$( ".window" ).window({
+		group: "demo"
+	});
+
+	// bind 2 last windows to top taskbar
+	$( ".window:gt(1)" )
+		.window( "option", "taskbar",
+			$( ".taskbar2" ) );
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar">
+	<!-- a simplest start menu -->
+	<ul data-menu-lang="*" data-menu-type="start">
+		<li>Item</li>
+	</ul>
+</div>
+<div class="taskbar2">
+	<!-- a simplest start menu -->
+	<ul data-menu-lang="*" data-menu-type="start">
+		<li>Item</li>
+	</ul>
+</div>
+
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		Taskbar on the top has
+		"<a href="../../docs/taskbar.html#option-menuAutoOpenOnBrowse">menuAutoOpenOnBrowse</a>"
+		set to false.
+		<br><br>
+		Taskbar on the bottom has "menuAutoOpenOnBrowse"set to true.
+		<br><br>
+		Click on some button with element connected to it
+		(like languageSelect or start menu) and then hover
+		to other buttons to feel the difference between both
+		settings.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

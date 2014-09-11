@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Toggle fullscreen manual test | Simone test</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js?testType=manual"></script>
+</head>
+<body>
+<div class="taskbar"></div>
+
+<div class="instructions">
+	<p>Fullscreen events could not be trigger programatically, so they have to be tested manually. To test behaviour of toggle fullscreen button, click it in the bottom right edge of the screen, then check if the label reflects current browser fullscreen state. It should say "Leave fullscreen mode" when in fullscreen mode and "Enter fullscreen mode" when not in fullscreen mode.</p>
+
+	<p>If toggle fullscreen button is not visible, this means it's not supported in this browser (<a href="http://caniuse.com/fullscreen">list of browsers supporting fullscreen API</a>).</p>
+</div>
+
+<style>
+	.instructions a {
+		outline: none;
+	}
+</style>
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$( ".taskbar" ).taskbar({
+			toggleFullscreen: true
+		});
+
+		$( ".instructions" ).window({
+			title: "Instructions",
+			position: {
+				my: "left top",
+				at: "left top"
+			},
+			width: 500,
+			height: 300
+		});
+	});
+</script>
+
+</body>
+</html>

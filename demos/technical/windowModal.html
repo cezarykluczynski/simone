@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Modal windows - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// initialize modal with default options: cover both windows and taskbars
+	$( ".window-default" ).window({
+		title: "Default settings",
+		modal: true
+	});
+
+	// initialize modal with overlay only covering windows
+	$( ".window-viewport" ).window({
+		title: '"modalOverlay": "viewport"',
+		modal: true,
+		modalOverlay: "viewport"
+	});
+
+	// make element that should always be visible draggable for convenience
+	$( ".always-visible" ).draggable({
+		containment: "window"
+	});
+
+	$( ".open-custom" ).on( "click", function () {
+		$( this ).hide();
+
+		$( ".window-custom" ).window({
+			title: "Cover top bar, but not windows",
+			modal: true,
+			// change both sets, so top-bar gonna be covered by overlay,
+			// but custom element won't
+			modalOverlaySetsCreated: function ( event, ui ) {
+				// to modify sets, asign new values to ui.$setCover
+				// and ui.$setCover not; existing values are a good starting
+				// point, but you can build from scratch too
+				ui.$setCover = ui.$setCover
+					.add( $( ".top-bar-container" ) );
+				ui.$setNoCover = ui.$setNoCover
+					.add( $( ".always-visible" ) );
+			},
+			// don't destroy window content
+			// on close (default demos behaviour),
+			// show .open-custom button instead
+			close: function () {
+				$( ".open-custom" ).show();
+			}
+		})
+	}).button();
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+/* hide custom modal when it's not a window */
+.window-custom:not(.simone-window-content) {
+	display: none;
+}
+
+/* some basic CSS for a custom container */
+.always-visible {
+	position: fixed;
+	top: 100px;
+	left: 100px;
+	width: 400px;
+	height: 100px;
+	z-index: 200; /* z-index higher than non-modal windows */
+	background: gold;
+	border: 1px solid goldenrod;
+	padding: 15px;
+	cursor: move;
+}
+</style>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window-default"></div>
+<div class="window-viewport"></div>
+<div class="window-custom"></div>
+
+<div class="always-visible">
+	This element will be always accessible, even is modal overlay is present.
+	Note that if custom modal will be opened, this element will still hide under
+	modal. This element is draggable.
+</div>
+
+<div class="demo">
+	<div class="description">
+		This demo demonstrates modal functionality.
+	</div>
+
+	<button class="open-custom">
+		Open modal covering topbar, but not the gold box
+	</button>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

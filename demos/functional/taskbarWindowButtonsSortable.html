@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sortable window buttons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// make both taskbars draggable and resizable
+	$.simone.taskbarSetup({
+		draggable: true,
+		resizable: true
+	});
+
+	// initialize bottom taskbar
+	$( ".taskbar" ).taskbar();
+
+	// bind 3 windows to top taskbar
+	$( ".window" ).window({
+		taskbar: ".taskbar"
+	});
+
+	// initialize top taskbar
+	$( ".taskbar2" ).taskbar({
+		horizontalStick: "top left",
+		windowButtonsSortable: false
+	});
+
+	// bind 3 windows to bottom taskbar
+	$( ".window2" ).window({
+		taskbar: ".taskbar2"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="window"></div>
+<div class="window"></div>
+<div class="window"></div>
+
+<div class="window2"></div>
+<div class="window2"></div>
+<div class="window2"></div>
+
+<div class="demo">
+	<div class="description">
+		Bottom taskbar has
+		"<a href="../../docs/taskbar.html#option-windowButtonsSortable">windowButtonsSortable</a>"
+		option set to true.
+		<br><br>
+		Top taskbar has "windowButtonsSortable" option set to false.
+		<br><br>
+		You can drag and resize both taskbar to see how sortable will act then.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

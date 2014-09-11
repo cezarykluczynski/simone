@@ -1,0 +1,2940 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Window | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+
+<script>
+	dontLoadLanguages = true;
+
+	// fake taskbar object for translations eval()
+	$.simone = {
+		taskbar: {
+			prototype: {
+				options: {
+					localization: {}
+				}
+			}
+		}
+	};
+</script>
+</head>
+
+<body>
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="options">Options</h3>
+		<ul class="side-nav">
+			<li><a href="#option-appendTo">appendTo</a></li>
+			<li><a href="#option-buttons">buttons</a></li>
+			<li><a href="#option-closable">closable</a></li>
+			<li><a href="#option-closeOnEscape">closeOnEscape</a></li>
+			<li><a href="#option-confirmClose">confirmClose</a>
+				<ul>
+					<li><a href="#option-confirmClose.confirm">confirmClose.confirm</a></li>
+					<li><a href="#option-confirmClose.modal">confirmClose.modal</a></li>
+					<li><a href="#option-confirmClose.minimizable">confirmClose.minimizable</a></li>
+					<li><a href="#option-confirmClose.no">confirmClose.no</a></li>
+					<li><a href="#option-confirmClose.noLocalized">confirmClose.noLocalized</a></li>
+					<li><a href="#option-confirmClose.text">confirmClose.text</a></li>
+					<li><a href="#option-confirmClose.textLocalized">confirmClose.textLocalized</a></li>
+					<li><a href="#option-confirmClose.title">confirmClose.title</a></li>
+					<li><a href="#option-confirmClose.titleLocalized">confirmClose.titleLocalized</a></li>
+					<li><a href="#option-confirmClose.yes">confirmClose.yes</a></li>
+					<li><a href="#option-confirmClose.yesLocalized">confirmClose.yesLocalized</a></li>
+				</ul>
+			</li>
+			<li><a href="#option-containment">containment</a></li>
+			<li><a href="#option-draggable">draggable</a></li>
+			<li><a href="#option-durations">durations</a>
+				<ul>
+					<li><a href="#option-durations.maximize">durations.maximize</a></li>
+					<li><a href="#option-durations.minimize">durations.minimize</a></li>
+					<li><a href="#option-durations.restore">durations.restore</a></li>
+					<li><a href="#option-durations.show">durations.show</a></li>
+				</ul>
+			</li>
+			<li><a href="#option-embeddedContent">embeddedContent</a></li>
+			<li><a href="#option-group">group</a></li>
+			<li><a href="#option-height">height</a></li>
+			<li><a href="#option-icons">icons</a>
+				<ul>
+					<li><a href="#option-icons.close">icons.close</a></li>
+					<li><a href="#option-icons.confirmClose">icons.confirmClose</a></li>
+					<li><a href="#option-icons.main">icons.main</a></li>
+					<li><a href="#option-icons.maximize">icons.maximize</a></li>
+					<li><a href="#option-icons.minimize">icons.minimize</a></li>
+					<li><a href="#option-icons.restore">icons.restore</a></li>
+
+				</ul>
+			</li>
+			<li><a href="#option-maxHeight">maxHeight</a></li>
+			<li><a href="#option-maximizable">maximizable</a></li>
+			<li><a href="#option-maximizedDraggable">maximizedDraggable</a></li>
+			<li><a href="#option-maxWidth">maxWidth</a></li>
+			<li><a href="#option-minHeight">minHeight</a></li>
+			<li><a href="#option-minimizable">minimizable</a></li>
+			<li><a href="#option-minWidth">minWidth</a></li>
+			<li><a href="#option-modal">modal</a></li>
+			<li><a href="#option-modalOverlay">modalOverlay</a></li>
+			<li><a href="#option-position">position</a></li>
+			<li><a href="#option-resizable">resizable</a></li>
+			<li><a href="#option-taskbar">taskbar</a></li>
+			<li><a href="#option-title">title</a></li>
+			<li><a href="#option-titleLocalized">titleLocalized</a></li>
+			<li><a href="#option-widgetClass">widgetClass</a></li>
+			<li><a href="#option-width">width</a></li>
+		</ul>
+
+		<h3 id="events">Events</h3>
+		<ul class="side-nav">
+			<li class="every"><a href="#event-every">every event</a></li>
+			<li><a href="#event-beforeClose">beforeClose</a></li>
+			<li><a href="#event-close">close</a></li>
+			<li><a href="#event-create">create</a></li>
+			<li><a href="#event-dragStart">dragStart</a></li>
+			<li><a href="#event-drag">drag</a></li>
+			<li><a href="#event-dragStop">dragStop</a></li>
+			<li><a href="#event-focus">focus</a></li>
+			<li><a href="#event-beforeMaximize">beforeMaximize</a></li>
+			<li><a href="#event-maximize">maximize</a></li>
+			<li><a href="#event-modalOverlaySetsCreated">modalOverlaySetsCreated</a></li>
+			<li><a href="#event-moveToBackground">moveToBackground</a></li>
+			<li><a href="#event-moveToTop">moveToTop</a></li>
+			<li><a href="#event-beforeMinimize">beforeMinimize</a></li>
+			<li><a href="#event-minimize">minimize</a></li>
+			<li><a href="#event-open">open</a></li>
+			<li><a href="#event-resizeStart">resizeStart</a></li>
+			<li><a href="#event-resize">resize</a></li>
+			<li><a href="#event-resizeStop">resizeStop</a></li>
+			<li><a href="#event-beforeRestore">beforeRestore</a></li>
+			<li><a href="#event-restore">restore</a></li>
+			<li><a href="#event-beforeShow">beforeShow</a></li>
+			<li><a href="#event-show">show</a></li>
+			<li><a href="#event-taskbarNotFound">taskbarNotFound</a></li>
+		</ul>
+
+		<h3 id="methods">Methods</h3>
+		<ul class="side-nav">
+			<li><a href="#method-button">button</a></li>
+			<li><a href="#method-close">close</a></li>
+			<li><a href="#method-confirmCloseWindow">confirmCloseWindow</a></li>
+			<li><a href="#method-containment">containment</a></li>
+			<li><a href="#method-destroy">destroy</a></li>
+			<li><a href="#method-instance">instance</a></li>
+			<li><a href="#method-maximize">maximize</a></li>
+			<li><a href="#method-maximized">maximized</a></li>
+			<li><a href="#method-maximizing">maximizing</a></li>
+			<li><a href="#method-minimize">minimize</a></li>
+			<li><a href="#method-minimized">minimized</a></li>
+			<li><a href="#method-minimizing">minimizing</a></li>
+			<li><a href="#method-modalOverlay">modalOverlay</a></li>
+			<li><a href="#method-moveToTop">moveToTop</a></li>
+			<li><a href="#method-option">option</a></li>
+			<li><a href="#method-refreshPosition">refreshPosition</a></li>
+			<li><a href="#method-restore">restore</a></li>
+			<li><a href="#method-restored">restored</a></li>
+			<li><a href="#method-restoring">restoring</a></li>
+			<li><a href="#method-show">show</a></li>
+			<li><a href="#method-shown">shown</a></li>
+			<li><a href="#method-showing">showing</a></li>
+			<li><a href="#method-taskbar">taskbar</a></li>
+			<li><a href="#method-title">title</a></li>
+			<li><a href="#method-widget">widget</a></li>
+			<li><a href="#method-windowSetup">windowSetup</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="widget with-tos">
+
+	<h2>Introduction</h2>
+		<p>
+			This is documentation for <strong>window</strong> widget.
+		</p>
+
+	<h2>Options</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Option name and values</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="option-appendTo" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">appendTo</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"body"</code><br><br>
+					Allowed values:<br>
+					selector<br>
+					jQuery object
+				</td>
+				<td>
+					<p>
+						Element to which window should be appended.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-buttons" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">buttons</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">[]</code><br><br>
+					Allowed values:<br>
+					array of objects representing each button config
+				</td>
+				<td>
+					<p>
+						Buttons that should be appended to bottom of the window. See related demo for details on implementation.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowButtons.html">Window buttons</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-closable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">closable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether user can close window.
+					</p>
+					<p>
+						This option does not affect behaviour of API method <a href="#method-close">close</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-closeOnEscape">closeOnEscape</a><br>
+						<a href="#option-maximizable">maximizable</a><br>
+						<a href="#option-minimizable">minimizable</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-close">close</a>
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeClose">beforeClose</a><br>
+						<a href="#event-close">close</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowUnclosable.html">Unclosable window</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-closeOnEscape" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">closeOnEscape</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Specifies whether the dialog should close when it has focus and the user presses the escape (ESC) key.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-closable">closable</a
+					</p>
+					<p>
+						Related method:<br>
+						 <a href="#method-close">close</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	confirm       : false,
+<!--			-->	modal         : false,
+<!--			-->	minimizable   : true,
+<!--			-->	no            : null,
+<!--			-->	noLocalized   : "confirmCloseNo",
+<!--			-->	text          : null,
+<!--			-->	textLocalized : "confirmCloseText",
+<!--			-->	title         : null,
+<!--			-->	titleLocalized: "confirmCloseTitle",
+<!--			-->	yes           : null,
+<!--			-->	yesLocalized  : "confirmCloseYes"
+<!--			-->},</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+				<td>
+					<p>
+						This object hold configuration for confirmClose functionality. See detailed options for more information.
+					</p>
+					<p>
+						Details:<br>
+						<a href="#option-confirmClose.confirm">confirmClose.confirm</a><br>
+						<a href="#option-confirmClose.modal">confirmClose.modal</a><br>
+						<a href="#option-confirmClose.minimizable">confirmClose.minimizable</a><br>
+						<a href="#option-confirmClose.no">confirmClose.no</a><br>
+						<a href="#option-confirmClose.noLocalized">confirmClose.noLocalized</a><br>
+						<a href="#option-confirmClose.text">confirmClose.text</a><br>
+						<a href="#option-confirmClose.textLocalized">confirmClose.textLocalized</a><br>
+						<a href="#option-confirmClose.title">confirmClose.title</a><br>
+						<a href="#option-confirmClose.titleLocalized">confirmClose.titleLocalized</a><br>
+						<a href="#option-confirmClose.yes">confirmClose.yes</a><br>
+						<a href="#option-confirmClose.yesLocalized">confirmClose.yesLocalized</a>
+					</p>
+					<p>
+						Confirm close window inherit most of it's options from parent window.
+					</p>
+					<p>
+						Related method:<br>
+						 <a href="#method-confirmCloseWindow">confirmCloseWindow</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.confirm" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.confirm</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Specifies whether the confirmClose functionality should be on.
+					</p>
+					<p>
+						When it's on, a window will appear when user want to close window, asking if he's sure.
+					</p>
+					<p>
+						From API point of view, when confirmClose is on, calling <code class="language-javascript">$( ".window" ).window( "close" )</code> will trigger confirm close window. Calling <code class="language-javascript">$( ".window" ).window( "close" )</code> again will close window for good. Calling <code class="language-javascript">$( ".window" ).window( "destroy" )</code> will bypass confirmClose functionality.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.modal" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.modal</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Specifies whether the confirm close window should be <a href="#option-modal">modal</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.minimizable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.minimizable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Specifies whether the confirm close window should be <a href="#option-minimizable">minimizable</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.no" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.no</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string
+				</td>
+				<td>
+					<p>
+						Button label for "no" button.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.no">confirmClose.no</a> and <a href="#option-confirmClose.noLocalized">confirmClose.noLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.noLocalized" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.noLocalized</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"confirmCloseNo"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string equal to key name in dictionary
+				</td>
+				<td>
+					<p>
+						Dictionary key for label for "no" button.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.no">confirmClose.no</a> and <a href="#option-confirmClose.noLocalized">confirmClose.noLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.text" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.text</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string
+				</td>
+				<td>
+					<p>
+						Confirm close window body, typically containing question about whether user is positive about closing a window.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.text">confirmClose.text</a> and <a href="#option-confirmClose.textLocalized">confirmClose.textLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.textLocalized" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.textLocalized</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"confirmCloseText"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string equal to key name in dictionary
+				</td>
+				<td>
+					<p>
+						Dictionary key for confirm close window body, typically containing question about whether user is positive about closing a window.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.text">confirmClose.text</a> and <a href="#option-confirmClose.textLocalized">confirmClose.textLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.title" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.title</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string
+				</td>
+				<td>
+					<p>
+						Confirm close window title.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.title">confirmClose.title</a> and <a href="#option-confirmClose.titleLocalized">confirmClose.titleLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.titleLocalized" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.titleLocalized</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"confirmCloseText"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string equal to key name in dictionary
+				</td>
+				<td>
+					<p>
+						Dictionary key for confirm close window title.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.title">confirmClose.title</a> and <a href="#option-confirmClose.titleLocalized">confirmClose.titleLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.yes" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.yes</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string
+				</td>
+				<td>
+					<p>
+						Button label for "yes" button.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.yes">confirmClose.yes</a> and <a href="#option-confirmClose.yesLocalized">confirmClose.yesLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-confirmClose.yesLocalized" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">confirmClose.yesLocalized</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"confirmCloseNo"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string equal to key name in dictionary
+				</td>
+				<td>
+					<p>
+						Dictionary key for label for "yes" button.
+					</p>
+					<p>
+						If both <a href="#option-confirmClose.yes">confirmClose.yes</a> and <a href="#option-confirmClose.yesLocalized">confirmClose.yesLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowConfirmClose.html">Confirm close functionality</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-containment" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">containment</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"inherit"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"inherit"</code><br>
+					<code class="language-javascript">"viewport"</code><br>
+					<code class="language-javascript">"visible"</code>
+				</td>
+				<td>
+					<p>
+						Defines containment for window. Three values are possible:
+						<ul>
+							<li><code class="language-javascript">"inherit"</code> means that value of this option will be inherited from <a href="window.html#windowsContainment">windowsContainment</a> option value of a taskbar this window is bound to.</li>
+							<li><code class="language-javascript">"viewport"</code> means that existing taskbars (with <a href="#option-autoHide">autoHide</a> set to <code class="language-javascript">false</code>) will define boundaries in which window will exist.</li>
+							<li><code class="language-javascript">"visible"</code> means that existing taskbars (with <a href="#option-autoHide">autoHide</a> set to <code class="language-javascript">false</code>) will define boundaries in which window draggable handle will be accessible, giving ability to move it almost out of sight, but not to a point where is becomes unusable.</li>
+						</ul>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-draggable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">draggable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						If set to <code class="language-javascript">true</code>, the window will be draggable by the titlebar. Requires the <a href="http://api.jqueryui.com/draggable/">jQuery UI Draggable widget</a> to be included, otherwise draggable functionality will be skipped, but window will be initialized.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-dragStart">dragStart</a><br>
+						<a href="#event-drag">drag</a><br>
+						<a href="#event-dragStop">dragStop</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	maximize: "default",
+<!--			-->	minimize: "default",
+<!--			-->	restore : "default",
+<!--			-->	show    : "default"
+<!--			-->},</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+				<td>
+					<p>
+						This is a object holding various animation durations. Every key in this object is responsible for duration of one particular animation. See detailed options for more information.
+					</p>
+					<p>
+						<strong>Note:</strong> Changing duration when animation is in progress will not change duration of this animation. This is the intended behaviour. If you need to end animation immediately, use <a href="#method-maximize">maximize</a>, <a href="#method-minimize">minimize</a>, <a href="#method-restore">restore</a>, or <a href="#method-show">show</a> methods with a parameter <code class="language-javascript">false</code>.
+					</p>
+					<p>
+						Details:<br>
+						<a href="#option-durations.maximize">durations.maximize</a><br>
+						<a href="#option-durations.minimize">durations.minimize</a><br>
+						<a href="#option-durations.restore">durations.restore</a><br>
+						<a href="#option-durations.show">durations.show</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowFlow.html">Window flow</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.maximize" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.maximize</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"default"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-hide">valid value for jQuery UI Tooltip's "hide" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						How much should window maximize take. This applies to user interactions and calling method <a href="#method-maximize">maximize</a> without parameters.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximized">maximized</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowDurations.html">Window durations</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.minimize" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.minimize</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"default"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-hide">valid value for jQuery UI Tooltip's "hide" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						How much should window minimize take. This applies to user interactions and calling method <a href="#method-minimize">minimize</a> without parameters.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimized">minimized</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowDurations.html">Window durations</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.restore" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.restore</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"default"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-hide">valid value for jQuery UI Tooltip's "hide" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						How much should window restore take. This applies to user interactions and calling method <a href="#method-restore">restore</a> without parameters.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restore">restore</a><br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowDurations.html">Window durations</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-durations.show" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">durations.show</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"default"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/tooltip/#option-hide">valid value for jQuery UI Tooltip's "hide" options</a><br>
+					<code class="language-javascript">false</code> for no animation
+				</td>
+				<td>
+					<p>
+						How much should window show take. This applies to user interactions and calling method <a href="#method-show">show</a> without parameters.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-show">show</a><br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowDurations.html">Window durations</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-embeddedContent" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">embeddedContent</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						When window contains embedded content, like iframe, Flash game, or QuickTime video, set this option to true. This will put an overlay over window when it's not <a href="#method-moveToTop">on top</a>, allowing to bring it back to top when it's clicked. Normally, click event would not be propagated from embedded content to DOM.
+					</p>
+					<p>
+						Styling guide has a section <a href="stylingGuide.html#window">on this option</a>.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowEmbeddedContent.html">Window "embeddedContent" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-group" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">group</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string
+				</td>
+				<td>
+					<p>
+						This option allow grouping windows. Windows that share the same <code class="language-javascript">group</code> option will also share a common window button on taskbar, and the button will open a menu whenever there's more than one window present in the given group.
+					</p>
+					<p>
+						Group name could be any string, but it's recommended that it contain only <a href="http://www.w3.org/TR/CSS21/syndata.html#characters">characters that can be safely used in CSS selectors</a> (in short: use letter, numbers, hypens, and underscores, and you'll be fine).
+					</p>
+					<p>
+						When built-in translations are used, group name can be hidden from user, but if no translations are used, group name will be exposed in button label. Related demo contains the details on implementation.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowGroups.html">Window groups</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-height" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">height</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"auto"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"auto"</code><br>
+					integer
+				</td>
+				<td>
+					<p>
+						Window height. It can either be calculated automatically (best for most cases) or set explicitly.
+					</p>
+					<p>
+						This option value is used to set CSS height, not outerHeight.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-maxHeight">maxHeight</a><br>
+						<a href="#option-minHeight">minHeight</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	close       : "ui-icon-closethick",
+<!--			-->	confirmClose: "ui-icon-help",
+<!--			-->	main        : null,
+<!--			-->	maximize    : "ui-icon-arrow-4-diag",
+<!--			-->	minimize    : "ui-icon-minusthick",
+<!--			-->	restore     : "ui-icon-newwin"
+<!--			-->}</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+
+				<td>
+					<p>
+						Details:<br>
+						<a href="#option-icons.close">icons.close</a><br>
+						<a href="#option-icons.confirmClose">icons.confirmClose</a><br>
+						<a href="#option-icons.main">icons.main</a><br>
+						<a href="#option-icons.maximize">icons.maximize</a><br>
+						<a href="#option-icons.minimize">icons.minimize</a><br>
+						<a href="#option-icons.restore">icons.restore</a>
+					</p>
+					<p>
+						Related demos:<br>
+						<a href="../demos/technical/icons.html">Icons</a><br>
+						<a href="../demos/technical/iconsFamfamfam.html">famfamfam iconset</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.close" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.close</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-closethick"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for close button.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-closable">closable</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.confirmClose" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.confirmClose</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-help"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Option that's gonna be propagated to <a href="#option-confirmClose">confirmClose</a> window <a href="#option-icons.main"><code class="language-javascript">icons.main</code></a> option.
+					</p>
+					<p>
+						This option will have no visible effect <a href="#option-confirmClose.confirm">confirmClose functionality</a> is not on.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.main" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.main</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Main window icon. This icon will be visible in window titlebar and on window button or in window <a href="#option-group">group</a> menu.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.maximize" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.maximize</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-arrow-4-diag"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for maximize button for when window is not maximized.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-maximizable">maximizable</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.minimize" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.minimize</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-minusthick"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for minimize button.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-maximizable">minimizable</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-icons.restore" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">icons.restore</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"ui-icon-newwin"</code><br><br>
+					Allowed values:<br>
+					<a href="//api.jqueryui.com/theming/icons/">valid jQuery icon value</a><br>
+					any custom class name that adds icon
+				</td>
+				<td>
+					<p>
+						Icon for maximize button for when window is maximized.
+					</p>
+					<p>
+						This option will have no visible effect if <a href="#option-maximizable">maximizable</a> option is set to <code class="language-javascript">false</code>.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-maxHeight" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">maxHeight</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					integer
+				</td>
+				<td>
+					<p>
+						Max window height. Applied to both auto-sizing capabilities (when <a href="#option-height">height</a> is set to <code class="language-javascript">"auto"</code>) and <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						This option value is used to set CSS height, not outerHeight.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-height">height</a><br>
+						<a href="#option-minHeight">minHeight</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-maximizable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">maximizable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether the window can be maximized by user.
+					</p>
+					<p>
+						This option does not affect behaviour of API method <a href="#method-maximize">maximize</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-closable">closable</a><br>
+						<a href="#option-minimizable">minimizable</a><br>
+						<a href="#option-maximizedDraggable">maximizedDraggable</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximized">maximized</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowUnclosable.html">Unclosable window</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-maximizedDraggable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">maximizedDraggable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether the window can be <a href="#option-draggable">dragged</a> when it's <a href="#method-maximize">maximized</a>, therefore becoming <a href="#method-restore">restored</a> when drag starts.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-maximizable">maximizable</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowMaximizedDraggable.html">Window "maximizedDraggable" option</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-maxWidth" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">maxWidth</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					integer
+				</td>
+				<td>
+					<p>
+						Max window width. Applied to <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						This option value is used to set CSS width, not outerWidth.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-minWidth">minWidth</a><br>
+						<a href="#option-width">width</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-minHeight" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">minHeight</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">150</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Minimal window height. Applied to both auto-sizing capabilities (when <a href="#option-height">height</a> is set to <code class="language-javascript">"auto"</code>) and <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						This option value is used to set CSS height, not outerHeight.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-height">height</a><br>
+						<a href="#option-maxHeight">maxHeight</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-minimizable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">minimizable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether the window can be minimized by user.
+					</p>
+					<p>
+						This option does not affect behaviour of API method <a href="#method-minimize">minimize</a>.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-closable">closable</a><br>
+						<a href="#option-maximizable">maximizable</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimized">minimized</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowUnclosable.html">Unclosable window</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-minWidth" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">minWidth</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">150</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Minimal window width. Applied to <a href="#option-resizable">resizable</a>.
+					</p>
+					<p>
+						This option value is used to set CSS width, not outerWidth.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-maxWidth">maxWidth</a><br>
+						<a href="#option-width">width</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-modal" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">modal</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">false</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						Whether the window is modal. Modal creates an overlay over all elements, optionally filtered by <a href="#option-modalOverlay">modalOverlay</a> option and <a href="#event-modalOverlaySetsCreated">modalOverlaySetsCreated</a> event.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-modalOverlaySetsCreated">modalOverlaySetsCreated</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowModal.html">Modal windows</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-modalOverlay" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">modalOverlay</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"all"</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">"all"</code><br>
+					<code class="language-javascript">"viewport"</code><br>
+					jQuery object
+				</td>
+				<td>
+					<p>
+						Specifies what elements should be covered by overlay, when modal window is <a href="#method-moveToTop">on top</a>. Three values are possible:
+						<ul>
+							<li><code class="language-javascript">"all"</code> means that all taskbars and windows will be covered.</li>
+							<li><code class="language-javascript">"viewport"</code> means that all windows will be covered, but not taskbars.</li>
+							<li>jQuery object acts as <code class="language-javascript">"all"</code>, except elements passed in jQuery Object will not be covered by modal overlay.</li>
+						</ul>
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-modal">modal</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-modalOverlaySetsCreated">modalOverlaySetsCreated</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowModal.html">Modal windows</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-position" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">position</code><br><br>
+					Default value:<br>
+					<pre><code class="language-javascript">{
+<!--			-->	my       : "center",
+<!--			-->	at       : "center",
+<!--			-->	of       : window,
+<!--			-->	collision: "fit",
+<!--			-->}</code></pre><br>
+					Allowed values:<br>
+					object with keys exactly as shown above
+				</td>
+				<td>
+					<p>
+						Specifies where the dialog should be displayed when opened. The dialog will handle collisions such that as much of the dialog is visible as possible.
+					</p>
+					<p>
+						The of property defaults to the window, but you can specify another element to position against. You can refer to the <a href="http://api.jqueryui.com/position/">jQuery UI Position utility</a> for more details about the available properties.
+					</p>
+					<p>
+						Window position will be corrected if needed to fit into whatever <a href="#option-containment">containment</a> has been specified.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-resizable" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">resizable</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">true</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">false</code><br>
+					<code class="language-javascript">true</code>
+				</td>
+				<td>
+					<p>
+						If set to <code class="language-javascript">true</code>, the window will be resizable. Requires the <a href="http://api.jqueryui.com/resizable/">jQuery UI Resizable widget</a> to be included, otherwise resizable functionality will be skipped, but window will be initialized.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-resizeStart">resizeStart</a><br>
+						<a href="#event-resize">resize</a><br>
+						<a href="#event-resizeStop">resizeStop</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-taskbar" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">taskbar</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">"simone-taskbar:eq(0)"</code><br><br>
+					Allowed values:<br>
+					selector<br>
+					jQuery object
+				</td>
+				<td>
+					<p>
+						Taskbar the window should be bound to.
+					</p>
+					<p>
+						When invalid option value is passed—selector not matching taskbar instance, or jQuery object not containing taskbar instance—there are two scenarios:
+						<ul>
+							<li>On window initialization, window will not be created from an element and <a href="#event-taskbarNotFound">taskbarNotFound</a> event will be triggered.</li>
+							<li>After window initialization, when setter is used (<code class="language-javascript">$( ".window" ).window( "option", "taskbar", $() );</code>), window will not be bound to new taskbar.</li>
+						</ul>
+					<p>
+						Related event:<br>
+						<a href="#event-taskbarNotFound">taskbarNotFound</a>
+					</p>
+					<p>
+						Related method<br>
+						<a href="#method-taskbar">taskbar</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-title" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">title</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string with title
+				</td>
+				<td>
+					<p>
+						Title of the window. Title will be visible in window titlebar and on window button or in window <a href="#option-group">group</a> menu.
+					</p>
+					<p>
+						If both <a href="#option-title">title</a> and <a href="#option-titleLocalized">titleLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-titleLocalized">titleLocalized</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-title">title</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-titleLocalized" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">titleLocalized</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">null</code><br><br>
+					Allowed values:<br>
+					<code class="language-javascript">null</code><br>
+					string with title
+				</td>
+				<td>
+					<p>
+						Dictionary key for title of the window. Title will be visible in window titlebar and on window button or in window <a href="#option-group">group</a> menu.
+					</p>
+					<p>
+						If both <a href="#option-title">title</a> and <a href="#option-titleLocalized">titleLocalized</a> are not equal to <code class="language-javascript">null</code>, the first one will be used.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-titleLocalized">titleLocalized</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-title">title</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-widgetClass" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">widgetClass</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">""</code><br><br>
+					Allowed values:<br>
+					string
+				</td>
+				<td>
+					<p>
+						Class that gonna be added to window widget (a parent of element that <code class="language-javascript">window()</code> method was called on).
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-widget">widget</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="option-width" class="anchor-fix"></span>
+					Option name:<br>
+					<code class="option-name language-javascript">width</code><br><br>
+					Default value:<br>
+					<code class="language-javascript">300</code><br><br>
+					Allowed values:<br>
+					integer
+				</td>
+				<td>
+					<p>
+						Window width. It can only be set explicitly.
+					</p>
+					<p>
+						This option value is used to set CSS width, not outerWidth.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-maxWidth">maxWidth</a><br>
+						<a href="#option-minWidth">minWidth</a>
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Events</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Event name and UI object</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="event-every" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">every event</code><br><br>
+					Every UI object contains:<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// widget instance; it's the same
+<!--				-->	// object jQuery widget instance()
+<!--				-->	// method returns since jQuery 1.11
+<!--				-->	instance: { ... },
+<!--				-->	// instance of taskbar this window is
+<!--				-->	// bound to; it's the same
+<!--				-->	// object jQuery widget instance()
+<!--				-->	// method returns since jQuery 1.11
+<!--				-->	taskbar : { ... },
+<!--				-->	// jQuery object containing element
+<!--				-->	// the window() method was called on
+<!--				-->	$window : $window,
+<!--				-->	// jQuery object containing window
+<!--				-->	// widget (parent of the element
+<!--				-->	// the window() method was called on)
+<!--				-->	$widget : $widget,
+<!--				-->	// jQuery object containing taskbar
+<!--				-->	$taskbar: $taskbar
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						In addition to event-specific properties, every UI object contains additional properties, as shown on the left.
+					</p>
+					<p>
+						<code class="language-javascript">instance</code> is a jQuery UI window widget instance. It's the same object that jQuery UI <code class="language-javascript">instance()</code> method return since jQuery UI 1.11.
+					</p>
+					<p>
+						<code class="language-javascript">taskbar</code> is a jQuery UI widget instance of taskbar the window is bound to. It's the same object that jQuery UI <code class="language-javascript">instance()</code> method return since jQuery UI 1.11.
+					</p>
+					<p>
+						<code class="language-javascript">$window</code> is a jQuery object fo DOM element on which <code class="language-javascript">window()</code> was called.
+					</p>
+					<p>
+						<code class="language-javascript">$window</code> is a jQuery object fo DOM element that serves as window widget (in short, parent of element on  which <code class="language-javascript">window()</code> was called).
+					</p>
+					<p>
+						<code class="language-javascript">$taskbar</code> is a jQuery object fo DOM element of taskbar the window is bound to.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeClose" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeClose</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is about to be closed.
+					</p>
+					<p>
+						This event will not be triggered when <a href="#method-destroy">destroy</a> method was called.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-closable">closable</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-close">close</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-close">close</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-close" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">close</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered after window is destroyed and closed.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-closable">closable</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-beforeClose">beforeClose</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-close">close</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-create" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">create</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						This event if triggered when window widget is successfully created.
+					</p>
+					<p>
+						This event if triggered only once.
+					</p>
+					<p>
+						If this event fails to fire, <a href="#event-taskbarNotFound">taskbarNotFound</a> likely fired.
+					</p>
+					<p>
+						This event will not be triggered if widget creation failed. If that happens, set taskbar's <a href="#option-debug.environment">debug.environment</a> to <code class="language-javascript">true</code> and check the output of <a href="#event-debugLogAdd">debugLogAdd</a> event.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-dragStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">dragStart</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// window current offset
+<!--				-->	offset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	},
+<!--				-->	// window original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// window original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	},
+<!--				-->	// window current position
+<!--				-->	position: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 400,
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window <a href="#option-draggable">draggable</a> starts.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-start">jQuery UI Draggable start event</a>.
+					</p>
+					<p>
+						Original draggable start event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-drag" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">drag</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// window current offset
+<!--				-->	offset: {
+<!--				-->		left  : 38,
+<!--				-->		top   : 456,
+<!--				-->	},
+<!--				-->	// window original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// window original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// window current position
+<!--				-->	position: {
+<!--				-->		left  : 38,
+<!--				-->		top   : 456,
+<!--				-->	}
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window <a href="#option-draggable">draggable</a> in in progress.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-drag">jQuery UI Draggable drag event</a>.
+					</p>
+					<p>
+						Original draggable drag event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-dragStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">dragStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// window current offset
+<!--				-->	offset: {
+<!--				-->		left  : 862,
+<!--				-->		top   : 304,
+<!--				-->	},
+<!--				-->	// window original offset
+<!--				-->	originalOffset: {
+<!--				-->		left  : 0,
+<!--				-->		top   : 300,
+<!--				-->	},
+<!--				-->	// window original position
+<!--				-->	originalPosition: {
+<!--				-->		left  : 1240,
+<!--				-->		top   : 29,
+<!--				-->	},
+<!--				-->	// window current position
+<!--				-->	position: {
+<!--				-->		left  : 862,
+<!--				-->		top   : 204,
+<!--				-->	}
+<!--				-->}</code></pre>
+					This event caries properties from <a href="http://api.jqueryui.com/draggable/#event-stop">jQuery UI Draggable stop event</a>.
+				</td>
+				<td>
+					<p>
+						Triggered when window <a href="#option-draggable">draggable</a> stops.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/draggable/#event-stop">jQuery UI Draggable stop event</a>.
+					</p>
+					<p>
+						Original draggable stop event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-focus" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">focus</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is focused.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeMaximize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeMaximize</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is about to be maximized.
+					</p>
+					<p>
+						Canceling this event will prevent window from maximizing.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-maximize">maximize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximized">maximized</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-maximize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">maximize</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window has been fully maximized.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-beforeMaximize">beforeMaximize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximized">maximized</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeMinimize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeMinimize</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// whether taskbar's "minimizeAll"
+<!--			-->	// method was called and is in progress
+<!--			-->	minimizeAllInProgress: true
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is about to be minimized.
+					</p>
+					<p>
+						Canceling this event will prevent window from minimizing.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-minimize">minimize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimized">minimized</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-minimize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">minimize</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// whether taskbar's "minimizeAll"
+<!--			-->	// method was called and is in progress
+<!--			-->	minimizeAllInProgress: true
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window has been fully minimized.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-beforeMinimize">beforeMinimize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimized">minimized</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-modalOverlaySetsCreated" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">modalOverlaySetsCreated</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--				-->	// jQuery object containing
+<!--				-->	// elements that gonna be covered
+<!--				-->	// by modal overlay
+<!--				-->	$setCover: $setCover,
+<!--				-->	// jQuery object containing
+<!--				-->	// elements that's will be explicitly
+<!--				-->	// excluded from being covered
+<!--				-->	// by modal overlay
+<!--				-->	$setNoCover: $setNoCover
+<!--				-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when modal overlay sets are created, based on <a href="#option-modal">modal</a> and <a href="#option-modalOverlay">modalOverlay</a> options. Both sets can be modified in this event. See related demo for details on how to do this.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-modal">modal</a><br>
+						<a href="#option-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowModal.html">Modal windows</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-moveToBackground" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">moveToBackground</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window was on top and is moved to background, therefore becoming a not active window.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-moveToTop">moveToTop</a><br>
+						<a href="taskbar.html#method-blurWindows">blurWindows</a> – taskbar method
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-moveToTop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">moveToTop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window was not on top and is moved to top, therefore becoming active window.
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-moveToTop">moveToTop</a><br>
+						<a href="taskbar.html#method-blurWindows">blurWindows</a> – taskbar method
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resizeStart" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resizeStart</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// original position
+<!--			-->	// before resize started
+<!--			-->	originalPosition: {
+<!--			-->		left: 950,
+<!--			-->		top: 82
+<!--			-->	},
+<!--			-->	// original size before
+<!--			-->	// resize started
+<!--			-->	originalSize: {
+<!--			-->		left: 338,
+<!--			-->		width: 299
+<!--			-->	},
+<!--			-->	// current position
+<!--			-->	position: {
+<!--			-->		left: 950,
+<!--			-->		top: 82
+<!--			-->	},
+<!--			-->	// current size
+<!--			-->	size: {
+<!--			-->		left: 338,
+<!--			-->		width: 299
+<!--			-->	}
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window resize starts.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-start">jQuery UI Resizable start event</a>.
+					</p>
+					<p>
+						Original resizable start event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resize" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resize</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// original position
+<!--			-->	// before resize started
+<!--			-->	originalPosition: {
+<!--			-->		left: 950,
+<!--			-->		top: 82
+<!--			-->	},
+<!--			-->	// original size before
+<!--			-->	// resize started
+<!--			-->	originalSize: {
+<!--			-->		left: 338,
+<!--			-->		width: 299
+<!--			-->	},
+<!--			-->	// current position
+<!--			-->	position: {
+<!--			-->		left: 943,
+<!--			-->		top: 77
+<!--			-->	},
+<!--			-->	// current size
+<!--			-->	size: {
+<!--			-->		left: 343,
+<!--			-->		width: 306
+<!--			-->	}
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered during window resize.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-resize">jQuery UI Resizable resize event</a>.
+					</p>
+					<p>
+						Original resizable resize event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-resizeStop" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">resizeStop</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// original position
+<!--			-->	// before resize started
+<!--			-->	originalPosition: {
+<!--			-->		left: 950,
+<!--			-->		top: 82
+<!--			-->	},
+<!--			-->	// original size before
+<!--			-->	// resize started
+<!--			-->	originalSize: {
+<!--			-->		left: 338,
+<!--			-->		width: 299
+<!--			-->	},
+<!--			-->	// current position
+<!--			-->	position: {
+<!--			-->		left: 943,
+<!--			-->		top: 77
+<!--			-->	},
+<!--			-->	// current size
+<!--			-->	size: {
+<!--			-->		left: 343,
+<!--			-->		width: 306
+<!--			-->	}
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window resize stops.
+					</p>
+					<p>
+						This event caries properties from <code class="language-javascript">ui</code> object of <a href="http://api.jqueryui.com/resizable/#event-stop">jQuery UI Resizable stop event</a>.
+					</p>
+					<p>
+						Original resizable stop event object is passed.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/functional/windowInteractions.html">Window interactions</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeRestore" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeRestore</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is about to be restored.
+					</p>
+					<p>
+						Canceling this event will prevent window from restoring.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-restore">restore</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restore">restore</a><br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-restore" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">restore</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window has been fully restored.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-beforeRestore">beforeRestore</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restore">restore</a><br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-beforeShow" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">beforeShow</code><br><br>
+					Cancelable: <strong>yes</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window is about to be shown.
+					</p>
+					<p>showing
+						Canceling this event will prevent window from showing.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-show">show</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-show">show</a><br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-show" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">show</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when window has been fully shown.
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-beforeShow">beforeShow</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-show">show</a><br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="event-taskbarNotFound" class="anchor-fix"></span>
+					Event name:<br>
+					<code class="option-name language-javascript">taskbarNotFound</code><br><br>
+					Cancelable: <strong>no</strong><br><br>
+					Example UI object (in addition to what <a href="#event-every">every event UI object</a> has):<br>
+					<pre><code class="language-javascript">{
+<!--			-->	// whether it's the initialization
+<!--			-->	// or taskbar was about to be
+<!--			-->	// changed via setter
+<!--			-->	initial: true,
+<!--			-->	// error message
+<!--			-->	message: "...",
+<!--			-->	// original value of taskbar option
+<!--			-->	// before resize started
+<!--			-->	taskbar: taskbar,
+<!--			-->	// jQuery object internally created
+<!--			-->	// from taskbar option
+<!--			-->	$taskbar: $taskbar,
+<!--			-->}</code></pre>
+				</td>
+				<td>
+					<p>
+						Triggered when taskbar passed in <a href="#option-taskbar">taskbar</a> option was not found, either on initialization or after initialization.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-taskbar">taskbar</a>
+					</p>
+					<p>
+						Related method<br>
+						<a href="#method-taskbar">taskbar</a>
+					</p>
+				</td>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<h2>Methods</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Method name</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr>
+				<td>
+					<span id="method-button" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">button</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns button connected to a window, or empty jQuery object if window is not bound to taskbar.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-close" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">close</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Closes the window. If <a href="#option-confirmClose.confirm">confirmClose.confirm</a> is set to <code class="language-javascript">true</code> and confirm close window is not present, first call on <code class="language-javascript">close()</code> method will open confirm close window. Second call will close confirm close window and the window it was called upon.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-closable">closable</a>
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeClose">beforeClose</a><br>
+						<a href="#event-close">close</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-destroy">destroy</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-confirmCloseWindow" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">confirmCloseWindow</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns confirm close window if confirm close window is currently opened, or empty jQuery object otherwise.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-confirmClose">confirmClose</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-containment" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">containment</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns real window <a href="#option-containment">containment</a>, either <code class="language-javascript">"visible"</code> or <code class="language-javascript">"viewport"</code>.
+					</p>
+					<p>
+						That is different from getter for <a href="#option-containment">containment</a> option, that could also return <code class="language-javascript">"inherit"</code>, if containment is inheritet from <a href="#option-taskbar">taskbar's</a> <a href="taskbar.html#windowsContainment">windowsContainment</a> option.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#option-containment">containment</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-destroy" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">destroy</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Removes the window functionality completely. This will return the element back to its pre-init state.
+					</p>
+					<p>
+						Related method:<br>
+						<a href="#method-close">close</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-instance" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">instance</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p class="alert-box info since">
+						Available since jQuery UI 1.11.
+					</p>
+					<p>
+						Retrieves the window's instance object. If the element does not have an associated instance, <code class="language-javascript">undefined</code> is returned.
+					</p>
+						Unlike other widget methods, <code class="language-javascript">instance()</code> is safe to call on any element after the dialog plugin has loaded.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-maximize" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">maximize</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Maximizes window. If window is already maximized, nothing will happen.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMaximize">beforeMaximize</a><br>
+						<a href="#event-maximize">maximize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximized">maximized</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowFlow.html">Window flow</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-maximized" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">maximized</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is fully maximized, <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMaximize">beforeMaximize</a><br>
+						<a href="#event-maximize">maximize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximizing">maximizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-maximizing" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">maximizing</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is currently maximizing, that is, the animation is in progress, and <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMaximize">beforeMaximize</a><br>
+						<a href="#event-maximize">maximize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-maximize">maximize</a><br>
+						<a href="#method-maximized">maximized</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-minimize" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">minimize</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Maximizes window. If window is already minimized, nothing will happen.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMinimize">beforeMinimize</a><br>
+						<a href="#event-minimize">minimize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimized">minimized</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/windowFlow.html">Window flow</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-minimized" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">minimized</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is fully minimized, <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMinimize">beforeMinimize</a><br>
+						<a href="#event-minimize">minimize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimizing">minimizing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-minimizing" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">minimizing</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is currently minimizing, that is, the animation is in progress, and <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeMinimize">beforeMinimize</a><br>
+						<a href="#event-minimize">minimize</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-minimize">minimize</a><br>
+						<a href="#method-minimized">minimized</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-modalOverlay" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">modalOverlay</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns jQuery element representing modal overlay, or empty jQuery object if modal overlay is not present.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-confirmClose">confirmClose</a><br>
+						<a href="#option-modal">modal</a><br>
+						<a href="#option-modalOverlay">modalOverlay</a>
+					</p>
+					<p>
+						Related event:<br>
+						<a href="#event-modalOverlaySetsCreated">modalOverlaySetsCreated</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-moveToTop" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">moveToTop</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Move window to top, making it an active window. If <a href="#option-modal">modal</a> window is present and current window is not modal, window will not be moved to top.
+					</p>
+					<p>
+						This method only moves window to top if this window is not <a href="#method-minimized">minimized</a> or <a href="#method-minimizing">minimizing</a>. You might want to check for that before using this method.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-moveToTop">moveToTop</a><br>
+						<a href="#event-moveToBackground">moveToBackground</a>
+					</p>
+					<p>
+						Related method:<br>
+						<a href="taskbar.html#method-blurWindows">blurWindows</a> – taskbar method
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-option" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">option</code><br><br>
+					Parameters:<br>
+					option name (mandatory)<br>
+					option value (optional)
+				</td>
+				<td>
+					<p>
+						Serves as getter or a setter for options.
+					</p>
+					<p>
+						When only option name is passed, this method act as getter.
+					</p>
+					<pre><code class="language-javascript"> // initialize window with default settings
+<!--				-->$( ".window" ).window();
+
+<!--				-->// modal will be false, because that's the default option value
+<!--				-->var modal = $( ".window" ).window( "option", "modal" );</code></pre>
+					<p>
+						When option name and option value is passed, a new option value is set.
+					</p>
+					<pre><code class="language-javascript"> // initialize window with default settings
+<!--				-->$( ".window" ).window();
+
+<!--				-->// modal will from now on be true
+<!--				-->$( ".window" ).window( "option", "modal", true );</code></pre>
+					<p>
+						Alternatively, an object can be passed as option name, acting as a setter:
+					</p>
+					<pre><code class="language-javascript">$( ".window" ).window( "option", {
+<!--				-->	containment: "visible",
+<!--				-->	closable: false
+<!--				-->});</code></pre>
+					<p>
+						This will set both <code class="language-javascript">containment</code> and <code class="language-javascript">closable</code> options.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-refreshPosition" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">refreshPosition</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Refreshes position and dimension of window.
+					</p>
+					<p>
+						Internally, this method is called whenever it's needed to reposition window, or change it's dimension.
+					</p>
+					<p>
+						On occasions this method should be called from your application, for example, when you have a window with <a href="#option-height">height</a> set to <code class="language-javascript">auto</code> and window has some new content, or old content is removed, and you want height to be recalculated.
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-restore" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">restore</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Restores window. If window is already restored, nothing will happen.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeRestore">beforeRestore</a><br>
+						<a href="#event-restore">restore</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-restored" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">restored</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is fully restored, <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeRestore">beforeRestore</a><br>
+						<a href="#event-restore">restore</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-restoring" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">restoring</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is currently restoring, that is, the animation is in progress, and <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeRestore">beforeRestore</a><br>
+						<a href="#event-restore">restore</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-restored">restored</a><br>
+						<a href="#method-restoring">restoring</a>
+					</p>
+				</td>
+			</tr><tr>
+				<td>
+					<span id="method-show" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">show</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Shows window. If window is already shown, nothing will happen.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeShow">beforeShow</a><br>
+						<a href="#event-show">show</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-shown" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">shown</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is fully shown, <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeShow">beforeShow</a><br>
+						<a href="#event-show">show</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-showing" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">showing</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <code class="language-javascript">true</code> if window is currently showing, that is, the animation is in progress, and <code class="option-name language-javascript">false</code> otherwise.
+					</p>
+					<p>
+						Related events:<br>
+						<a href="#event-beforeShow">beforeShow</a><br>
+						<a href="#event-show">show</a>
+					</p>
+					<p>
+						Related methods:<br>
+						<a href="#method-shown">shown</a><br>
+						<a href="#method-showing">showing</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-taskbar" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">taskbar</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns <a href="taskbar.html">taskbar</a> the window is bound to, or empty jQuery object if window is not bound to taskbar.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#method-taskbar">taskbar</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-title" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">title</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns real window title, that is the title currently shown on titlebar.
+					</p>
+					<p>
+						Related options:<br>
+						<a href="#option-title">title</a><br>
+						<a href="#option-titleLocalized">titleLocalized</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-widget" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">widget</code><br><br>
+					Parameters:<br>
+					none
+				</td>
+				<td>
+					<p>
+						Returns parent of element on which <code class="language-javascript">taskbar()</code> method was called. That's the jQuery object containing original element, titlebar, and, optionally, container for custom <a href="#option-buttons">buttons</a>.
+					</p>
+					<p>
+						Related option:<br>
+						<a href="#method-widgetClass">widgetClass</a>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span id="method-windowSetup" class="anchor-fix"></span>
+					Method name:<br>
+					<code class="option-name language-javascript">windowSetup</code><br><br>
+					Parametes:<br>
+					options (mandatory)<br>
+					propagateToInstances (optional, passed as first parameter if used)
+				</td>
+				<td>
+					<p>
+						Changes the default window setup, and optionally propagate changes to existing window instances. See related demo for details on usage.
+					</p>
+					<p>
+						Related demo:<br>
+						<a href="../demos/technical/setup.html">$.simone.taskbarSetup and $.simone.windowSetup methods</a>
+					</p>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window buttons - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar({
+		// let's have language select, so we can observe how button label
+		// of "customButton" changes
+		languageSelect: true,
+		languages: [ "en", "pl" ],
+		// add custom labels for both languages
+		localization: {
+			en: {
+				customButton: "Custom button!"
+			},
+			pl: {
+				customButton: "Dodatkowy przycisk!"
+			}
+		},
+		// delegate debugLogAdd output to demo log
+		debugLogAdd: function ( event, ui ) {
+			demo.log( ui.levelName + ": " + ui.message );
+		}
+	});
+
+	$( ".window" ).window({
+		// move window to bottom edge
+		position: {
+			my: "center bottom",
+			at: "center bottom"
+		},
+		buttons: [
+			// this will generate a button with blank label
+			{
+				click: function () {
+					demo.log( "Blank button clicked." );
+
+					// after clicking the button, it will no longer be blank
+					$( ".window" ).window(
+						"option", "buttons.0.text", "Not blank anymore"
+					);
+				},
+			},
+			// This is a button with an "OK" label
+			{
+				click: function () {
+					demo.log( "OK clicked." );
+				},
+				text: "OK"
+			},
+			// this button will take it text from dictionary
+			{
+				click: function () {
+					demo.log( "Custom button clicked." );
+				},
+				textLocalized: "customButton"
+			},
+		]
+	})
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window">Some content...</div>
+
+<div class="demo">
+	<div class="description">
+		"Shows how buttons can be prepended to window using native functionality.
+		<br><br>
+		Three variants are demonstrated, each with slightly different config.
+	</div>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

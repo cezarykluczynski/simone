@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar subordinates events - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// function to determine button type and event type
+	function logElementEvent( event, ui ) {
+		// remove "taskbar" from event type
+		var eventType = event.type.substr( 7 ),
+
+		    // possible attributes of buttons
+		    buttonFor = ui.$button.attr( "data-menu-button-for" ),
+		    groupButton = ui.$button.attr( "data-group-name" ),
+		    systemButton = ui.$button.attr( "data-button-name" ),
+
+		    // pick button type
+		    buttonType = buttonFor || groupButton || systemButton;
+
+		// $element property is present only in "elementOpen"
+		// and "elementClose" events, so if it not present,
+		// we're dealing with menu item
+		if ( ! ui.$element ) {
+			buttonType += " item";
+		}
+
+		// return findings to eventHandler
+		return eventType + ": " + buttonType;
+	}
+
+	// handler for all events
+	function eventHandler ( event, ui ) {
+		// log event details
+		demo.log( logElementEvent( event, ui ) );
+	}
+
+	// initialize taskbar with language select, clock, and handlers for logging
+	$( ".taskbar" ).taskbar({
+		languageSelect: true,
+		clock: true,
+		// bind the same function to each of the four events we want to log
+		elementClose: eventHandler,
+		elementOpen: eventHandler,
+		menuItemBlur: eventHandler,
+		menuItemFocus: eventHandler
+	});
+
+	// initialize 2 windows with a common group co window group will be
+	// created within taskbar
+	$( ".window" ).window({
+		group: "test"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar">
+	<!-- simple start menu with two items -->
+	<ul data-menu-lang="*" data-menu-type="start">
+		<li>Restart</li>
+		<li>Exit</li>
+	</ul>
+</div>
+
+<div class="window"></div>
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows when different subordinates events are fired.
+		<br><br>
+		Click around the menus to see the event flow.
+		<br><br>
+		Elements that those events are relevant to are start menus,
+		window group menus, language select menu and clock.
+	</div>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

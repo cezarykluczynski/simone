@@ -1,0 +1,59 @@
+{
+	"qunit": {
+		"urlConfig": {
+			"jquery": {
+				"id": "jquery",
+				"label": "jQuery version",
+				"value": [
+					"1.8.3", "1.9.1", "1.10.2", "1.11.1",
+					"2.0.3", "2.1.1"
+				],
+				"head": "2.1.1",
+				"tooltip": "Which jQuery version to test against"
+			},
+			"jqueryUi" : {
+				"id": "jqueryUi",
+				"label": "jQuery UI version",
+				"value": [
+					"1.10.0", "1.10.1", "1.10.2", "1.10.3", "1.10.4",
+					"1.11.0", "1.11.1"
+				],
+				"head": "1.11.1",
+				"tooltip": "Which jQuery UI version to test against"
+			},
+			"showDragTrace": {
+				"id": "showDragTrace",
+				"label": "Show drag trace",
+				"value": [
+					"yes"
+				],
+				"tooltip":
+					"Whether to show drag trace on tests involving simulated drag (default to no; yes is useful for writing new tests or examining existing)"
+			},
+			"showTopBar": {
+				"id": "showTopBar",
+				"label": "Show top bar",
+				"value": [
+					"no"
+				],
+				"tooltip":
+					"Whether to show top bar (default to yes; no is useful for writing new tests or examining existing)"
+			},
+			"resetOnDone": {
+				"id": "resetOnDone",
+				"label": "Reset on done",
+				"value": [
+					"no"
+				],
+				"tooltip":
+					"Whether to reset taskbar when tests are done (default to yes; no is useful for writing new tests or examining existing)"
+			}
+		},
+		"warnings": {
+			"warning-interactions-timeouts" : "This tests simulated mouse interactons and relies on timeouts. For this tests to go smoothly, please keep the mouse pointer outside the window. This test might fail on very slow or busy devices.",
+			"warning-timeouts": "This test relies on timeouts and it might fail on very slow or busy devices.",
+			"warning-random-data": "This test takes time and uses random data. Running it multiple times can eventually tigger an error. If that happens, please reaport it providing as much data as possible.",
+			"warning-devtools-required": "This test requires that the Developers tools be opened. Hit F12 (IE9) and refresh page."
+		}
+	}
+}

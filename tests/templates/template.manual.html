@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Change left side of the title to match that we're gonna be testing -->
+<title>Manual test template | Simone test</title>
+<meta charset="UTF-8">
+<!-- testType=manual will load different set of scripts - no QUnit, in short -->
+<script src="../common/libs.js?testType=manual"></script>
+</head>
+<body class="no-top-bar">
+<div class="taskbar"></div>
+
+<div class="instructions">
+	<!-- Write an instruction on how to manually perform this test. -->
+	<p></p>
+</div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		// create taskbar;
+		// probably at least one would be needed
+		// - you can add options to it
+		$( ".taskbar" ).taskbar();
+
+		// create window from instruction div
+		$( ".instructions" ).window({
+			title: "Instructions",
+			position: {
+				my: "left top",
+				at: "left top"
+			},
+			width: 500,
+			height: 300
+		});
+
+		// your code goes here
+	});
+</script>
+
+<!-- Last but not least, when you're done, remove the template comments. -->
+</body>
+</html>

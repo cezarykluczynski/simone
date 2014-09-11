@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Smooth resizable on vertical taskbar - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body><!-- To remove top bar from demo, add class "no-top-bar" to body -->
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize resizable taskbar on left edge
+	$( ".taskbar" ).taskbar({
+		resizable: true,
+		orientation: "vertical",
+		verticalStick: "top left",
+		// make column width equal to 1 - that'll be our resizable step
+		verticalColumnWidth: 1,
+		// set minimum number of columns to 100, which in practice is 100px
+		verticalColumnsMin: 100,
+		// set maximum number of columns to 300, which in practice is 300px
+		verticalColumnsMax: 300,
+		// set current width to 150 columns, which in practice is 150px
+		verticalColumns: 150
+	});
+
+	// initialize resizable taskbar on the right with default settings
+	$( ".taskbar2" ).taskbar({
+		resizable: true,
+		orientation: "vertical"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		How to make vertical taskbar's resizable smooth, not jumpy.
+		<br><br>
+		Resize the taskbar on the left to see the smooth resize.
+		<br><br>
+		For comparision, taskbar on the right is resizable with
+		default settings.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

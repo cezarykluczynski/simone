@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Network monitor manual test | Simone test</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js?testType=manual"></script>
+</head>
+<body>
+<div class="taskbar"></div>
+
+<div class="instructions">
+	<p>Online/offline events could not be trigger programatically, so they have to be tested manually. To test behaviour of network monitor button, go offline and online again by doing the following:</p>
+
+	<ul>
+		<li><strong>Firefox</strong>: Main menu → Tools → Work Offline</li>
+		<li><strong>IE9</strong>: File → Work offline</li>
+		<li><strong>IE10</strong>: Tools → Work Offline</li>
+		<li><strong>Opera 12 and below</strong>: Settings → Work Offline</li>
+		<li><strong>Chrome, Safari, IE11+, Opera 15+</strong>: No easy way. The fastest way is switching your network connection off and on via the controls your OS provides.</li>
+	</ul>
+
+	<p>Button label should be "This device seems to be disconnected from the web" in offline mode, and "This device seems to be connected to the web" when you're online.</p>
+
+	<p>If network monitor button is not visible, this means it's not supported in this browser.</p>
+</div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$( ".taskbar" ).taskbar({
+			networkMonitor: true
+		});
+
+		$( ".instructions" ).window({
+			title: "Instructions",
+			position: {
+				my: "left top",
+				at: "left top"
+			},
+			width: 500,
+			height: 300
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Taskbar autohide | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-interactions-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar({
+			autoHide: true,
+			durations: {
+				autoHideHide: 100,
+				autoHideShow: 100,
+				autoHideDelay: 100,
+			}
+		});
+
+		var center = function ( $elem ) {
+			var offset = $elem.offset();
+
+			return {
+				top:  offset.top  + $elem.outerHeight() / 2,
+				left: offset.left + $elem.outerWidth() / 2
+			}
+		}
+
+		asyncTest( "\"autohide\": false", function ( assert ) {
+			$taskbar.trigger( "mouseleave" );
+
+			setTimeout(function () {
+				start();
+
+				var prev = $taskbar.taskbar( "option", "autoHide" );
+
+				$taskbar.taskbar( "option", "autoHide", false );
+
+				equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Set \"autohide\" to false. Taskbar immediately visible."
+				);
+
+				$taskbar.taskbar( "option", "autoHide", prev );
+			}, 1000 );
+		});
+
+		asyncTest( "\"autohide\": true",
+			function ( assert ) {
+			expect( 3 );
+
+			var $handle;
+
+			$taskbar.taskbar();
+
+			$taskbar.trigger( "mouseleave" );
+
+			setTimeout(function () {
+				equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Trigger taskbar mouseleave. Taskbar hidden."
+				);
+				start();
+				stop();
+			}, 2000 );
+
+			setTimeout(function () {
+				$handle = $taskbar
+					.find( ".simone-taskbar-resizable .ui-resizable-handle" );
+				$handle.trigger( "mouseenter" );
+			}, 2100 );
+
+			setTimeout(function () {
+				equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Trigger mouseenter. Taskbar visible."
+				);
+				start();
+				stop();
+			}, 2500 );
+
+			setTimeout(function () {
+				equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Taskbar still visible after 2 seconds."
+				);
+				start();
+			}, 4500 );
+		});
+
+		asyncTest( "Stopping elements", function ( assert ) {
+			expect( 8 );
+
+			var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+			var $menu = getMenu();
+
+			$taskbar.prepend( $menu );
+
+			$taskbar.taskbar( "refresh" );
+
+			setTimeout( function () {
+				start();
+
+				$taskbar.trigger( "mouseenter" );
+
+				$taskbar.find( "[data-menu-button-for=test]" ).trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+
+				stop();
+			}, 1000 );
+
+			setTimeout( function () {
+				start();
+
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Prepend and open start menu. Taskbar still visible after 2 seconds."
+				);
+
+				stop();
+			}, 3000 );
+
+			setTimeout( function () {
+				start();
+
+				$taskbar.find( "[data-menu-button-for=test]" ).trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+				stop();
+			}, 4000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide menu. Trigger taskbar mouseleave. Taskbar hidden."
+				);
+				start();
+
+				$menu.remove();
+
+				$taskbar.taskbar({
+					clock: true,
+					clockShowDatepicker: true
+				}).taskbar( "refresh" );
+
+
+				$taskbar.find( "[data-button-name=clock]").trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+				stop();
+			}, 5000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					  "Create and open datepicker. Trigger taskbar mouseleave. "
+					+ "Taskbar still visible after 2 seconds."
+				);
+				start();
+				$taskbar.find( "[data-button-name=clock]").trigger( "click" );
+				$taskbar.trigger( "mouseleave" );
+				stop();
+			}, 7000 );
+
+			var $window;
+			var $window2;
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide datepicker. Trigger taskbar mouseleave. Taskbar hidden."
+				);
+				start();
+
+				$window = $( "<div></div>" ).window({
+					group: "shared"
+				});
+
+				$window2 = $( "<div></div>" ).window({
+					group: "shared"
+				});
+
+				$taskbar.find( "[data-group-name=shared]" ).trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+				stop();
+			}, 8000 );
+
+			setTimeout( function () {
+				start();
+
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					  "Create and open window group. Trigger taskbar mouseleave. "
+					+ "Taskbar still visible after 2 seconds."
+				);
+
+				$taskbar.find( "[data-group-name=shared]" ).trigger( "click" );
+
+				$window.window( "destroy" );
+				$window2.window( "destroy" );
+
+				$taskbar.trigger( "mouseleave" );
+
+				stop();
+			}, 10000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide window group. Trigger taskbar mouseleave. Taskbar hidden."
+				);
+				start();
+
+				$taskbar.taskbar( "option", "languages", [ "en", "pl" ] );
+				$taskbar.taskbar( "option", "languageSelect", true );
+
+				$taskbar.find( "[data-button-name=languageSelect]" ).trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+
+				stop();
+			}, 11000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					  "Create and open language select menu. Trigger taskbar mouseleave. "
+					+ "Taskbar still visible after 2 seconds."
+				);
+				start();
+
+				$taskbar.find( "[data-button-name=languageSelect]" )
+					.trigger( "click" );
+
+				$taskbar.trigger( "mouseleave" );
+				stop();
+			}, 13000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide language select menu. Trigger taskbar mouseleave. Taskbar hidden."
+				);
+				start();
+			}, 14000 );
+		});
+
+		asyncTest( "\"autoHide\" on initialization", function ( assert ) {
+			expect( 2 );
+
+			$taskbar.taskbar( "destroy" );
+			$taskbar.taskbar({
+				autoHide: true,
+				durations: {
+					autoHideHide: 100,
+					autoHideShow: 100,
+					autoHideDelay: 100,
+				}
+			});
+
+			var prev, prev2;
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Taskbar hidden."
+				);
+				start();
+				stop();
+
+				prev = $taskbar.taskbar( "option", "clock" );
+				prev2 = $taskbar.taskbar( "option", "clockShowDatepicker" );
+
+				$taskbar.taskbar( "option", "clock", true );
+				$taskbar.taskbar( "option", "clockShowDatepicker", true );
+				$taskbar.taskbar( "option", "autoHide", false );
+				$taskbar.taskbar( "option", "autoHide", true );
+			}, 2000 );
+
+			setTimeout( function () {
+				// tests fix on datepicker bubbling mouseover event
+				// up to taskbar, see: taskbar._initAutoHide
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Trigger refresh with datepicker. Taskbar hidden."
+				);
+				start();
+
+			}, 4000 );
+
+			setTimeout( function () {
+				// teardown
+				$taskbar.taskbar( "option", "clock", prev );
+				$taskbar.taskbar( "option", "clockShowDatepicker", prev2 );
+			}, 4100 );
+		});
+
+		asyncTest( "\"hide\" and \"show\" methods: set autoHideHide, autoHideShow, and autoHideDelay each to 1000", function ( assert ) {
+
+			$taskbar.taskbar( "destroy" );
+			$taskbar.taskbar({
+				autoHide: true,
+				durations: {
+					autoHideHide: 1000,
+					autoHideShow: 1000,
+					autoHideDelay: 1000,
+				}
+			});
+
+			$taskbar.taskbar( "hide", false );
+
+			assert.equal(
+				parseInt( $taskbar.css( "bottom" ) ) * -1,
+				parseInt( $taskbar.outerHeight() ),
+				"Quick hide taskbar. Taskbar hidden."
+			);
+
+			$taskbar.taskbar( "show", false );
+
+			assert.equal(
+				parseInt( $taskbar.css( "bottom" ) ),
+				0,
+				"Quick show taskbar. Taskbar visible."
+			);
+
+			start();
+
+			$taskbar.taskbar( "show" );
+
+			stop();
+
+			setTimeout( function () {
+				$taskbar.taskbar( "hide" );
+			}, 500 );
+
+			setTimeout( function () {
+				assert.notEqual(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide taskbar. Taskbar not fully hidden after .5 s."
+				);
+
+				assert.notEqual(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Hide taskbar. Taskbar not fully shown after .5 s."
+				);
+
+				start();
+				stop();
+			}, 1000 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Hide taskbar. Taskbar hidden after 1.5 s."
+				);
+
+				$taskbar.taskbar( "show" );
+
+				start();
+				stop();
+			}, 2000 );
+
+			setTimeout( function () {
+				assert.notEqual(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Show taskbar. Taskbar not fully shown after .5 s."
+				);
+
+				assert.notEqual(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Show taskbar. Taskbar not fully hidden after .5 s."
+				);
+
+				start();
+				stop();
+			}, 2500 );
+
+			setTimeout( function () {
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Show taskbar. Taskbar shown after 1.5 s."
+				);
+
+				start();
+			}, 3500 );
+		});
+
+		asyncTest( "change \"autoHide\" value during hide and show", function ( assert ) {
+			expect( 5 );
+
+			$taskbar.taskbar( "destroy" );
+			$taskbar.taskbar({
+				autoHide: true,
+				durations: {
+					autoHideHide: 1000,
+					autoHideShow: 1000,
+					autoHideDelay: 100,
+				}
+			});
+
+			var prev, prev2;
+
+			setTimeout( function () {
+				start();
+
+				$taskbar.taskbar( "option", "autoHide", false );
+
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Set \"autoHide\" to true. Start hide. Set \"autoHide\" to false. Taskbar visible."
+				);
+
+				$taskbar.taskbar( "option", "autoHide", true );
+
+				$taskbar.taskbar( "option", {
+					autoHide: true,
+					durations: {
+						autoHideHide: 100,
+						autoHideShow: 1000,
+						autoHideDelay: 100,
+					}
+				});
+
+				ok( true,
+					  "set \"autoHide\" to true, \"autoHideHide\" and \"autoHideDelay\" "
+					+ "both to 100 ms, \"autoHideShow\" to 1000 ms. Hide taskbar." );
+				stop();
+			}, 500 );
+
+			setTimeout( function () {
+				start();
+
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ) * -1,
+					parseInt( $taskbar.outerHeight() ),
+					"Taskbar hidden after 500 ms. Trigger mouseenter."
+				);
+
+				$taskbar
+					.find( ".simone-taskbar-resizable .ui-resizable-handle" )
+					.trigger( "mouseenter" );
+
+				stop();
+			}, 1000 );
+
+			setTimeout( function () {
+				start();
+
+				ok(
+					inRange(
+						parseInt( $taskbar.css( "bottom" ) ),
+						parseInt( $taskbar.outerHeight() ) * -1,
+						1
+					),
+					"Taskbar not fully visible or hidden after 500 ms."
+				);
+
+				$taskbar.taskbar( "option", "autoHide", false );
+
+				assert.equal(
+					parseInt( $taskbar.css( "bottom" ) ),
+					0,
+					"Set \"autoHide\" to false. Taskbar fully visible."
+				);
+			}, 1500 );
+		});
+	});
+</script>
+
+</body>
+</html>

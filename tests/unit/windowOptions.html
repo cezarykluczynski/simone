@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Window options | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+		var instance = $taskbar.data( $.simone.taskbar.prototype._cnst.dataPrefix + "taskbar" );
+
+		test( "\"buttons\: \"textLocalized\"", function () {
+			expect( 3 );
+
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				buttons: [
+					{
+						text: null,
+						textLocalized: "maximize",
+						click: $.noop
+					}
+				]
+			});
+
+			equal(
+				$window.parent().find( ".ui-dialog-buttonset .ui-button .ui-button-text" ).text(),
+				"Maximize",
+				"Create window with button with \"textLocalized\": \"maximize\". Button text is \"Maximize\"."
+			);
+
+			$window.window( "option", "buttons.0.textLocalized", "minimize" );
+
+			equal(
+				$window.parent().find( ".ui-dialog-buttonset .ui-button .ui-button-text" ).text(),
+				"Minimize",
+				"Change  \"textLocalized\" via setter to \"minimize\". Button text is \"Minimize\"."
+			);
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "No text or textLocalized providen for button") > -1 ) {
+					ok( true, "Debug for empty \"text\" and \"textLocalized\" generated." );
+				}
+			});
+
+			$window.window( "option", "buttons.0", {
+				text: null,
+				textLocalized: null
+			});
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "debugLogAdd", null );
+		});
+
+		test( "\"closable\"", function () {
+			var $window = $( "<div></div>" ).window({
+				closable: true
+			});
+
+			equal(
+				$window.parent().find( ".ui-dialog-titlebar-close:visible" ).length,
+				1,
+				"closable: true; close button found"
+			);
+
+			$window.window(  "option", "closable", false );
+
+			equal(
+				$window.parent().find( ".ui-dialog-titlebar-close:visible" ).length,
+				0,
+				"closable: false; close button not found"
+			);
+
+			$window.parent().find( ".ui-dialog-titlebar-close" ).trigger( "click" );
+
+			ok(
+				$window.parent().hasClass( "simone-window" ),
+				"Trigger click on close button. Window not closed."
+			);
+
+			$window.window(  "option", "closable", true );
+
+			equal(
+				$window.parent().find( ".ui-dialog-titlebar-close:visible" ).length,
+				1,
+				"closable: true; close button found"
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "\"closeOnEscape\"", function () {
+			expect( 2 );
+
+			var $window = $( "<div></div>" ).prependTo( "body" );
+
+			$window.window({
+				closeOnEscape: true
+			});
+
+			$window.simulate( "keydown", {
+				keyCode: $.ui.keyCode.ESCAPE
+			});
+
+			try {
+				$window.window( "option", "closeOnEscape" );
+			} catch( e ) {
+				ok(
+					e.message.indexOf( "window prior to initialization") > -1,
+					"\"closeOnEscape\": true, trigger ESC keydown, window closed"
+				);
+			}
+
+			$window.window({
+				closeOnEscape: false
+			});
+
+			$window.simulate( "keydown", {
+				keyCode: $.ui.keyCode.ESCAPE
+			});
+
+			try {
+				// try to use window option method,
+				// if window was closed, exception would be thrown
+				$window.window( "option", "closeOnEscape" );
+				ok( true,"\"closeOnEscape\": false, trigger ESC keydown, window not closed" );
+				$window.window( "close" );
+			} catch( e ) {}
+		});
+
+		test( "\"closeOnEscape\" vs \"closable\"", function () {
+			expect( 2 );
+
+			var $window = $( "<div></div>" ).prependTo( "body" );
+
+			$window.window({
+				closeOnEscape: true,
+				closable     : false
+			});
+
+			$window.simulate( "keydown", {
+				keyCode: $.ui.keyCode.ESCAPE
+			});
+
+			try {
+				// try to use window option method,
+				// if window was closed, exception would be thrown
+				$window.window( "option", "closeOnEscape" );
+				ok( true,"\"closeOnEscape\": true, \"closable\": false, trigger ESC keydown, window not closed" );
+			} catch( e ) {}
+
+			$window.window( "option", "closable", true );
+
+			$window.simulate( "keydown", {
+				keyCode: $.ui.keyCode.ESCAPE
+			});
+
+			try {
+				$window.window( "option", "closeOnEscape" );
+			} catch( e ) {
+				ok(
+					e.message.indexOf( "window prior to initialization") > -1,
+					"\"closeOnEscape\": true, \"closable\": true, trigger ESC keydown, window closed"
+				);
+			}
+		});
+
+		test( "\"confirmClose\"", function () {
+			var $window = $( "<div></div>" ).appendTo( "body" ).window();
+			var $confirmCloseWindow;
+
+			equal(
+				$window.window( "confirmCloseWindow" ).length,
+				0,
+				"Init window without confirmClose. Confirm close window not found."
+			);
+
+			$window.window( "option", "confirmClose.confirm", true );
+			$window.window( "close" );
+
+			$confirmCloseWindow = $window.window( "confirmCloseWindow" );
+
+			equal(
+				$confirmCloseWindow.length,
+				1,
+				"Set confirmClose.confirm to true, trigger close. Confirm close window found."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"confirmClose\": options propagation", function ( assert ) {
+			var $window;
+			var $confirmCloseWindow;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				confirmClose: {
+					confirm        : true,
+				}
+			});
+
+			$window.window( "close" );
+
+			$confirmCloseWindow = $window
+				.window( "confirmCloseWindow" );
+
+			var newDurations = {
+				maximize       : false,
+				restore        : "slow",
+				show           : 100,
+				minimize       : 1000
+			};
+
+			// durations
+			$window.window( "option", "durations", newDurations );
+
+			deepEqual(
+				$confirmCloseWindow.window( "option", "durations" ),
+				newDurations,
+				"\"durations\" propagated"
+			);
+
+			// modal
+			$window.window( "option", "confirmClose.modal", true );
+
+			equal(
+				$window.window( "confirmCloseWindow" ).window( "modalOverlay" ).length,
+				1,
+				"\"modal\" propagated"
+			);
+
+			// minimizable
+			$window.window( "option", "confirmClose.minimizable", false );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-button-minimize:visible" ).length,
+				0,
+				"\"minimizable\" propagated"
+			);
+
+			//
+
+			// title
+			$window.window( "option", "confirmClose.title", "Test" );
+
+			equal(
+				$confirmCloseWindow.window( "option", "title" ),
+				"Test",
+				"\"confirmClose.title\" propagated"
+			);
+
+			// titleLocalized
+			$window.window( "option", "confirmClose.title", null );
+			$window.window( "option", "confirmClose.titleLocalized", "close" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".ui-dialog-title" ).text(),
+				$taskbar.taskbar( "i18n", "close" ),
+				"\"confirmClose.titleTranslated\" propagated"
+			);
+
+			// text
+			$window.window( "option", "confirmClose.text", "Testing" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-text" ).text(),
+				"Testing",
+				"\"confirmClose.text\" propagated"
+			);
+
+			// textLocalized
+			$window.window( "option", "confirmClose.text", null );
+			$window.window( "option", "confirmClose.textLocalized", "maximize" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-text" ).text(),
+				$taskbar.taskbar( "i18n", "maximize" ),
+				"\"confirmClose.textTranslated\" propagated"
+			);
+
+			// yes
+			$window.window( "option", "confirmClose.yes", "Si" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-yes" ).button( "option", "label" ),
+				"Si",
+				"\"confirmClose.yes\" propagated"
+			);
+
+			// yesLocalized
+			$window.window( "option", "confirmClose.yes", null );
+			$window.window( "option", "confirmClose.yesLocalized", "minimize" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-yes" ).text(),
+				$taskbar.taskbar( "i18n", "minimize" ),
+				"\"confirmClose.yesTranslated\" propagated"
+			);
+
+			// no
+			$window.window( "option", "confirmClose.no", "Si" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-no" ).button( "option", "label" ),
+				"Si",
+				"\"confirmClose.no\" propagated"
+			);
+
+			// noLocalized
+			$window.window( "option", "confirmClose.no", null );
+			$window.window( "option", "confirmClose.noLocalized", "restore" );
+
+			equal(
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-no" ).text(),
+				$taskbar.taskbar( "i18n", "restore" ),
+				"\"confirmClose.yesTranslated\" propagated"
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "\"containment\"", function () {
+			var prev = $taskbar.taskbar( "option", "windowsContainment" );
+			var $window;
+
+			var height = 9000;
+
+			$taskbar.taskbar( "option", "windowsContainment", "visible" );
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "visible",
+				minHeight: height
+			});
+
+			ok(
+				inRange( $window.parent().outerHeight(), height, height + 20 ),
+				"\"containment\": \"visible\", height ~ " + height
+			);
+
+			$window.window( "option", "containment", "viewport" );
+
+			equal(
+				$window.parent().outerHeight(),
+				$( ".simone-taskbar-windows-containment" ).outerHeight(),
+				"\"containment\": \"viewport\", height === viewport height"
+			);
+
+			$window.window( "option", "containment", "inherit" );
+
+			ok(
+				inRange( $window.parent().outerHeight(), height, height + 20 ),
+				"\"containment\": \"visible\", height ~ " + height
+			);
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "windowsContainment", prev );
+		});
+
+		test( "\"containment\": \"inherit\"", function () {
+			var prev = $taskbar.taskbar( "option", "windowsContainment" );
+			var $window;
+
+			$taskbar.taskbar( "option", "windowsContainment", "viewport" );
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				containment: "inherit"
+			});
+
+			var instance = $window.data( "simone-window" );
+
+			equal(
+				instance._getRealContainment(),
+				"viewport",
+				"Inherited from taskbar: \"viewport\""
+			);
+
+			$taskbar.taskbar( "option", "windowsContainment", "visible" );
+
+			equal(
+				instance._getRealContainment(),
+				"visible",
+				"Inherited from taskbar: \"visible\""
+			);
+
+			// prev
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "windowsContainment", prev );
+		});
+
+		asyncTest( "\"durations\"", function () {
+			var $window;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				durations: {
+					maximize: 500,
+					restore : 500,
+					show    : 500,
+					minimize: 500
+				},
+			});
+
+			// maximize
+			$window.window( "maximize" );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-maximized" ), $window.parent().hasClass( "simone-window-maximizing" ) ],
+					[ false, true ],
+					"Set maximzie to 500 ms. Window not fully maximized after 250 milliseconds."
+				);
+
+				start();
+				stop();
+			}, 250 );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-maximized" ), $window.parent().hasClass( "simone-window-maximizing" ) ],
+					[ true, false ],
+					"Window fully maximized after 1000 milliseconds."
+				);
+
+				start();
+				stop();
+
+				$window.window( "restore" );
+			}, 1000 );
+
+			// restore
+			setTimeout( function () {
+				deepEqual(
+					[
+						$window.parent().hasClass( "simone-window-maximized" ),
+						$window.parent().hasClass( "simone-window-restored" ),
+						$window.parent().hasClass( "simone-window-restoring" )
+					],
+					[ false, false, true ],
+					"Set restore to 500 ms. Window not fully restored after 250 milliseconds."
+				);
+
+				start();
+				stop();
+			}, 1250 );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-restored" ), $window.parent().hasClass( "simone-window-restoring" ) ],
+					[ false, false ],
+					"Window fully restored after 1000 milliseconds."
+				);
+
+				start();
+				stop();
+
+				$window.window( "minimize" );
+			}, 2000 );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-minimized" ), $window.parent().hasClass( "simone-window-minimizing" ) ],
+					[ false, true ],
+					"Set restore to 500 ms. Window not fully minimized after 250 milliseconds."
+				);
+
+				start();
+				stop();
+			}, 2250 );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-minimized" ), $window.parent().hasClass( "simone-window-minimizing" ) ],
+					[ true, false ],
+					"Window fully minimized after 1000 milliseconds."
+				);
+
+				start();
+				stop();
+
+				$window.window( "show" );
+			}, 3000 );
+
+			setTimeout( function () {
+				deepEqual(
+					[ $window.parent().hasClass( "simone-window-minimized" ), $window.parent().hasClass( "simone-window-showing" ) ],
+					[ false, true ],
+					"Set restore to 500 ms. Window not fully shown after 250 milliseconds."
+				);
+
+				start();
+				stop();
+			}, 3250 );
+
+			setTimeout( function () {
+				equal(
+					$window.parent().hasClass( "simone-window-showing" ),
+					false,
+					"Window fully shwon after 1000 milliseconds."
+				);
+
+				start();
+				$window.window( "close" );
+			}, 4000 );
+		});
+
+		test( "\"embeddedContent\"", function () {
+			var $window;
+			var $window2;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				embeddedContent: true
+			});
+
+			$window2 = $( "<div></div>" ).prependTo( "body" ).window({
+				width: 100,
+				height: 100
+			});
+
+			ok(
+				$window.siblings( ".simone-window-content-overlay").length,
+				"\"embeddedContent\": true, window not on top. Overlay found."
+			);
+
+			$window.window( "moveToTop" );
+
+			ok(
+				! $window.siblings( ".simone-window-content-overlay").length,
+				"\"embeddedContent\": true, window on top. Overlay not found."
+			);
+
+			$window2.window( "moveToTop" );
+
+			$window.window( "option", "embeddedContent", false );
+
+			ok(
+				! $window.siblings( ".simone-window-body-overlay").length,
+				"\"embeddedContent\" set to false, window not on top. Overlay not found."
+			);
+
+			$window.window( "option", "embeddedContent", true );
+
+			ok(
+				$window.siblings( ".simone-window-content-overlay").length,
+				"\"embeddedContent\" set to true, window not on top. Overlay found."
+			);
+
+			$window.window( "option", "embeddedContent", false );
+			$window.window( "moveToTop" );
+			$window.window( "option", "embeddedContent", true );
+
+			ok(
+				! $window.siblings( ".simone-window-content-overlay").length,
+				"\"embeddedContent\" set to true, window on top. Overlay not found."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$window2.window( "close" );
+		});
+
+		test( "\"group\"", function () {
+			var $window;
+			var $window2;
+
+			$window = $( "<div></div>" ).prependTo( "body" ).window({
+				group: null,
+				title: "Window"
+			});
+
+			ok(
+				$taskbar.find( ".simone-taskbar-window-button .ui-button-text:contains(Window)" ).length,
+				"Create window with group null. Window button with text \"Window\" found."
+			);
+
+			$window.window( "option", "group", "meta" );
+
+			ok(
+				$taskbar.find( ".simone-taskbar-window-button .ui-button-text:contains(meta)" ).length,
+				"Change group to \"meta\". Window button for group found."
+			);
+
+			ok(
+				! $taskbar.find( ".simone-taskbar-window-button .ui-button-text:contains(Window)" ).length,
+				" Window button with text \"Window\" not found."
+			);
+
+			$window.window( "option", "group", null );
+
+			ok(
+				! $taskbar.find( ".simone-taskbar-window-button .ui-button-text:contains(meta)" ).length,
+				"Change group to null. Window button for group not found."
+			);
+
+			ok(
+				$taskbar.find( ".simone-taskbar-window-button .ui-button-text:contains(Window)" ).length,
+				" Window button with text \"Window\" found."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"height\", \"maxHeight\", \"minHeight\", \"width\", \"maxWidth\", \"minWidth\"", function () {
+			expect( 80 );
+
+			var $window;
+
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+
+			var containments = [
+				"viewport"
+				,
+				 "visible"
+			];
+			var dimensions   = [ "width", "height" ];
+			var sizes        = [ 60, 120, 300, 12000 ];
+
+			function ucFirst ( string ) {
+				return string[ 0 ].toUpperCase() + string.slice( 1 );
+			};
+
+			function axisDiff ( $elem, name ) {
+				var edges = {
+					width: {
+						start: "Left",
+						end  : "Right",
+					},
+					height   : {
+						start: "Top",
+						end  : "Bottom"
+					}
+				}[ name ],
+				    computed = window.getComputedStyle( $elem[ 0 ] ),
+				    sum = 0;
+
+				$.each( [ "border", "padding" ], function ( index, prop ) {
+					var suffix = prop === "border" ? "Width" : "";
+
+					sum += parseFloat( computed[ prop + edges.start + suffix ] )
+						 + parseFloat( computed[ prop + edges.end + suffix ] );
+				});
+
+				return sum;
+			}
+
+			var minMaxTolerance = 20;
+			var setterChange    = 0;
+
+			var $containment = $( ".simone-taskbar-windows-containment" );
+
+			$.each( containments, function ( index, containment ) {
+				$.each( sizes, function ( index2, size ) {
+					var config = {};
+
+					$.each( dimensions, function ( index3, dimension ) {
+						config[ dimension ] = size;
+						config.containment  = containment;
+						config[ "min" + ucFirst( dimension ) ] = size - minMaxTolerance;
+						config[ "max" + ucFirst( dimension ) ] = size + minMaxTolerance;
+					});
+
+					$.each( dimensions, function ( index4, dimension ) {
+						$window = $( "<div></div>" )
+							.window( config );
+
+						var $windowParent = $window.parent();
+
+						var dimensionsBefore = instance._extendedPosition.call( $windowParent, "offset" );
+
+						var expect = size,
+						    overflow = false;
+
+						var containmentDimension = $containment[ "inner" + ucFirst( dimension ) ]();
+
+						if ( containment === "viewport" ) {
+							var viewportMax = containmentDimension - axisDiff( $windowParent, dimension );
+
+							if ( viewportMax < expect ) {
+								overflow = true;
+								expect   = viewportMax;
+							}
+						}
+
+						var testPrefix =  "\"containment\": \"" + containment + "\""
+							+ ", \"dimension\": \"" + dimension + "\""
+							+ ", \"size\": \"" + size + "\"";
+
+						equal(
+							Math.round( parseFloat( $windowParent.css( dimension ) ) ),
+							Math.round( expect ),
+							testPrefix
+							+ ": dimension were kept"
+						);
+
+						var setterDirs = [ setterChange, setterChange * -1 ];
+
+						// with bigger dimensions we have to scale down first,
+						// but the two lowest values, let's scale up in first iteration
+						if ( size > 120 ) {
+							// swap values; one liner taken from
+							// https://twitter.com/izs/statuses/17744109574
+							setterDirs[ 1 ] = [ setterDirs[ 0 ], setterDirs[ 0 ] = setterDirs[ 1 ] ][ 0 ];
+						}
+
+						$.each( setterDirs, function ( index5, setterDir ) {
+							var set = Math.round( expect ) + ( index5 ? 0 : setterDir );
+
+							$window.window( "option", dimension, set );
+
+							equal(
+								Math.round( parseFloat( $windowParent.css( dimension ) ) ),
+								set,
+								testPrefix
+								+ ": change by " + setterDir + ": dimension was as expected"
+							);
+						});
+
+						var $handleSE = $windowParent.find( ".ui-resizable-se" );
+
+						$handleSE
+							.trigger( "mouseenter" )
+							.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+								dx: - 100,
+								dy: - 100
+							}));
+
+						var dimensionsDown = instance._extendedPosition.call( $windowParent, "offset" );
+
+						deepEqual(
+							[ dimensionsBefore.width, dimensionsBefore.height ],
+							[
+								dimensionsDown.width + ( overflow ? 0 : minMaxTolerance ),
+								dimensionsDown.height + ( overflow ? 0 : minMaxTolerance )
+							],
+							testPrefix
+							+ ": \"min-height\" respected by resizable"
+						);
+
+						$handleSE
+							.trigger( "mouseenter" )
+							.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+								dx: 200,
+								dy: 200
+							}));
+
+						var dimensionsUp = instance._extendedPosition.call( $windowParent, "offset" );
+
+						deepEqual(
+							[ dimensionsBefore.width, dimensionsBefore.height ],
+							[
+								dimensionsDown.width + ( overflow ? 0 : minMaxTolerance ),
+								dimensionsDown.height + ( overflow ? 0 : minMaxTolerance )
+							],
+							testPrefix
+							+ ":\"max-height\" respected by resizable"
+						);
+
+						$window.window( "destroy" );
+					});
+				});
+			});
+		});
+
+		test( "\"hide\"", function () {
+			expect( 4 );
+
+			var $window;
+
+			var prev = $taskbar.taskbar( "option", "debugLogAdd" );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "option is not supported" ) > -1 ) {
+					ok( true, "Debug message for setter generated." );
+				}
+			});
+
+			$window = $( "<div></div>" ).window({
+				hide: 10000,
+			});
+
+			equal(
+				$window.window( "option", "hide" ),
+				false,
+				"Set \"hide\" to 10000 on init. Getter for \"hide\" return false."
+			);
+
+			$window.window( "option", "hide", true );
+
+			equal(
+				$window.window( "option", "hide" ),
+				false,
+				"Set \"hide\" to true via setter. Getter for \"hide\" return false."
+			);
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "debugLogAdd", prev );
+		});
+
+		test( "\"icons\"", function () {
+			var $window;
+			var $confirmCloseWindow;
+
+			$window = $( "<div></div>" ).window({
+				icons: {
+					close       : "ui-icon-pause",
+					confirmClose: "ui-icon-plusthick",
+					main        : "ui-icon-suitcase",
+					minimize    : "ui-icon-power",
+					maximize    : "ui-icon-eject",
+					restore     : "ui-icon-battery-2"
+				},
+				durations: {
+					maximize    : false,
+					restore     : false
+				},
+				confirmClose    : {
+					confirm     : true
+				}
+			});
+
+			// close
+			ok(
+				$window
+					.parent()
+					.find( ".ui-dialog-titlebar-close .ui-button-icon-primary" )
+					.hasClass( "ui-icon-pause" ),
+				 "Close button has ui-icon-pause."
+			);
+
+			// confirmClose
+			$window.window( "close" );
+
+			$confirmCloseWindow = $window.window( "confirmCloseWindow" );
+
+			ok(
+				$confirmCloseWindow
+					.parent()
+					.find( ".simone-window-icon" )
+					.hasClass( "ui-icon-plusthick" ),
+				 "Confirm close window icon has ui-icon-plusthick."
+			);
+
+			$confirmCloseWindow.window( "close" );
+
+			// main
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-icon" )
+					.hasClass( "ui-icon-suitcase" ),
+				"Main icon is ui-icon-suitcase."
+			);
+
+			ok(
+				$taskbar
+					.find( ".simone-taskbar-window-button .ui-button-icon-primary" )
+					.hasClass( "ui-icon-suitcase" ),
+				"Window button has icon ui-icon-suitcase."
+			);
+
+			// minimize
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-minimize .ui-button-icon-primary" )
+					.hasClass( "ui-icon-power" ),
+				 "Minimize button has ui-icon-power."
+			);
+
+			$window.window( "maximize" );
+
+				// restore
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-maximize-restore .ui-button-icon-primary" )
+					.hasClass( "ui-icon-battery-2" ),
+				 "Maximize button has ui-icon-battery-2."
+			);
+
+			$window.window( "restore" );
+
+			// maximize
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-maximize-restore .ui-button-icon-primary" )
+					.hasClass( "ui-icon-eject" ),
+				 "Maximize button has ui-icon-eject."
+			);
+
+			// confirmClose
+			$window.window( "close" );
+			$confirmCloseWindow = $window.window( "confirmCloseWindow" );
+
+			$window.window( "option", {
+				icons: {
+					close       : "ui-icon-document",
+					confirmClose: "ui-icon-key",
+					main        : "ui-icon-clipboard",
+					minimize    : "ui-icon-volume-off",
+					maximize    : "ui-icon-video",
+					restore     : "ui-icon-signal-diag"
+				}
+			});
+
+			// close
+			ok(
+				$window
+					.parent()
+					.find( ".ui-dialog-titlebar-close .ui-button-icon-primary" )
+					.hasClass( "ui-icon-document" ),
+				 "Use setter. Close button has ui-icon-document."
+			);
+
+			// confirmClose
+			ok(
+				$confirmCloseWindow
+					.parent()
+					.find( ".simone-window-icon" )
+					.hasClass( "ui-icon-key" ),
+				 "Use setter. Confirm close window icon has ui-icon-key."
+			);
+
+			$confirmCloseWindow.window( "close" );
+
+			// main
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-icon" )
+					.hasClass( "ui-icon-clipboard" ),
+				"Use setter. Use setter. Main icon is ui-icon-clipboard."
+			);
+
+			ok(
+				$taskbar
+					.find( ".simone-taskbar-window-button .ui-button-icon-primary" )
+					.hasClass( "ui-icon-clipboard" ),
+				"Use setter. Window button has icon ui-icon-clipboard."
+			);
+
+			// minimize
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-minimize .ui-button-icon-primary" )
+					.hasClass( "ui-icon-volume-off" ),
+				 "Use setter. Minimize button has ui-icon-volume-off."
+			);
+
+			$window.window( "maximize" );
+
+			// restore
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-maximize-restore .ui-button-icon-primary" )
+					.hasClass( "ui-icon-signal-diag" ),
+				 "Use setter. Maximize button has ui-icon-signal-diag."
+			);
+
+			$window.window( "restore" );
+
+			// maximize
+			ok(
+				$window
+					.parent()
+					.find( ".simone-window-button-maximize-restore .ui-button-icon-primary" )
+					.hasClass( "ui-icon-video" ),
+				 "Maximize button has ui-icon-video."
+			);
+
+			$window.window( "option", "group", "meta" );
+
+			ok(
+				$taskbar.find( "[data-group-name=meta] .ui-icon" ).hasClass( "ui-icon-clipboard" ),
+				"Bind window to group. Group list item has icon ui-icon-clipboard."
+			);
+
+			$window.window( "option", "icons.main", "ui-icon-heart" );
+
+			ok(
+				$taskbar.find( "[data-group-name=meta] .ui-icon" ).hasClass( "ui-icon-heart" ),
+				"Use setter to set main icon. Group list item has icon ui-icon-heart."
+			);
+
+			// teardown
+			$window
+				.window( "close" )
+				.window( "close" );
+		});
+
+		test( "\"maximizable\"", function () {
+			var $window = $( "<div></div>" ).window({
+				maximizable: true,
+				durations: {
+					maximize: false,
+					restore : false
+				}
+			});
+
+			equal(
+				$window.parent().find( ".simone-window-button-maximize-restore:visible" ).length,
+				1,
+				"maximizable: true; maximizable button found"
+			);
+
+			$window.window(  "option", "maximizable", false );
+
+			equal(
+				$window.parent().find( ".simone-window-button-maximize-restore:visible" ).length,
+				0,
+				"maximizable: false; maximizable button not found"
+			);
+
+			$window.parent().find( ".simone-window-button-maximize-restore" ).trigger( "click" );
+
+			ok(
+				! $window.parent().hasClass( "simone-window-maximized" ).length,
+				"Trigger click on maximize button. Window not maximized."
+			);
+
+			$window.window(  "option", "maximizable", true );
+
+			equal(
+				$window.parent().find( ".simone-window-button-maximize-restore:visible" ).length,
+				1,
+				"maximizable: true; maximizable button found"
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "\"maximizedDraggable\"", function () {
+			var $window;
+			var $handleSE;
+
+			// reset
+			window.scrollTo( 0, 0 );
+
+			$window = $( "<div></div>" ).window({
+				draggable         : true,
+				maximizable       : true,
+				maximizedDraggable: true
+			}).window( "maximize", false );
+
+			var $titlebar = $window.parent().find( ".ui-dialog-titlebar" );
+
+			ok(
+				$window.parent().hasClass( "simone-window-maximized" ),
+				"Initialize window with \"maximizedDraggable\" = true and maximize. Window maximized."
+			);
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - 3
+			}));
+
+			ok(
+				! $window.parent().hasClass( "simone-window-maximized" ),
+				"Window dragged. Window not maximized."
+			);
+
+			$window
+				.window( "option", "maximizedDraggable", false )
+				.window( "maximize", false );
+
+			ok(
+				$window.parent().hasClass( "simone-window-maximized" ),
+				"Use setter to set \"maximizedDraggable\" = false. Maximize window. Window maximized."
+			);
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - 3,
+				dy: - 3
+			}));
+
+			ok(
+				$window.parent().hasClass( "simone-window-maximized" ),
+				"Window dragged. Window stay maximized."
+			);
+
+			$window
+				.window( "option", "maximizedDraggable", true )
+				.window( "restore", false );
+
+			ok(
+				! $window.parent().hasClass( "simone-window-maximized" ),
+				"Use setter to set \"maximizedDraggable\" = true. Restore window. Window restored."
+			);
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dy: - $( window ).innerHeight(),
+				dx: - $( window ).innerWidth(),
+			}));
+
+			deepEqual(
+				$window.parent().offset(),
+				{ top: 0, left: 0 },
+				"Drag window to top left corner."
+			);
+
+			$handleSE = $window.parent().find( ".ui-resizable-se" );
+
+			$handleSE
+				.trigger( "mouseenter" )
+				.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+					dy: $( window ).innerHeight() * 3,
+					dx: $( window ).innerWidth(),
+				}));
+
+			var $windowsContainment = $( ".simone-taskbar-windows-containment" );
+
+			var previousSize = [ $window.parent().outerWidth(), $window.parent().outerHeight() ];
+
+			deepEqual(
+				previousSize,
+				[ $windowsContainment.width(), $windowsContainment.height() ],
+				"Resize window to stretch through entire viewport."
+			);
+
+			$window.window( "maximize", false );
+
+			ok(
+				$window.parent().hasClass( "simone-window-maximized" ),
+				"Maximize window. Window maximized."
+			);
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - 3,
+				dy: - 3
+			}));
+
+			ok(
+				! $window.parent().hasClass( "simone-window-maximized" ),
+				"Window dragged. Window not maximized."
+			);
+
+			var currentSize = [ $window.parent().outerWidth(), $window.parent().outerHeight() ];
+
+			deepEqual(
+				currentSize,
+				previousSize,
+				"Window size was not changed."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"maximizedDraggable\" vs containment", function ( assert ) {
+			var $window;
+			var $titlebar;
+			var instance = $taskbar.data( dataPrefix + "taskbar" );
+			var $windowsContainment = $( ".simone-taskbar-windows-containment" );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			var previousSize = [ $window.parent().outerWidth(), $window.parent().outerHeight() ];
+
+			$window
+				.window( "maximize", false );
+
+			deepEqual(
+				[ $window.parent().outerWidth(), $window.parent().outerHeight() ],
+				[ $windowsContainment.width(), $windowsContainment.height() ],
+				"Create and maximize window."
+			);
+
+			$titlebar = $window.parent().find( ".ui-dialog-titlebar" );
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: $( window ).innerWidth(),
+				dy: $( window ).innerHeight()
+			}));
+
+			deepEqual(
+				previousSize,
+				[ $window.parent().outerWidth(), $window.parent().outerHeight() ],
+				"Drag window by titlebar to bottom right corner. Window keept it's size."
+			);
+
+			var positionContainment = instance._extendedPosition.call( $windowsContainment, "offset" );
+			var positionWindow      = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			equal(
+				positionWindow.right,
+				positionContainment.right,
+				"Widget touches right edge of containment."
+			);
+
+			equal(
+				positionWindow.bottom,
+				positionContainment.bottom,
+				"Widget touches bottom edge of containment."
+			);
+
+			$titlebar.simulate( "drag", $.extend( {}, eventSimulateOptions, {
+				dx: - $( window ).innerWidth(),
+				dy: - $( window ).innerHeight()
+			}));
+
+			positionWindow = instance._extendedPosition.call( $window.parent(), "offset" );
+
+			ok( true, "Drag by titlebar to top left corner." );
+
+			equal(
+				positionWindow.left,
+				positionContainment.left,
+				"Widget touches left edge of containment."
+			);
+
+			equal(
+				positionWindow.top,
+				positionContainment.top,
+				"Widget touches top edge of containment."
+			);
+
+			// teardown
+			$window.window( "close" );
+		});
+
+		test( "\"minimizable\"", function ( assert ) {
+			var $window = $( "<div></div>" ).window({
+				minimizable: true,
+				durations: {
+					minimize: false
+				}
+			});
+
+			equal(
+				$window.parent().find( ".simone-window-button-minimize:visible" ).length,
+				1,
+				"minimizable: true; minimize button found"
+			);
+
+			$window.window(  "option", "minimizable", false );
+
+			equal(
+				$window.parent().find( ".simone-window-button-minimize:visible" ).length,
+				0,
+				"minimizable: false; minimize button not found"
+			);
+
+			$window.parent().find( ".simone-window-button-minimize" ).trigger( "click" );
+
+			ok(
+				! $window.parent().hasClass( "simone-window-minimized" ),
+				"Trigger click on maximize button. Window not maximized."
+			);
+
+			$window.window(  "option", "minimizable", true );
+
+			equal(
+				$window.parent().find( ".simone-window-button-minimize:visible" ).length,
+				1,
+				"minimizable: true; minimize button found"
+			);
+
+			$window.window( "close" );
+		});
+
+		test( "\"modal\": covered in functional/windowModal.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"modalOverlay\": covered in functional/windowModal.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"show\"", function () {
+			expect( 4 );
+
+			var $window;
+
+			var prev = $taskbar.taskbar( "option", "debugLogAdd" );
+
+			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+				if ( ui.message.indexOf( "should either be a function or null" ) > -1 ) {
+					ok( true, "Debug message generated." );
+				}
+			});
+
+			ok( true, "Set \"show\" to 100 on init." );
+
+			$window = $( "<div></div>" ).window({
+				show: 100
+			});
+
+			ok( true, "Set \"show\" to true via setter." );
+
+			$window.window( "option", "show", true );
+
+			// teardown
+			$window.window( "close" );
+			$taskbar.taskbar( "option", "debugLogAdd", prev );
+		});
+
+		test( "\"taskbar\"" , function ( assert ) {
+			expect( 11 );
+
+			var tests = {
+				empty        : false,
+				notAnInstance: false,
+				missingPlugin: false
+			};
+
+			var $window = $( "<div></div>" ).window({
+				taskbar: $taskbar
+			});
+
+			var windowId = $window.attr( "id" );
+
+			ok( $taskbar.find( "[data-window-id=" + windowId + "]" ).length, "Window binded to first taskbar." );
+
+			$taskbar2.taskbar({
+				horizontalStick: "top left"
+			});
+
+			var windowId = $window.attr( "id" );
+
+			var titleBefore = $window.window( "title" );
+			var titleButtonBefore = $taskbar
+				.find( ".ui-button[data-window-id=" + windowId + "]" )
+				.button( "option", "label" );
+
+			$window.window( "option", "taskbar", $taskbar2 );
+
+			var titleAfter = $window.window( "title" );
+			var titleButtonAfter = $taskbar2
+				.find( ".ui-button[data-window-id=" + windowId + "]" )
+				.button( "option", "label" );
+
+			equal(
+				titleAfter,
+				titleBefore,
+				"Title on titlebar keept after rebind."
+			);
+
+			equal(
+				titleButtonAfter,
+				titleButtonBefore,
+				"Title on window button keept after rebind."
+			);
+
+			ok( $taskbar2.find( "[data-window-id=" + windowId + "]" ).length, "Bind to second taskbar. Window binded." );
+			ok( ! $taskbar.find( "[data-window-id=" + windowId + "]" ).length, "Window not binded to first taskbar." );
+
+			$window.window( "option", "taskbarNotFound", function ( event, ui ) {
+				event.preventDefault();
+
+				if ( ui.message.indexOf( "jQuery object passed in \"taskbar\" option is empty") !== -1 ) {
+					if ( tests.empty === false ) {
+						ok( true, "debug: empty object: ok" );
+						tests.empty = true;
+					}
+				}
+
+				if ( ui.message.indexOf( "jQuery object passed in \"taskbar\" option is not an instance") !== -1 ) {
+					if ( tests.notAnInstance === false ) {
+						ok( true, "debug: not a taskbar: ok" );
+						tests.notAnInstance = true;
+					}
+				}
+
+				if ( ui.message.indexOf( "Taskbar plugin is missing") !== -1 ) {
+					if ( tests.missingPlugin === false ) {
+						ok( true, "debug: missing plugin: ok" );
+						tests.missingPlugin = true;
+					}
+				}
+			});
+
+			$window.window( "option", "taskbar", $() );
+
+			$window.window( "option", "taskbar", $( "iframe:eq(0)" ) );
+
+			var prev = $.simone.taskbar;
+			$.simone.taskbar = null;
+
+			$window.window( "option", "taskbar", $taskbar );
+
+			// teardown
+			$.simone.taskbar = prev;
+			$window.window( "close" );
+			$taskbar2.taskbar( "destroy" );
+
+			$window = $( "<div></div>" )
+				.window({
+					taskbar: $( "#qunit-fixture" ),
+					close: function ( event, ui ) {
+						ok( true, "\"close\" fired when invalid taskbar given on initialization." );
+					},
+					taskbarNotFound: function ( event, ui ) {
+						ok( true, "\"taskbarNotFound\" fired when invalid taskbar given on initialization." );
+
+						// prevent throwing error
+						event.preventDefault();
+					}
+				});
+
+			ok(
+				! $window.hasClass( "simone-window" ),
+				"Element is not an instance of window when invalid taskbar given on initialization."
+			);
+		});
+
+		test( "\"title\", \"titleLocalized\"" , function () {
+			var $window;
+
+			$window = $( "<div></div>" ).window({
+				title: "Test"
+			});
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Test",
+				"Initialized with \"title\" = \"Test\". Title matches."
+			);
+
+			$window.window( "option", "titleLocalized", "maximize" );
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Maximize",
+				"Set \"titleLocalized\" = \"maximize\". Title matches."
+			);
+
+			$window.window( "option", "titleLocalized", null );
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Test",
+				"Set \"titleLocalized\" = null. Title is \"Test\"."
+			);
+
+			$window.window( "close" );
+
+			$window = $( "<div></div>" ).window({
+				titleLocalized: "minimize"
+			});
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Minimize",
+				"Initialize with \"titleLocalized\" = \"minimize\". Title is \"Minimize\"."
+			);
+
+			$window.window( "option", "titleLocalized", "close" );
+
+			var prev = $taskbar.taskbar( "option", "language" );
+			$taskbar.taskbar( "option", "language", "pl" );
+
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).text(),
+				"Zamknij",
+				"Set \"titleLocalized\" = \"close\". Taskbar language set to \"pl\". Title equal to \"Zamknij\"."
+			);
+
+
+			var heightTitle  = $window.parent().find( ".ui-dialog-title" ).outerHeight();
+			var heightButton = $taskbar.find( "[data-window-id=" + $window.attr( "id" ) + "]" ).outerHeight();
+
+			$window.window( "option", "titleLocalized", null );
+			$window.window( "option", "title", "" );
+
+			equal(
+				$window.parent().find( ".ui-dialog-title" ).outerHeight(),
+				heightTitle,
+				"Set titleLocalized to null, \"title\" to \"\". Title height did not change."
+			);
+
+			equal(
+				$taskbar.find( "[data-window-id=" + $window.attr( "id" ) + "]" ).outerHeight(),
+				heightButton,
+				"Window button height did not change."
+			);
+
+			// teardown
+			$taskbar.taskbar( "option", "language", prev );
+			$window.window( "close" );
+		});
+
+		test( "\"widgetClass\"", function () {
+			var $window;
+			var className  = "custom-class";
+			var className2 = "custom-class2";
+
+			$window = $( "<div></div>" )
+				.window();
+
+			ok(
+				! $window.window( "widget" ).hasClass( className ),
+				"Initialize window with default settings. Class not found."
+			);
+
+			$window.window( "option", "widgetClass", className );
+
+			ok(
+				$window.window( "widget" ).hasClass( className ),
+				"Set first class via setter. Class found."
+			);
+
+
+			$window.window( "option", "widgetClass", className2 );
+
+			ok(
+				$window.window( "widget" ).hasClass( className2 ),
+				"Set second class via setter. Class found."
+			);
+
+			ok(
+				! $window.window( "widget" ).hasClass( className ),
+				"First class not found."
+			);
+
+			$window.window( "option", "widgetClass", "" );
+
+			ok(
+				! $window.window( "widget" ).hasClass( className2 ),
+				"Set \"widgetClass\" to empty string. Second class not found."
+			);
+
+			$window.window( "destroy" );
+		});
+
+		test( "Remembering the \"New window\" count", function () {
+			resetTaskbar();
+
+			var $window;
+			var $window2;
+
+			$window = $( "<div></div>" )
+				.window({
+					title: null
+				});
+
+			$window2 = $( "<div></div>" )
+				.window({
+					title: null
+				});
+
+			equal(
+				$window.window( "title"),
+				"New window",
+				"New window created, and it has title \"New window\"."
+			);
+
+			equal(
+				$window2.window( "title"),
+				"New window (2)",
+				"Second new window created, and it has title \"New window\"."
+			);
+
+			$window.window( "option", "title", "Test" );
+			$window2.window( "option", "title", "Test2" );
+
+			equal(
+				$window.window( "title"),
+				"Test",
+				"Change first window title to \"Test\". Title matches."
+			);
+
+			equal(
+				$window2.window( "title"),
+				"Test2",
+				"Change second window title to \"Test2\". Title matches."
+			);
+
+			$window.window( "option", "title", null );
+			$window2.window( "option", "title", null );
+
+			equal(
+				$window.window( "title"),
+				"New window",
+				"Change first window title to null. Window has title \"New window\"."
+			);
+
+			equal(
+				$window2.window( "title"),
+				"New window (2)",
+				"New window (2)",
+				"Change second window title to null.Window has title \"New window (2)\"."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+		});
+
+		test( "Taskbar language propagation to \"title\" and \"titleLocalized\"", function () {
+			resetTaskbar();
+
+			var prev         = $taskbar.taskbar( "option", "language" );
+			var originalLang = prototype.options.localization.en;
+			var newLang      = prototype.options.localization.pl;
+
+			$.each( [ null, "minimize" ], function ( index, titleLocalized ) {
+				$taskbar.taskbar( "option", "language", "en" );
+
+				var original = titleLocalized === null
+					? originalLang.newWindow
+					: originalLang[ titleLocalized ];
+
+				var newOne = titleLocalized === null
+					? newLang.newWindow
+					: newLang[ titleLocalized ];
+
+				var $window;
+
+				ok( true, "Create new window with \"title\" = null and \"titleLocalized\" = "
+					+ ( titleLocalized ? "null" : "\"" + titleLocalized + "\"" ) + "." );
+
+				$window = $( "<div></div>" )
+					.window({
+						title: null,
+						titleLocalized: titleLocalized
+					});
+
+				equal(
+					$window.window( "title" ),
+					original,
+					"Window title match translation from English dictionary."
+				);
+
+				$taskbar.taskbar( "option", "language", "pl" );
+
+				equal(
+					$window.window( "title" ),
+					newOne,
+					"Changed language to pl. Window title match translation from Polish dictionary."
+				);
+
+				$window.window( "destroy" );
+			});
+
+			// teardown
+			$taskbar.taskbar( "option", "language", prev );
+		});
+
+		test( "\"title\" propagation to group menus", function () {
+			var $window;
+			var $window2;
+			var title;
+			var title2;
+
+			$taskbar.taskbar( "destroy" );
+			$taskbar.taskbar();
+
+			var language = $taskbar.taskbar( "option", "language" );
+
+			title = "Test window";
+
+			$window = $( "<div></div>" ).window({
+				group: "beta",
+				title: title
+			});
+
+			$window2 = $( "<div></div>" ).window({
+				group: "beta"
+			});
+
+			equal(
+				$taskbar
+					.find( ".simone-taskbar-window-buttons-container" )
+					.find( "ul li:eq(0) a" )
+					.text(),
+				title,
+				"Window 1 custom title propagated."
+			);
+
+			equal(
+				$taskbar
+					.find( ".simone-taskbar-window-buttons-container" )
+					.find( "ul li:eq(1) a" )
+					.text(),
+				$.simone.taskbar.prototype.options.localization[ language ].newWindow,
+				"Window 2 title (New window) propagated."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+		});
+	});
+</script>
+
+</body>
+</html>

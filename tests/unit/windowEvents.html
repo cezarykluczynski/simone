@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Window events | Simone tests</title>
+<meta charset="UTF-8">
+<script src="../common/libs.js"></script>
+</head>
+<body class="warning-timeouts">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<script>
+	$(document).ready(function () {
+		"use strict";
+
+		$taskbar.taskbar();
+
+
+		test( "\"beforeClose\", \"close\"", function () {
+			expect( 10 );
+
+			var $window;
+
+			ok( true, "Window created." );
+
+			$window = $( "<div></div>" )
+				.window({
+					beforeClose: function( event, ui ) {
+						ok( true, "\"beforeClose\" fired" );
+					},
+					close: function( event, ui ) {
+						ok( true, "\"close\" fired" );
+					}
+				})
+				.window( "close" );
+
+			ok(
+				! $window.hasClass( "simone-window-content" ),
+				"Window closed by calling \"close\" method."
+			);
+
+			ok( true, "Window created." );
+
+			$window = $( "<div></div>" )
+				.window({
+					beforeClose: function( event, ui ) {
+						ok( false, "\"beforeClose\" fired" );
+					},
+					close: function( event, ui ) {
+						ok( true, "\"close\" fired" );
+					}
+				})
+				.window( "destroy" );
+
+			ok(
+				! $window.hasClass( "simone-window-content" ),
+				"Window closed by calling \"destroy\" method."
+			);
+
+			ok( true, "Window created." );
+
+			$window = $( "<div></div>" )
+				.window({
+					beforeClose: function( event, ui ) {
+						ok( true, "beforeClose fired, preventDefault() called." );
+						event.preventDefault();
+					}
+				})
+				.window( "close" );
+
+			ok(
+				$window.hasClass( "simone-window-content" ),
+				"Window not closed by calling \"close\", because event \"beforeClose\" was prevented."
+			);
+
+			// teardown
+			$window.window( "destroy" );
+		});
+
+		test( "\"create\":", function () {
+			expect( 3 );
+
+			var $window;
+
+			$window = $( "<div></div>" )
+				.window({
+					create: function( event, ui ) {
+						ok( true, "\"create\" fired" );
+					}
+				})
+				.window( "close" );
+
+			$window = $( "<div></div>" )
+				.window({
+					taskbar: $( "#qunit-fixture" ),
+					create: function( event, ui ) {
+						ok( true, "\"create\" fired when invalid taskbar given on initialization." );
+					},
+					close: function ( event, ui ) {
+						ok( true, "\"close\" fired when invalid taskbar given on initialization." );
+					},
+					taskbarNotFound: function ( event, ui ) {
+						// prevent throwing error
+						event.preventDefault();
+					}
+				});
+
+			ok(
+				! $window.hasClass( "simone-window" ),
+				"Element is not an instance of window when invalid taskbar given on initialization."
+			);
+		});
+
+		test( "\"drag\", \"dragStart\", \"dragStop\": covered in unit/windowDialog.html", function () {
+			expect( 0 );
+		});
+
+		asyncTest( "\"focus\"", function () {
+			expect( 5 );
+
+			var $window;
+			var $window2;
+
+			var once = 0;
+
+			$window = $( "<div></div>" )
+				.window({
+					focus: function ( event, ui ) {
+						ok( ++once === 1, "\"focus\" triggered once on creation" );
+					}
+				});
+
+			$window.window( "option", "focus", function () {
+				ok( false, "\"focus\" triggered when another window created" );
+			});
+
+			$window2 = $( "<div></div>" )
+				.window({
+					position: {
+						my: "left top",
+						at: "left top"
+					}
+				});
+
+			$window.window( "option", "focus", function ( event, ui ) {
+				ok( true, "\"focus\" triggered when \"moveToTop\" method was called" );
+			});
+
+			$window.window( "moveToTop" );
+
+			// teardown
+			$window.window( "destroy" );
+			$window2.window( "destroy" );
+
+			$window = $( "<div></div>" )
+				.window();
+
+			$window.window( "option", "focus", function () {
+				ok( false, "\"focus\" triggered when method \"minimize\" called." );
+			});
+
+			$window
+				.window( "minimize", false );
+
+			$window.window( "option", "focus", function () {
+				ok( true, "\"focus\" triggered after method \"show\" started." );
+			});
+
+			$window.window( "show" );
+
+			setTimeout( function () {
+				var focuses = 0;
+
+				$window.window( "option", "focus", function () {
+					++focuses;
+				});
+				// test if focus will be triggered,
+				// when focusing a focused window
+				$window.window( "moveToTop" );
+				$window.window( "moveToTop" );
+
+				ok( focuses === 0, "No additional \"focus\" triggered when moving focused window to top." );
+
+				start();
+
+				// teardown
+				$window.window( "destroy" );
+			}, 1000 );
+		});
+
+		test( "\"beforeMaximize\", \"maximize\", \"beforeMinimize\", \"minimize\", \"beforeRestore\", \"restore\", \"beforeShow\", \"show\"", function () {
+			expect( 28 );
+
+			var $window;
+
+			// method and events names are identical,
+			// but let's have them for clarity
+			var eventsSets = {
+				maximize    : {
+					before  : "beforeMaximize",
+					event   : "maximize",
+					method  : "maximize",
+					done    : "maximized",
+					progress: "maximizing"
+				},
+				minimize    : {
+					before  : "beforeMinimize",
+					event   : "minimize",
+					method  : "minimize",
+					done    : "minimized",
+					progress: "minimizing"
+				},
+				restore     : {
+					before  : "beforeRestore",
+					event   : "restore",
+					method  : "restore",
+					done    : "restored",
+					progress: "restoring"
+				},
+				show        : {
+					before  : "beforeShow",
+					event   : "show",
+					method  : "show",
+					done    : "shown",
+					progress: "showing"
+				}
+			};
+
+			var once;
+			var resetOnce = function() {
+				once = {
+					before: 0,
+					event : 0
+				};
+			};
+
+			$.each( eventsSets, function ( setName, eventsSet ) {
+
+				$.each( [ false, true ], function ( index, prevented ) {
+					resetOnce();
+
+					ok(
+						true,
+						"Create window. "
+						+ ( prevented
+							? "Event " + eventsSet.before + " is prevented."
+							: "No events are prevented."
+						)
+						+ " Call method \"" + eventsSet.method + "\"."
+					);
+
+					$window = $( "<div></div>" )
+						.window();
+
+					// set initial state so the method could change anything
+					if ( setName === "show" ) {
+						$window.window( "minimize", false );
+					}
+
+					// set initial state so the method could change anything
+					if ( setName === "restore" ) {
+						$window.window( "maximize" , false );
+					}
+
+					$window
+						.window( "option", eventsSet.before, function ( event ) {
+							if ( prevented ) {
+								event.preventDefault();
+							}
+							ok(
+								++once.before === 1,
+								"\"" + eventsSet.before + "\" triggered once."
+							);
+						})
+						.window( "option", eventsSet.event, function () {
+							ok(
+								prevented ? false : ++once.event === 1,
+								"\"" + eventsSet.event + "\" triggered once."
+							);
+						})
+						.window( eventsSet.method, false );
+
+					ok(
+						$window.window( eventsSet.done ) === ! prevented,
+						"Method \"" + eventsSet.done + "\" returns "
+						+ ( prevented ? false : true ) + "."
+					);
+
+					// teardown
+					$window.window( "destroy" );
+				});
+			});
+		});
+
+		test( "\"modalOverlaySetsCreated\": covered in functional/windowModal.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"moveToTop\", \"moveToBackground\"", function () {
+			expect( 14 );
+
+			var $window;
+			var $window2;
+			var $window3;
+			var once = {
+				window1: 0,
+				window2: 0,
+				window3: 0
+			};
+
+			// window 1
+			ok( true, "Create window 1." );
+
+			$window = $( "<div></div>" ).window({
+				moveToTop: function () {
+					ok( ++once.window1 === 1, "Window 1 \"moveToTop\" triggered once on initialization." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 1 \"moveToBackground\" triggered once on initialization." );
+				}
+			});
+
+			$window.window( "option", {
+				moveToTop: function () {
+					ok( false, "Window 1 \"moveToTop\" triggered once after window 2 initialization." );
+				},
+				moveToBackground: function () {
+					ok( ++once.window1 === 2, "Window 1 \"moveToBackground\" triggered once after window 2 initialization." );
+				}
+			});
+
+			// window 2
+			ok( true, "Create window 2." );
+
+			$window2 = $( "<div></div>" ).window({
+				moveToTop: function () {
+					ok( once.window1 === 2, "Window 1 \"moveToBackground\" triggered before window 2 \"moveToTop\"." );
+					ok( ++once.window2 === 1, "Window 2 \"moveToTop\" triggered once on initialization." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 2 \"moveToBackground\" triggered once on initialization." );
+				}
+			});
+
+			$window.window( "option", {
+				moveToTop: function () {
+					ok( false, "Window 1 \"moveToTop\" triggered once after window 3 initialization." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 1 \"moveToBackground\" triggered once after window 3 initialization." );
+				}
+			});
+
+			$window2.window( "option", {
+				moveToTop: function () {
+					ok( false, "Window 2 \"moveToTop\" triggered once after window 3 initialization." );
+				},
+				moveToBackground: function () {
+					ok( ++once.window2 === 2, "Window 2 \"moveToBackground\" triggered once after window 3 initialization." );
+				}
+			});
+
+			// window 3
+			ok( true, "Create window 3." );
+
+			$window3 = $( "<div></div>" ).window({
+				moveToTop: function () {
+					ok( once.window2 === 2, "Window 2 \"moveToBackground\" triggered before window 2 \"moveToTop\"." );
+					ok( ++once.window3 === 1, "Window 3 \"moveToTop\" triggered once on initialization." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 3 \"moveToBackground\" triggered once after window 3 initialization." );
+				}
+			});
+
+			$window.window( "option", {
+				moveToTop: function () {
+					ok( false, "Window 1 \"moveToTop\" triggered once after window 2 \"moveToTop\" method called." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 1 \"moveToBackground\" triggered once after window 2 \"moveToTop\" method called." );
+				}
+			});
+
+			$window2.window( "option", {
+				moveToTop: function () {
+					ok( ++once.window2 === 3, "Window 2 \"moveToTop\" triggered once after window 2 \"moveToTop\" method called." );
+				},
+				moveToBackground: function () {
+					ok( false, "Window 2 \"moveToBackground\" triggered once after window 2 \"moveToTop\" method called" );
+				}
+			});
+
+			$window3.window( "option", {
+				moveToTop: function () {
+					ok( false, "Window 3 \"moveToTop\" triggered once after window 3 initialization." );
+				},
+				moveToBackground: function () {
+					ok( ++once.window3 === 2, "Window 3 \"moveToBackground\" triggered once after window 3 initialization." );
+				}
+			});
+
+			ok( true, "Call \"moveToTop\" method on window 2." );
+
+			$window2.window( "moveToTop" );
+
+			deepEqual(
+				once,
+				{
+					window1: 2,
+					window2: 3,
+					window3: 2
+				},
+				"Events for window 1 triggered 2 times, "
+				+ "events for window 2 triggered 2 times, "
+				+ "events for window 3 triggered 2 times."
+			);
+
+			// teardown
+			$window
+				.add( $window2 )
+				.add( $window3 )
+				.window( "option", {
+					moveToTop       : null,
+					moveToBackground: null,
+				})
+				.window( "destroy" );
+		});
+
+		test( "\"open\"", function () {
+			expect( 1 );
+
+			var $window;
+
+			$window = $( "<div></div>" );
+
+			$window.window({
+				open: function () {
+					ok( false, "\"open\" event fired on initialization" );
+				}
+			});
+
+			ok( true, "not triggered" );
+
+			$window.window( "destroy" );
+		});
+
+		test( "\"resize\", \"resizeStart\", \"resizeStop\": covered in unit/windowDialog.html", function () {
+			expect( 0 );
+		});
+
+		test( "\"taskbarNotFound\": covered in unit/windowOptions/html :: \"taskbar\"", function () {
+			expect( 0 );
+		});
+
+	});
+</script>
+
+</body>
+</html>

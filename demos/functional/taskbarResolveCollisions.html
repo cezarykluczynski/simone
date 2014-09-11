@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbars collisions resolving - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$.simone.taskbarSetup({
+		// the default for "resolveCollisions" option, is true,
+		// so we can skip setting it
+		draggable: true
+	});
+
+	// initialize taskbar with default options
+	$( ".taskbar" ).taskbar();
+
+	// initialize vertical taskbar on right edge
+	$( ".taskbar2" ).taskbar({
+		orientation: "vertical",
+		verticalStick: "top right"
+	});
+
+	// initialize horizontal taskbar on top edge
+	$( ".taskbar3" ).taskbar({
+		horizontalStick: "top left"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+<div class="taskbar3"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows how
+		<a href="../../taskbar.html#option-resoliveCollisions">resolving collisions</a>
+		is handled. Drag the taskbars around to get the feel.
+		Resolving collisions works on principle in which
+		taskbars dropped first on given edge has higher precedence and takes
+		space from taskbars dropped later on neighbouring edges.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

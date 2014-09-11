@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Basics - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// taskbar has to be created first
+	$( ".taskbar" ).taskbar();
+
+	// window is binded to taskbar widget,
+	// so it has to be created second
+	$( ".window" ).window();
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="window"></div>
+
+<div class="demo">
+	<div class="description">
+		This is the basic demo, showing one taskbar and one window,
+		both with default options.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

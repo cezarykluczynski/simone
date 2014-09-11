@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>$.simone.taskbarSetup and $.simone.windowSetup methods - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// set some options as taskbar's defaults
+	$.simone.taskbarSetup({
+		languageSelect: true,
+		languages: [ "en", "pl" ],
+		orientation: "vertical",
+		verticalStick: "bottom right",
+		verticalHeight: "80%",
+		beforeDroppableOver: function ( event, ui ) {
+			// we have top bar on page, so let's dissalow dropping
+			// taskbars on top edge
+			if ( ui.edge === "top" ) {
+				event.preventDefault();
+			}
+		}
+	});
+
+	// initialize taskbars after calling $.simone.taskbarSetup()
+	$( ".taskbar" ).taskbar();
+	$( ".taskbar2" ).taskbar({
+		verticalStick: "bottom left"
+	});
+
+	// set some more options as default, with true as first parameter
+	// which is a way to propagate passed options to existing instances
+	$.simone.taskbarSetup( true, {
+		clock: true,
+		networkMonitor: true,
+		toggleFullscreen: true
+	});
+
+	// initialize another taskbar after second taskbarSetup() call
+	// - it will have both modifications to prototype made so far
+	$( ".taskbar-horizontal" ).taskbar({
+		orientation: "horizontal"
+	});
+
+	// set some options as window's defaults
+	$.simone.windowSetup({
+		closable: false,
+		group: "shared",
+		width: 400
+	})
+
+	// initialize window after calling $.simone.windowSetup()
+	$( ".window" ).window({
+		title: "Initialized after first windowSetup() call"
+	});
+
+	// set some more options as default, with true as first parameter
+	// which is a way to propagate passed options to existing instances
+	$.simone.windowSetup( true, {
+		minimizable: false
+	});
+
+	// initialize another taskbar after second taskbarSetup() call
+	// - it will have both modifications to prototype made so far
+	$( ".window2" ).window({
+		title: "Initialized after second windowSetup() call"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+<div class="taskbar-horizontal"></div>
+
+<div class="window"></div>
+<div class="window2"></div>
+
+<div class="demo">
+	<div class="description">
+		"<a href="../../docs/taskbar.html#method-taskbarSetup">taskbarSetup</a>"
+		and "<a href="../../docs/taskbar.html#method-windowSetup">windowSetup</a>"
+		are two methods that allow you to change the default options on taskbar
+		and window widgets, without the need to modify prototypes directly,
+		which is ugly, and you might even not know what modifying prototype
+		in JavaScript is.
+		<br><br>
+		All options that you want to change, you simply pass to
+		$.simone.taskbarSetup for taskbar widget and $.simone.windowSetup for window
+		widget.
+		<br><br>
+		If you wan't to modify existing instances, that is elements that's been
+		already initialized as widgets, pass true as a first parameters,
+		and your options as second parameter.
+		<br><br>
+		<strong>Tip:</strong> using $.simone.taskbarSetup is a convenient way for
+		adding translations that should be shared across all taskbar instances,
+		and windows bound to it, as a result.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

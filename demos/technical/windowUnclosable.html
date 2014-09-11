@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unclosable window - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// button for opening unclosable window
+	$( ".open-unclosable" )
+		.button()
+		.on( "click", function () {
+			openUnclosableWindow();
+		});
+
+	// clicking button in demo window
+	// will trigger this function
+	function openUnclosableWindow() {
+		$( ".unclosable" ).window({
+			// cannot be closed
+			closable   : false,
+			maximizable: false,
+			// cannot be minimized
+			minimizable: false,
+			// modal - by default covers all windows and taskbars
+			modal      : true,
+			resizable  : false,
+			// no dragging out of sight
+			draggable  : false,
+			buttons    : [
+				// custom button for closing
+				{
+					click: function () {
+						$( ".unclosable" )
+							.window( "close" );
+					},
+					// use native label
+					textLocalized: "close"
+				}
+			],
+			// don't destroy window content
+			// on close (default demos behaviour)
+			close: null
+		});
+	}
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<style class="demo-css">
+/* hide unclosable when it's not a window */
+.unclosable:not(.simone-window-content) {
+	display: none;
+}
+</style>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows a unclosable, unminimizable, and
+		unmovable window. Window will open when you click
+		the button.
+	</div>
+
+	<button class="open-unclosable">Open unclosable</button>
+</div>
+
+<div class="unclosable">
+	<div class="description">
+		This is a unclosable, unminimizable, unmovable window.
+		It can only by closed by hitting custom button bellow,
+		but the button is optional too.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

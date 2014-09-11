@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Non-technical contributions | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+
+<script>
+	// fake taskbar object so there's something for translations to extend
+	$.simone = {
+		taskbar: {
+			prototype: {
+				options: {
+					localization: {}
+				}
+			}
+		}
+	};
+</script>
+<script src="../src/i18n/simone-all.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Non-technical contributions</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#translations">Translations</a></li>
+			<li><a href="#proofreading">Proofreading</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="general-error"></div>
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				This page describes the kind of contributions to Simone that can be done by people with very little or no technical knowledge.
+			</p>
+
+			<span id="translations" class="anchor-fix"></span>
+			<h2>Translations</h2>
+
+			<p>
+				Simone use a small dictionary for crucial interface translations. There are currently <span class="translation-count"></span> entries in dictionary that requires to be translated in order to add now language to Simone. Window buttons labels and native taskbar buttons are among elements that use dictionary.
+			</p>
+			<p>
+				If you think you can provide a translation for your native language or a language you're fluent with, download <a href="../src/i18n/simone-template.js">translation template</a>, open it in your favourite editor and follow instructions inside. It will take you smoothly through the process and provide all the information, including context of what you are translating, and how to submit you work when you're done.
+			</p>
+
+			<h3>Supported languages</h3>
+			<ul class="supported-languages"><!-- this list is filled by AJAX request --></ul>
+
+			<h3>Missing languages</h3>
+			<ul>
+				<li>All the rest!</li>
+			</ul>
+
+			<span id="proofreading" class="anchor-fix"></span>
+			<h2>Proofreading</h2>
+
+			<p>
+				Simone documentation was not written by a native English speaker. Although it can generally be understood, there's for sure a lot of terrible grammar all over the place. If you can help out by providing you're expertise, please do so. Preferably you'll be a native English speaker.
+			</p>
+			<p>
+				You'll require a basic knowledge of Git to contribute. If you're unfamiliar with Git, that's a greate opportunity to learn—<a href="code.html">code contributing documentation</a> contain some resource on starting you're adventure with Git. The <a href="code.html">general rules for contributing code</a> applies for proofreading contributions, excluding all the technical requirements. In short, you should be interested in following <a href="code.html#commits">commits</a> and <a href="code.html#pull-request">pull request</a> guidelines.
+			</p>
+		</div>
+	</div>
+</main>
+
+<style>
+.translation-count {
+	font-weight: bold;
+}
+</style>
+
+<script>
+$( document ).ready( function () {
+	var keyCount = 0;
+
+	// load language list
+	$.each( $.simone.taskbar.prototype.options.localization, function ( index, dictionary ) {
+		var $li = $( "<li></li>" )
+			.text( dictionary.name );
+
+		// some files can have missing keys, let's assume that the files with most keys
+		// is the most up to date
+		keyCount = Math.max( Object.keys( dictionary ).length, keyCount );
+
+		$li.appendTo( $( ".supported-languages" ) );
+	});
+
+	$( ".translation-count" ).text( keyCount );
+});
+</script>
+
+</body>
+</html>

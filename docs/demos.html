@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Demos | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Demos</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#demo-list">Demo list</a>
+				<ul>
+					<li><a href="#demos-functional">Functional demos</a></li>
+					<li><a href="#demos-technical">Technical demos</a></li>
+				</ul>
+			</li>
+			<li><a href="#writing-demos">Writing demos</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				All the demos for Simone can be found on this page. There are currently two types of demos: <strong>functional</strong> and <strong>technical</strong>.
+			</p>
+
+			<p>
+				<strong>Functional demos</strong> shows some basic functionalities, where <strong>technical demos</strong> serves more as a tutorials for some advanced functionalities and API usage.
+			</p>
+
+			<span id="demo-list" class="anchor-fix"></span>
+			<h2 class="demo-list-header">Demo list</h2>
+
+			<ul class="demo-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+			<span id="writing-demos" class="anchor-fix"></span>
+			<h2>Writing demos</h2>
+
+			<p>
+				If you think new demos are required or some demos are missing, you can add them.
+			</p>
+
+			<p>
+				Writing new demos requires <a href="code.html">general knowledge about contributing code</a>. You might like to <a class="bugs" href="../docs/code.html#discussions">discuss your changes</a> to get sure they won't get rejected.
+			</p>
+
+			<p>
+				There is currently onle one general template for new demos:
+			</p>
+
+			<ul class="template-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+			<p>
+				Upon creating new demo, copy template file into relevant directory, rename it to match it's planned content, and then follow the instructions in template to get you started. After you're done with setting up the file, add it to the <a href="../tests/file.manifest.json">file manifest</a>. It's structure is pretty self-explanatory—it's used on this page to build demo lists.
+			</p>
+
+			<p>
+				When writing new demos, try to keep lines under 80 chars (4 spaces for tab), so vertical scrollbars won't appear on windows holding demo code.
+			</p>
+
+			<p>
+				Consider linking you demo with appropriate options in widget's documentation (it's purely optional though).
+			</p>
+
+			<p>
+				When you're done with new demo, make a <a href="code.html">pull request</a> on GitHub.
+			</p>
+
+		</div>
+
+	</div>
+</main>
+
+<script>
+$( document ).ready( function () {
+	var $testList = $( ".demo-list" );
+	var $templateList = $( ".template-list" );
+
+	if ( checkAjaxPossibilities() === false ) {
+		return;
+	}
+
+	loadFileManifest( "../demos/file.manifest.json", {
+		order: [ "functional", "technical", "templates" ],
+		containers: {
+			"*"     : $testList,
+			template: $templateList,
+		},
+		category: "demos",
+		afterBuild: function ( result ) {
+			var demosCount = Object.keys( result.files ).length - 1;
+			$( ".demo-list-header" ).append( "<span> (" + demosCount + " total)" );
+		}
+	});
+});
+</script>
+
+</body>
+</html>

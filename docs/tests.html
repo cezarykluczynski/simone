@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Tests | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Tests</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#test-types">Test types</a></li>
+			<li><a href="#test-list">Test list</a>
+				<ul>
+					<li><a href="#tests-unit">Unit tests</a></li>
+					<li><a href="#tests-functional">Functional tests</a></li>
+					<li><a href="#tests-manual">Manual tests</a></li>
+					<li><a href="#tests-stress">Stress tests</a></li>
+				</ul>
+			</li>
+			<li><a href="#failing-tests">Failing tests</a></li>
+			<li><a href="#writing-tests">Writing tests</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				Simone comes with tests. If you're unfamiliar with the concept of software testing, <a href="http://en.wikipedia.org/wiki/Software_testing">this Wikipedia article</a> is a good introduction.
+			</p>
+
+			<p>
+				Over <strong>1400</strong> tests are currently written, around 240 of them being tests inherited from <a href="https://jqueryui.com/dialog/">jQuery UI Dialog widget</a>, a widget that this plugin's <a href="../docs/window.html">window widget</a> extends.
+			</p>
+
+			<span id="test-types" class="anchor-fix"></span>
+			<h2>Test types</h2>
+
+			<p>
+				Two main types of tests are maintained: <strong>unit</strong> tests and <strong>functional</strong> tests. In addition, a few <strong>manual</strong> tests and <strong>stress</strong> tests are part of this project.
+			</p>
+
+			<p>
+				<strong>Unit tests</strong> are more towards testing the widget's public API.
+			</p>
+
+			<p>
+				<strong>Functional tests</strong> are more towards testing the simulated user interactions and widgets visuals, although the distinction isn't strict.
+			</p>
+
+			<p>
+				<strong>Manual tests</strong> are those tests that cannot be automated, for example, when a required action, like click, must come from natural user action and cannot be simulated, or a required action needs to be performed outside of browser window, manually by the user.
+			</p>
+
+			<p>
+				<strong>Stress tests</strong> tests various functionalities using random data, or multiple times, or in many iterations.
+			</p>
+
+			<span id="test-list" class="anchor-fix"></span>
+			<h2>Test list</h2>
+
+			<ul class="test-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+			<span id="failing-tests" class="anchor-fix"></span>
+			<h2>Failing tests</h2>
+
+			<p>
+				It could happen that a particular test or set of tests fails in a certain environment. If you found a failling test, make sure you're doing everything right:
+			</p>
+
+			<ul>
+				<li>The browser you are using is <a href="../docs/installation.html#supported-browsers">supported</a>.</li>
+				<li>The window the test or test suite was run was active and on top all the time. This is particularly important for Chrome, but can be a case in other browsers too.</li>
+				<li>The device tests are run onto is not extremely busy or very ancient, in which case test relying on timeouts might be failing, because the device isn't performing fast enough.</li>
+			</ul>
+
+			<p>
+				If none of the above seems to be the case, please fill a <a class="bugs" href="../docs/issues.html#bug-report">bug report</a>.
+			</p>
+
+			<span id="writing-tests" class="anchor-fix"></span>
+			<h2>Writing tests</h2>
+
+			<p>
+				<a href="http://qunitjs.com/">QUnit</a> is used for mantaining test base.
+			</p>
+
+			<p>
+				Although test coverage is decent, <strong>new tests are always welcomed</strong>.
+			</p>
+
+			<p>
+				In most cases, you will add new tests to the existing test suites when writing unit and functional tests, but in some situations you can create a new test suite. Before you add new test suite, stronly consider extending the existing ones, and make sure that what you want to test is not already tested.
+			</p>
+
+			<p>
+				Writing new tests requires <a href="../docs/code.html">general knowledge about contributing code</a>. Before doing major changes to the tests files, you might like to <a class="bugs" href="../docs/code.html#discussions">discuss them</a> to get sure they won't get rejected.
+			</p>
+
+			<p>
+				Try to put stress tests into a separate files, within reason.
+			</p>
+
+			<p>
+				There are templates ready for particular types of tests:
+			</p>
+
+			<ul class="template-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+			<p>
+				Upon creating new test suite, copy template file into relevant directory, rename it to match it's planned content, and then follow the instructions in template to get you started. After you're done with setting up the file, add it to the <a href="../tests/file.manifest.json">file manifest</a>. It's structure is pretty self-explanatory—it's used on this page to build test lists.
+			</p>
+
+			<p>
+				When you're done with new tests, make a <a href="../docs/code.html">pull request</a> on GitHub.
+			</p>
+
+		</div>
+	</div>
+</main>
+
+<script>
+$( document ).ready( function () {
+	var $testList = $( ".test-list" );
+	var $templateList = $( ".template-list" );
+
+	if ( checkAjaxPossibilities() === false ) {
+		return;
+	}
+
+	loadFileManifest( "../tests/file.manifest.json", {
+		order: [ "unit", "functional", "manual", "stress", "templates" ],
+		containers: {
+			"*"     : $testList,
+			template: $templateList,
+		},
+		category: "tests"
+	});
+});
+</script>
+
+</body>
+</html>

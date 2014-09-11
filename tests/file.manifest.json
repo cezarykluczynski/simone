@@ -1,0 +1,165 @@
+{
+	"files": {
+		"functional/all.html": {
+			"name": "Functional Tests Suite",
+			"description": "Qunit Composite file with all functional tests ran on single page.",
+			"tags": [
+				"type:functional"
+			]
+		},
+		"functional/taskbarAutoHide.html": {
+			"name": "Autohide",
+			"description" : "Tests covering taskbar autohide functionality.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/taskbarInteractions.html": {
+			"name" : "Interactions",
+			"description" : "Tests mostly covering taskbar interactions: draggable, resizable and sortable.",
+			"tags": [
+				"type:functional", "widget:taskbar"
+			]
+		},
+		"functional/windowConfirmClose.html": {
+			"name" : "Confirm close",
+			"description" : "Tests covering window confirm close functionality.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowFlow.html": {
+			"name" : "Flow",
+			"description" : "Tests covering window flow: minimizing, maximizing, showing and restoring, and how those interact with draggable and resizable.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowInteractions.html": {
+			"name" : "Interactions",
+			"description" : "Tests covering mostly window interactions: draggable and resizable, and also how window react to various \"containment\" settings.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"functional/windowModal.html": {
+			"name" : "Modal",
+			"description" : "Tests covering window modal functionality.",
+			"tags": [
+				"type:functional", "widget:window"
+			]
+		},
+		"manual/taskbarNetworkMonitor.html": {
+			"name" : "Network monitor",
+			"description" : "Test checking if network monitor button gets into the right state, based on network status.",
+			"tags": [
+				"type:manual", "widget:taskbar"
+			]
+		},
+		"manual/taskbarToggleFullscreen.html": {
+			"name" : "Toggle fullscreen",
+			"description" : "Test checking if toggle fullscreen button gets into the right state, based on the current browser fullscreen state.",
+			"tags": [
+				"type:manual", "widget:taskbar"
+			]
+		},
+		"stress/taskbarWindowButtonsVisibility.html": {
+			"name" : "Window buttons visibility",
+			"description": "Test that make sure window buttons are always visible, with different font sizes and varying number of buttons.",
+			"tags": [
+				"type:stress", "widget:taskbar"
+			]
+		},
+		"templates/template.manual.html": {
+			"name": "Manual test template",
+			"description": "Template for those test that cannot be automated.",
+			"tags": [
+				"type:template"
+			]
+		},
+		"templates/template.unit.html": {
+			"name": "Unit test template",
+			"description": "Template for all automated tests: unit, functional, and stress.",
+			"tags": [
+				"type:template"
+			]
+		},
+		"unit/all.html": {
+			"name": "Unit Tests Suite",
+			"description": "Qunit Composite file with all unit tests ran on single page.",
+			"tags": [
+				"type:unit"
+			]
+		},
+		"unit/debug.html": {
+			"name" : "Debug",
+			"description": "Shared window and taskbar tests covering the debug functionality.",
+			"tags": [
+				"type:unit", "widget:shared"
+			]
+		},
+		"unit/languagesLocalization.html": {
+			"name": "Languages and localization",
+			"description": "Shared window and taskbar tests covering languages and localization options, methods and events.",
+			"tags": [
+				"type:unit", "widget:shared"
+			]
+		},
+		"unit/taskbarButtonsIcons.html": {
+			"name": "Buttons and icons",
+			"description": "Taskbar tests regarding various taskbar buttons and icons used on those buttons.",
+			"tags": [
+				"type:unit", "widget:taskbar"
+			]
+		},
+		"unit/taskbarEvents.html": {
+			"name": "Events",
+			"description": "Taskbar events tests.",
+			"tags": [
+				"type:unit", "widget:taskbar"
+			]
+		},
+		"unit/taskbarMethods.html": {
+			"name": "Methods",
+			"description": "Taskbar methods tests.",
+			"tags": [
+				"type:unit", "widget:taskbar"
+			]
+		},
+		"unit/taskbarPositionDimensions.html": {
+			"name": "Position and dimensions",
+			"description": "Taskbar tests covering options regarding taskbar size and position on screen.",
+			"tags": [
+				"type:unit", "widget:taskbar"
+			]
+		},
+		"unit/windowDialog.html": {
+			"name": "jQuery UI Dialog tests",
+			"description": "jQuery UI Dialog tests that are relevant to window widget.",
+			"tags": [
+				"type:unit", "widget:window"
+			]
+		},
+		"unit/windowEvents.html": {
+			"name": "Events",
+			"description": "Window events tests.",
+			"tags": [
+				"type:unit", "widget:window"
+			]
+		},
+		"unit/windowMethods.html": {
+			"name": "Methods",
+			"description": "Window methods tests.",
+			"tags": [
+				"type:unit", "widget:window"
+			]
+		},
+		"unit/windowOptions.html": {
+			"name": "Options",
+			"description": "Window options tests.",
+			"tags": [
+				"type:unit", "widget:window"
+			]
+		}
+	}
+}

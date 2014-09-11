@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Simone functional test suite</title>
+<script src="../common/libs.all.js"></script>
+
+<script>
+(function() {
+	QUnit.testSuites("Taskbar", [
+		{ name: "Autohide" ,      path: "taskbarAutoHide.html" },
+		{ name: "Interactions",   path: "taskbarInteractions.html" },
+	]);
+
+	QUnit.testSuites( "Window", [
+		{ name: "Confirm close" , path: "windowConfirmClose.html" },
+		{ name: "Flow" ,          path: "windowFlow.html" },
+		{ name: "Interactions" ,  path: "windowInteractions.html" },
+		{ name: "Modal" ,         path: "windowModal.html" },
+	]);
+})();
+</script>
+</head>
+<body class="all">
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+</body>
+</html>

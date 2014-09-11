@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar's draggable events - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar and log all relevant events
+	$( ".taskbar" ).taskbar({
+		draggable: true,
+		beforeDrop: function ( event, ui ) {
+			demo.log( "beforeDrop" );
+
+			// prevent event on left edge;
+			// effect: taskbar cannot be dropped here
+			if ( ui.edge === "left" ) {
+				demo.log( "no dropping on the left edge!" );
+				event.preventDefault();
+			}
+		},
+		drop: function ( event, ui ) {
+			demo.log( "drop" );
+		},
+		beforeDroppableOver: function( event, ui ) {
+			demo.log( "beforeDroppableOver" );
+
+			// prevent event on top edge;
+			// effect: droppable will not be highlighted
+			if ( ui.edge === "top" ) {
+				demo.log( "no entering the top edge!" );
+				event.preventDefault();
+			}
+		},
+		droppableOver: function( event, ui ) {
+			demo.log( "droppableOver" );
+		},
+		beforeDroppableOut: function( event, ui ) {
+			demo.log( "beforeDroppableOut" );
+		},
+		droppableOut: function( event, ui ) {
+			demo.log( "droppableOut" );
+		},
+		dragStart: function( event, ui ) {
+			demo.log( "dragStart" );
+		},
+		drag: function( event, ui ) {
+			// log drag once in a while, no log flooding
+			if ( Math.random() < 0.05 ) {
+				demo.log( "drag" );
+			}
+		},
+		dragStop: function( event, ui ) {
+			demo.log( "dragStop" );
+		},
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows when different draggable events are fired.
+		<br><br>
+		Drag a taskbar to all edges and observe log output.
+	</div>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

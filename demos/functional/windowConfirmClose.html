@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Confirm close functionality - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// initialize taskbar
+	$( ".taskbar" ).taskbar();
+
+	// this button will open window and trigger confirm close window
+	$( ".open-confirmable" )
+		.button()
+		.on( "click", function () {
+			$( "<div></div>" ).window({
+				width: 400,
+				height: 200,
+				confirmClose: {
+					// confirm set to true it's all we need for basic
+					// confirm close functionality
+					confirm: true,
+				}
+			// trigger close once - this will make confirm close window
+			// appear;  if it's gonna be triggered again when confirm close
+			// window is opened, it's gonna by bypassed and main window
+			// will be closed
+			}).window( "close" );
+		});
+
+	// this button will open confirm close window that is also a modal
+	$( ".open-confirmable-modal" )
+		.button()
+		.on( "click", function () {
+			$( "<div></div>" ).window({
+				width: 400,
+				height: 200,
+				confirmClose: {
+					confirm: true,
+					modal  : true
+				}
+			}).window( "close" );
+		});
+
+	// this button will open confirm close window with custom texts set to it
+	$( ".open-confirmable-custom-text" )
+		.button()
+		.on( "click", function () {
+			$( "<div></div>" ).window({
+				width: 400,
+				height: 200,
+				confirmClose: {
+					confirm: true,
+					// every key that stores a text, can have :title in it,
+					// headerLocalized, textLocalized, yesLocalized
+					// and noLocalized can have then too
+					// (see default translation files for details)
+					header: 'Custom header for ":title"',
+					text: 'Custom questtion for ":title"?',
+					yes: 'Custom yes for ":title"!',
+					no: 'Custom no for ":title"!',
+				}
+			}).window( "close" );
+		});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="demo">
+	<div class="description">
+		This demo shows confirm close functionality of window widget.
+	</div>
+
+	<button class="open-confirmable">
+		Open window and trigger close()
+	</button>
+	<button class="open-confirmable-modal">
+		Open windom with modal confirm close
+		and trigger close()
+	</button>
+	<button class="open-confirmable-custom-text">
+		Open window with custom texts
+		and trigger close()
+	</button>
+</div>
+</div>
+
+</body>
+</html>

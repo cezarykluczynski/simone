@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "languageChange" event - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// all taskbar should have language change widget and 2 languages
+	$.simone.taskbarSetup({
+		languageSelect: true,
+		languages: [ "en", "pl" ]
+	});
+
+	// we'll save current languageChange propagation to variable
+	// to avoid infinite loop
+	var languageChangeInProgress = false;
+
+	// initialize top and bottom taskbar
+	$( ".taskbar-top, .taskbar-bottom" ).taskbar({
+		languageChange: function( event, ui ) {
+			// propagate only if propagation is not already in progress
+			if ( ! languageChangeInProgress ) {
+				// propagation in progress - start
+				languageChangeInProgress = true;
+
+				// find all taskbars
+				$( ".simone-taskbar" )
+					// exclude current taskbar
+					.not( ui.$taskbar )
+					.taskbar( "option", "language", ui.language );
+
+				// propagation in progress - finish
+				languageChangeInProgress = false;
+			}
+		}
+	});
+
+	// move top taskbar to top edge
+	$( ".taskbar-top" ).taskbar( "option", "horizontalStick", "top left" );
+
+	// initialize right taskbar
+	$( ".taskbar-right" ).taskbar({
+		orientation: "vertical",
+		languageChange: function( event, ui ) {
+			// when we left this handler an empty function,
+			// or don't set this handler at all,
+			// language will not be propagate to other taskbars
+		}
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar-top"></div>
+<div class="taskbar-bottom"></div>
+<div class="taskbar-right"></div>
+
+<div class="demo">
+	<div class="description">
+		Top taskbar and bottom takbar will propagate their language to other
+		taskbars, but taskbar on the right will not.
+		<br><br>
+		Note that "languageChange" in not propagated to right taskbar,
+		if your current language is English and you're clicking English
+		in the language change menu, because no real language change occurs.
+	</div>
+
+</div>
+</div>
+
+</body>
+</html>

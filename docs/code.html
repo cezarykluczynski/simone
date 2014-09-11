@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Code contibutions | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Code contributions</h3>
+		<ul class="side-nav">
+			<li><a href="#introduction">Introduction</a></li>
+			<li><a href="#general-guidelines">General guidelines</a></li>
+			<li><a href="#coding-standards">Coding standards</a></li>
+			<li><a href="#versioning">Versioning</a></li>
+			<li><a href="#commits">Commits</a></li>
+			<li><a href="#pull-request">Pull request</a></li>
+			<li><a href="#discussions">Discussions</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>
+				Code contributions are always welcomed.
+			</p>
+			<p>
+				Simone code is stored on <a data-json-key="homepage">GitHub</a>, and GitHub's pull request's are used for merging code changes from people who does not have write access to repository. You cannot send patches in ZIP files, using JSFiddle or via Skype. GitHub's the only way, with <a href="nonTechnicalContributions.html#translations">translations</a> being the only exception. If you're unfamiliar with Git, there are some great resources to get you started, including <a href="https://try.github.io/">Try Git</a>, an online learning tool, <a href="https://help.github.com/articles/set-up-git">basic course on GitHub</a>, and the <a href="http://git-scm.com/book">Pro Git book</a> with in-depth analysis of all Git features.
+			</p>
+
+			<span id="general-guidelines" class="anchor-fix"></span>
+			<h2>General guidelines</h2>
+
+			<p>
+				There are few things to remember:
+			</p>
+			<ul>
+				<li>Simone comes with <a href="tests.html">tests</a>. New features without any tests written to it, or with poorly written tests, will not be merged until test coverage is satisfactory.</li>
+				<li><a href="http://qunitjs.com/">QUnit</a> is used for testing, and it's trivial to learn. If you never wrote tests, it would take you an hour or two to wrap you head around it. If you have experience with unit testing frameworks, you'll learn Qunit momentarily.</li>
+				<li>Bug fixes should also be tested. You can benefit from <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-driven development</a> here. (Basically: 1. Write failing test for the bug. 2. Fix the bug. 3. Test is now passing. 4. Profit.).</li>
+				<li>Patches fixing Simone for unsupported browsers (IE8, Safari 5, Opera 12) will not me merged.</li>
+			</ul>
+
+			<span id="coding-standards" class="anchor-fix"></span>
+			<h2>Coding standards</h2>
+
+			<p>
+				<a href="http://wiki.jqueryui.com/w/page/12137737/Coding%20standards">jQuery UI's coding standards</a> apply to Simone, with a few modifications:
+			</p>
+
+			<ul>
+				<li>Ignore rules that are marked as those that should be moved to widget factory docs.</li>
+				<li>Ignore parts about z-index stacking.</li>
+				<li>You can use <code class="language-javscript">data()</code> on element and it's subordinates, just call <code class="language-javscript">removeData()</code> on destroy or when element is no longer used.
+			</ul>
+
+			<p>
+				Please follow <a href="http://contribute.jquery.org/style-guide/js/">JavaScript Style Guide</a>, with the following exceptions:
+			</p>
+			<ul>
+				<li>Ignore the part about JSLint. If you run JSLint on your code, it's fine, but if you don't, that's fine too. Please don't fix errors reported by JSLint on parts of code that you didn't contributed.</li>
+				<li>Ignore the part about multi-line statements when it comes to strings.</li>
+			</ul>
+
+			<p>
+				Please also remember to:
+			</p>
+
+			<ul>
+				<li>Trail whitespaces before commiting changes. Your favourite editor probably has some plugin for it. Search online for how to turn it on, if you're unfamiliar with this concept.</li>
+				<li>Use spaces, not tabs, for intending multiline <code class="language-javascript">var</code> statements (<a href="http://youtu.be/CGPXkVawXQc?t=1m26s">not everyone use 4 spaces for tab</a>), for example:</li>
+			</ul>
+<pre><code class="language-javascript">function foo() {
+	var a, // first a tab, because function should be intended,
+	    b, // but then four spaces
+	    c; // (select code with mouse to see it clearly)
+}</code></pre>
+
+			<span id="versioning" class="anchor-fix"></span>
+			<h2>Versioning</h2>
+
+			<p>
+				First version of Simone was <a href="changelog.html#0.1.0">0.1.0</a>.
+			</p>
+			<p>
+				Major versions, like 0.2.0, 0.3.0, and so on, are versions introducing new features, extending existing features, containing API redesigns, dropping off deprecated features, dropping support for versions of jQuery and jQuery UI, and so on.
+			</p>
+			<p>
+				Maintenance releases, like 0.1.2, 0.2.1, and so on, will only contain bugfixes for major versions. They can however contain documentation extensions, new demos, new languages, and new tests for existing features.
+			</p>
+
+			<span id="commits" class="anchor-fix"></span>
+			<h2>Commits</h2>
+
+			<p>
+				When commiting, remember about few things:
+			</p>
+			<ul>
+				<li>Commit messages should be informative. Inform to what features, new or existing, is you commit related to, and in what manner.</li>
+				<li>Include issue ID in form of <code>#123</code>, if your commit related to a issue from the <a data-json-key="bugs">issue tracker</a>.
+				<li>Make separate commits for logically separate changes. Don't join multiple issue into one commit, and don't generate multiple commit for a single issue (<a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squash them</a> instead). Pull requests that don't follow those two rules will not be rejected, though. It's just a good self-discipline.</li>
+			</ul>
+
+			<span id="pull-request" class="anchor-fix"></span>
+			<h2>Pull request</h2>
+
+			<ul>
+				<li>Make pull request from a separate branches. <code class="language-bash">git checkout -b descriptive-branch-name</code> is all that's needed, and it leaves your master branch in peace for easy future pulls from original repository.</li>
+				<li>Make pull request with at least commit message. The more information you provide, the better. Please do not left conversation the moment you've made pull request. People might have questions or comments for you (GitHub will inform about them you if you didn't changed defaults settings).</li>
+			</ul>
+
+			<span id="discussions" class="anchor-fix"></span>
+			<h2>Discussions</h2>
+
+			<p>
+				Talking is good. Discussing major changes before you're gonna do them is always a good idea. That way you gonna avoid contributing code that will not be finally merged, and you can get feedback on your ideas. Please also start a new <a data-json-key="bugs">issue</a> when you would like to tell about you're experience with this project documentation, demos, or code. If you don't want to share that publically, drop an <a data-json-key="author.email">email to the author</a>.
+			</p>
+		</div>
+	</div>
+</main>
+
+<script>
+$( document ).ready( function () {
+	$( "[data-json-key=bugs]" ).attr( "href", jQueryJSON.bugs );
+	$( "[data-json-key=\"author.email\"]" ).attr( "href", "mailto:" + jQueryJSON.author.email );
+	$( "[data-json-key=homepage]" ).attr( "href", jQueryJSON.bugs.replace( "/issues", "" ) );
+});
+</script>
+
+</body>
+</html>

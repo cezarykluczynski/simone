@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+<main>
+	<div class="general-error"></div>
+	<div class="row">
+		<div class="small-12 large-6 column">
+
+			<span id="introduction" class="anchor-fix"></span>
+			<h2>Introduction</h2>
+
+			<p>This page serves as general introduction to jQuery <strong>Simone</strong> plugin, and as a resource list. It gathers links to all important documentation pages that are part of this project, with a brief explanation of their content.</p>
+
+			<span id="about" class="anchor-fix"></span>
+			<h2>About</h2>
+
+			<p><strong>Simone</strong> is JavaScript <strong>window manager</strong> consisting of two widgets: <strong>taskbar</strong> and <strong>window</strong>, providing a desktop-like experience. It's especially useful for single-page applications. It's built on top of the <a href="https://jquery.com/">jQuery</a> and <a href="https://jqueryui.com/">jQuery UI</a>.</p>
+
+			<span id="features" class="anchor-fix"></span>
+			<h2>Features</h2>
+
+			<ul>
+				<li><strong>Easy start</strong> for developers. API known from jQuery UI.</li>
+				<li><strong>jQuery UI Themes compatible</strong>  with no additional setup. Works with <a href="https://jqueryui.com/themeroller/">jQuery UI ThemeRoller</a> too.</li>
+				<li><strong>Customizable</strong> with options, events and methods.</li>
+				<li>Built-in <strong>debugger</strong>.</li>
+				<li>Comes with <a href="tests.html">tests</a>.</li>
+				<li>Utilizies <strong>well-known patterns</strong>, present in other window managers.</li>
+				<li>Comes with <strong>localization</strong> support nad <strong>multilingual</strong> capabilities.</li>
+				<li><strong>Widgets</strong> are to a point <strong>aware</strong> of each other.</li>
+				<li>Content-agnostic windows.</li>
+				<li>Software in <strong>active development</strong>.</li>
+			</ul>
+
+			<span id="people" class="anchor-fix"></span>
+			<h2>People involved</h2>
+
+			<p>Original author of this plugin is <span data-json-key="author.name">Cezary Kluczyński</span> (<a data-no-text data-json-key="author.email">email</a>, <a data-no-text data-json-key="author.url" href="">GitHub</a>, <a href="http://twitter.com/ckluczynski">Twitter</a>). <span class="author-maintainer">He is the current maintainer too.</span>
+
+			<!-- this is for the future -->
+			<p class="maintainers">Current maintainers are:</p>
+			<ul class="maintainers"></ul>
+
+			<span id="development-status" class="anchor-fix"></span>
+			<h2>Development status</h2>
+
+			<p>Current version: <strong data-json-key="version"></strong></p>
+
+			<p class="version-status">This is a <strong>beta version</strong>, which means <a href="issues.html#bug-report">bugs</a> are expected.<p>
+
+		</div>
+
+		<div class="small-12 large-6 column">
+
+			<span id="resources" class="anchor-fix"></span>
+			<h2>Resources</h2>
+
+			<ul class="docs-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+		</div>
+	</div>
+</main>
+
+<style>
+.author-maintainer,
+.maintainers {
+	display: none;
+}
+
+[data-file-group-id=general-index],
+[data-header-for="general"] {
+	display: none;
+}
+</style>
+
+<script>
+$( document ).ready( function () {
+	var $docsList = $( ".docs-list" );
+
+	if ( checkAjaxPossibilities() === false ) {
+		return;
+	}
+
+	var pluginData;
+
+	function setPluginData() {
+		$( "[data-json-key]" ).each( function () {
+			var $this = $( this ),
+			    key   = $this.data( "json-key" ).split( "." );
+
+			current = pluginData;
+
+			var lastKeyPart;
+
+			$.each( key, function( index, keyPart ) {
+				lastKeyPart = keyPart;
+				current     = current[ keyPart ];
+			});
+
+			if ( typeof $this.attr( "data-no-text" ) === "undefined" ) {
+				$this.text( current );
+			}
+
+			if ( $this.is( "a" ) ) {
+				if ( lastKeyPart === "email" ) {
+					current = "mailto:" + current;
+				}
+
+				$this.attr( "href", current );
+			}
+		});
+
+		var $maintainers = $( "ul.maintainers" );
+
+		var maintainers = pluginData.maintainers;
+
+		// in case the original author is the only maintainer, we make the notice
+		if ( maintainers.length === 1 && maintainers[ 0 ].name === pluginData.author.name ) {
+			$( ".maintainers" ).hide();
+			$( ".author-maintainer" ).show();
+		// however, if there is more maintainers, we print the list
+		} else {
+			$( ".maintainers" ).show();
+			$.each( maintainers, function ( data, maintainer ) {
+				var $maintainer = $( "<li></li>" );
+
+				var name = maintainer.name || maintainer.email;
+
+				$maintainer.html(
+					name + " " +
+					( maintainer.url || maintainer.email ? "(" : "" ) +
+					( maintainer.url ? "<a href=\"" + maintainer.url + "\">URL</a>" : "" ) +
+					( name || maintainer.url ? ", " : "" ) +
+					( maintainer.email ? "<a href=\"mailto:" + maintainer.email + "\">email</a>" : "" ) +
+					( maintainer.url || maintainer.email ? ")" : "" )
+				);
+
+				$maintainer.appendTo( $maintainers );
+			});
+		}
+	}
+
+	$.ajax({
+		url: "../simone.jquery.json",
+		dataType: "json"
+	}).success( function ( result ) {
+		pluginData = result;
+
+		setPluginData();
+	}).error( function ( xhr, status, error ) {
+		fileAjaxError( status + "<br>" + error );
+	});
+
+	loadFileManifest( "file.manifest.json", {
+		order: [
+			"general",
+			"widgets",
+			"integration",
+			"development"
+		],
+		containers: {
+			"*": $docsList,
+		},
+		setBullets: true,
+		sectionLabel: "",
+		category: "docs"
+	});
+});
+</script>
+
+</body>
+</html>

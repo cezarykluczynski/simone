@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Window groups - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body>
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$( ".taskbar" ).taskbar({
+		// window groups icons are configured in taskbar, not windows
+		icons: {
+			"group:beta": "ui-icon-star",
+			"group:test": "ui-icon-cart"
+		},
+		// window groups localization are configured in taskbar, not windows
+		localization: {
+			en: {
+				"group:beta": "Beta",
+				"group:test": "Test"
+			}
+		},
+		// delegate debugLogAdd output to demo log
+		debugLogAdd: function ( event, ui ) {
+			demo.log( ui.levelName + ": " + ui.message );
+		}
+	});
+
+	// button for opening window in group "test"
+	$( ".open-group-test" )
+		// make it into a button
+		.button()
+		.on( "click", function () {
+			// create div and make it into window
+			$( "<div></div>" ).window({
+				position: {
+					my: "left bottom",
+					at: "left bottom"
+				},
+				group: "test"
+			});
+		});
+
+	// button for opening window in group "beta"
+	$( ".open-group-beta" )
+		// make it into a button
+		.button()
+		.on( "click", function () {
+			// create div and make it into window
+			$( "<div></div>" ).window({
+				position: {
+					my: "right bottom",
+					at: "right bottom"
+				},
+				group: "beta"
+			});
+		});
+
+	// button for opening window in group "noTranslations";
+	// windows in this group does not have translation for group name,
+	// so group name is used as window group button label
+	$( ".open-group-noTranslations" )
+		// make it into a button
+		.button()
+		.on( "click", function () {
+			// create div and make it into window
+			$( "<div></div>" ).window({
+				position: {
+					my: "center bottom",
+					at: "center bottom"
+				},
+				group: "noTranslations"
+			});
+		});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+
+<div class="demo">
+	<div class="description">
+		Each buttons open window in a different
+		"<a href="../../docs/window.html#option-group">group</a>".
+		Grouped windows are prepended to common menu
+		and represented by a single button in taskbar's window buttons container.
+		<br><br>
+		Groups translations and icons are defined in taskbar the windows
+		are bound to, not in windows.
+		<br><br>
+		Windows in group "noTranslations" have no translations,
+		so opening one will generated debug messages.
+	</div>
+
+	<button class="open-group-test">
+		Open window in group "test"
+	</button>
+	<button class="open-group-beta">
+		Open window in group "beta"
+	</button>
+	<button class="open-group-noTranslations">
+		Open window in group "noTranslations"
+	</button>
+
+	<div class="log"></div>
+</div>
+</div>
+
+</body>
+</html>

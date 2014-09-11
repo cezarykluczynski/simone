@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<!-- Change left side of the title to match that what you're page is about -->
+<title>Template | Simone documentation</title>
+<meta charset="UTF-8">
+<script src="common/libs.js"></script>
+</head>
+
+<body class="layout-default">
+
+<!-- example TOS - if you wan't to remove it, remove class "with-tos" from main tag too -->
+<aside class="tos">
+	<div class="tos-contents">
+		<div class="top-arrow"></div>
+		<div class="bottom-arrow"></div>
+		<h3 id="tos">Table of contents</h3>
+		<ul class="side-nav">
+			<li><a href="#section">Section</a></li>
+		</ul>
+	</div>
+</aside>
+
+<main class="with-tos">
+	<!-- this is container for AJAX errors, or any errors; it's generally come in handy,
+	     if AJAX requests are mode on page; in other case it can be removed completelly -->
+	<div class="general-error"></div>
+	<div class="row">
+		<div class="small-12 large-12 column">
+
+			<!-- this is a fake anchor for header bellow, CSS fixes accounting for topbar;
+			     all headers should have those kind of anchor fixes -->
+			<span id="section" class="anchor-fix"></span>
+			<h2>Section</h2>
+
+			<p>
+				First paragraph.
+			</p>
+
+			<p>
+				Second paragraph.
+			</p>
+
+			<ul>
+				<li>List are</li>
+				<li>also possible.</li>
+			</ul>
+
+		</div>
+
+		<div class="small-12 large-12 column">
+
+			<span id="resources" class="anchor-fix"></span>
+			<h2>Resources</h2>
+
+			<ul class="resources-list file-list"><!-- this list is filled by AJAX request --></ul>
+
+		</div>
+	</div>
+</main>
+
+<style>
+/* Here goes styles for documentation page. */
+</style>
+
+<script>
+$( document ).ready( function () {
+	// this is a container to which parsed file.manifest.json
+	// will be prepended; multiple containers are supported
+	// (see "containers") option in loadFileManifest function bellow
+	var $resourcesList = $( ".resources-list" );
+
+	// if no AJAX is available, because we're
+	// on file: protocol, report an error
+	if ( checkAjaxPossibilities() === false ) {
+		return;
+	}
+
+	// this code is used for loading file list
+	// from a manifest into container, file name
+	// is passed as the first argument, and the second
+	// argument is a parsing options
+	loadFileManifest( "file.manifest.json", {
+		// order of files when subderectories are involved,
+		// and when not, "type:" tag is used
+		order: [],
+		// container to prepend data to:
+		// "*" is a wildcard, but also, but "type:" tag
+		// value can also be used as key
+		containers: {
+			"*": $resourcesList,
+		},
+		// set bullets despite resources being at top level
+		setBullets: true,
+		// label for headers, can be ommited is no different
+		// than "category" value
+		sectionLabel: "example",
+		// used to build paths and labels,
+		// if no "sectionLabel" is provided
+		category: "example"
+	});
+});
+</script>
+
+<!-- Last but not least, when you're done, remove the template comments. -->
+</body>
+</html>

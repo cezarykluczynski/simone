@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Containments - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// create first taskbar
+	var $taskbar = $( ".taskbar" ).taskbar({
+		windowsContainment: "viewport",
+		buttons: {
+			openWindow: {
+				label: "Open window (viewport)"
+			}
+		},
+		buttonsOrder: [ "openWindow" ]
+	});
+
+	// bind events to taskbar window opener
+	var $taskbarOpen = $( ".taskbar" )
+		.taskbar( "option", "buttons.openWindow" )
+		// get jQuery object of the button created
+		.$element
+		// click on button open window; window default "containment" option
+		// is set to "inherit", so it inherits containment from the taskbar
+		// it's bound to
+		.on( "click", function () {
+			$( "<div></div>" )
+				.window({
+					taskbar: $taskbar,
+					title: "Viewport"
+				});
+		});
+
+	// create second taskbar
+	var $taskbar2 = $( ".taskbar2" ).taskbar({
+		windowsContainment: "visible",
+		horizontalStick: "top left",
+		buttons: {
+			openWindow: {
+				label: "Open window (visible)"
+			}
+		},
+		buttonsOrder: [ "openWindow" ]
+	});
+
+	// bind events to second taskbar window opener
+	var $taskbarOpen = $taskbar2
+		.taskbar( "option", "buttons.openWindow" )
+		// get jQuery object of the button created
+		.$element
+		// click on button open window; window default "containment" option
+		// is set to "inherit", so it inherits containment from the taskbar
+		// it's bound to
+		.on( "click", function () {
+			$( "<div></div>" )
+				.window({
+					taskbar: $taskbar2,
+					title: "Visible"
+				});
+		});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Window containment describe boundaries in which window exists.
+		There are two types of containment.
+		<br><br>
+		By default, containment is inherited from the taskbar window
+		is bound to, from it's
+		"<a href="../../docs/taskbar.html#option-windowsContainment">windowsContainment</a>"
+		options, but it can also be set explicitly using window
+		"<a href="../../docs/window.html#option-containment">containment</a>"
+		option.
+		<br><br>
+		Windows on the top taskbar has "containment" set to "viewport",
+		where windows on the bottom taskbar has "containment"
+		set to "visible". Resize and drag the windows around to
+		get the difference.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

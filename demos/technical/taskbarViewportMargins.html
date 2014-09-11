@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbar "viewportMargins" option - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	// setup for all taskbars
+	$.simone.taskbarSetup({
+		viewportMargins: {
+			top: [ 50, "correct" ],
+			right: [ 30, "correctUp" ],
+			bottom: [ 60, "correctNone" ],
+			left: [ 70, "correctDown" ]
+		}
+	});
+
+	// initialize top taskbar
+	$( ".taskbar-top" ).taskbar({
+		horizontalStick: "top left"
+	});
+
+	// initialize right taskbar
+	$( ".taskbar-right" ).taskbar({
+		orientation: "vertical"
+	});
+
+	// initialize bottom taskbar
+	$( ".taskbar-bottom" ).taskbar();
+
+	// initialize left taskbar
+	$( ".taskbar-left" ).taskbar({
+		orientation: "vertical",
+		verticalStick: "top left"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar-top"></div>
+<div class="taskbar-right"></div>
+<div class="taskbar-bottom"></div>
+<div class="taskbar-left"></div>
+
+<div class="demo">
+	<div class="description">
+		Top edge containment will always be corrected if a taskbar is present,
+		so windows will touch top taskbar.
+		<br><br>
+		Right edge containment will be corrected if taskbar is wider than given integer,
+		so in this case it's indeed corrected and windows will touch right taskbar.
+		<br><br>
+		Bottom edge containment will never be corrected,
+		so windows will always be 60px from the bottom edge.
+		<br><br>
+		Left edge containment will be corrected if taskbar is not wider than given integer,
+		so in this case it's not corrected and windows will go under the taskbar,
+		but only 70px from left edge (default vertical taskbar width is 100px).
+	</div>
+</div>
+</div>
+
+</body>
+</html>

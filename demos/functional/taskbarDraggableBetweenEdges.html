@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Taskbars draggable between edges - Simone demo</title>
+	<meta charset="UTF-8">
+	<script src="../common/libs.js"></script>
+</head>
+<body class="no-top-bar">
+
+<script>
+$( document ).ready( function () {
+	beforeDemosCommon();
+});
+</script>
+
+<script class="demo-js">
+$( document ).ready( function () {
+	"use strict";
+
+	$.simone.taskbarSetup({
+		// make all instances draggable
+		// only in their current orientation
+		draggable: "orientation",
+		// make all instances
+		// draggable between edges
+		draggableBetweenEdge: true
+	});
+
+	// initialize horizontal taskbar
+	$( ".taskbar" ).taskbar({
+		horizontalWidth: "70%"
+	});
+
+	// initialize vertical taskbar
+	$( ".taskbar2" ).taskbar({
+		verticalHeight: "60%",
+		orientation: "vertical"
+	});
+});
+</script>
+
+<script>
+$( document ).ready( function () {
+	loadDemosCommon();
+});
+</script>
+
+<div class="demo-html">
+<div class="taskbar"></div>
+<div class="taskbar2"></div>
+
+<div class="demo">
+	<div class="description">
+		Both taskbar are draggable between edges, but only within their
+		orientation. Drag taskbars around to see the effect.
+		<br><br>
+		Drag horizontal taskbar to the left or right edge of the main window
+		in X axis.
+		<br><br>
+		Drag vertical taskbar to the top or bottom edge of the main window
+		in Y axis.
+	</div>
+</div>
+</div>
+
+</body>
+</html>

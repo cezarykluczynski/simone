@@ -1,0 +1,109 @@
+{
+	"files": {
+		"changelog.html": {
+			"name": "Changelog",
+			"description": "Project changelog describing changes since initial release.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"code.html": {
+			"name": "Contributing code",
+			"description": "Describes how code can be contributed to the project.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"demos.html": {
+			"name": "Demos",
+			"description": "Holds the list of available demos.",
+			"tags": [
+				"type:general"
+			]
+		},
+		"download.html": {
+			"name": "Download",
+			"description": "Page where you can download custom Simone build. Server is required for this page if you like to run this repository locally, but no server side language is needed.",
+			"tags": [
+				"type:general"
+			]
+		},
+		"index.html": {
+			"name": "Documentation",
+			"description": "Main documentation page, It serves as general introduction to Simone, and as a resource list.",
+			"tags": [
+				"type:general"
+			]
+		},
+		"installation.html": {
+			"name": "Installation",
+			"description": "How to add Simone to your project, and what dependencies are required.",
+			"tags": [
+				"type:integration"
+			]
+		},
+		"issues.html": {
+			"name": "Issues",
+			"description": "Explains the process of reporting bugs to bugtracker and using issue tracker for other things.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"nonTechnicalContributions.html": {
+			"name": "Non-technical contributions",
+			"description": "Describes how people can contribute to the project with only minimal technical skills, or no technical skills at all.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"roadmap.html": {
+			"name": "Roadmap",
+			"description": "List of planned features.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"support.html": {
+			"name": "Support",
+			"description": "Simone support, including commercial support.",
+			"tags": [
+				"type:general"
+			]
+		},
+		"stylingGuide.html": {
+			"name": "Styling guide",
+			"description": "Describes key areas where CSS customization can by applied.",
+			"tags": [
+				"type:integration"
+			]
+		},
+		"taskbar.html": {
+			"name": "Taskbar",
+			"description": "Taskbar widget documentation, containing description of options, events, and methods available.",
+			"tags": [
+				"type:widgets"
+			]
+		},
+		"tests.html": {
+			"name": "Tests",
+			"description": "List of available test suites, along with instruction on how to write new tests and how to report failing tests.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"upgradeGuide.html": {
+			"name": "Upgrade guide",
+			"description": "Tells which libraries should be upgraded, how, and when.",
+			"tags": [
+				"type:development"
+			]
+		},
+		"window.html": {
+			"name": "Window",
+			"description": "Window widget documentation, containing description of options, events, and methods available.",
+			"tags": [
+				"type:widgets"
+			]
+		}
+	}
+}
