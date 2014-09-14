@@ -6,15 +6,15 @@ into your project - merge your desired language file
 on the download page instead */
 
 // make recognizable name, so other pages can use this variable
-var availableTaskbarWindowLanguages = [ "de", "en", "nl", "pl" ];
+var availableSimoneLanguages = [ "de", "en", "nl", "pl" ];
 
 // some pages might only need the config
 if ( typeof dontLoadLanguages === "undefined" || dontLoadLanguages !== true ) {
-	for( var l = 0; l < availableTaskbarWindowLanguages.length; l++ ) {
+	for( var l = 0; l < availableSimoneLanguages.length; l++ ) {
 		document.write(
 			'<script src="' +
 			( location.href.indexOf( "/docs/nonTechnical" ) === -1 ? '../' : '' ) +
-			'../src/i18n/simone-' + availableTaskbarWindowLanguages[ l ] +
+			'../src/i18n/simone-' + availableSimoneLanguages[ l ] +
 			'.js"></script>'
 		);
 	}

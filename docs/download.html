@@ -397,9 +397,9 @@
 		var buildLangJSFiles = function () {
 			var pathsJS = {};
 
-			if ( availableTaskbarWindowLanguages ) {
-				for( var l = 0; l < availableTaskbarWindowLanguages.length; l++ ) {
-					var lang = availableTaskbarWindowLanguages[ l ];
+			if ( availableSimoneLanguages ) {
+				for( var l = 0; l < availableSimoneLanguages.length; l++ ) {
+					var lang = availableSimoneLanguages[ l ];
 
 					pathsJS[ lang ] = "../src/i18n/simone-" + lang + ".js";
 				}
@@ -408,7 +408,7 @@
 			$( ".loading" ).append(
 				'<p class="translations-downloads">Downloading translations... ' +
 				'(<span class="count">0</span>/<span class="total">' +
-				Object.keys( availableTaskbarWindowLanguages ).length +
+				Object.keys( availableSimoneLanguages ).length +
 				'</span>)</p>'
 			);
 
@@ -546,7 +546,7 @@
 			var keys = [ "taskbar", "window" ];
 
 			if ( type === "translations" ) {
-				keys = availableTaskbarWindowLanguages;
+				keys = availableSimoneLanguages;
 				counts.translations = 0;
 			}
 
