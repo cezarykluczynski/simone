@@ -447,6 +447,10 @@
 	text-align: center;
 }
 
+.simone-taskbar-vertical .simone-taskbar-system-buttons-container .ui-menu .ui-menu-item {
+	text-align: left;
+}
+
 .simone-taskbar-vertical.simone-taskbar-stick-top .simone-taskbar-system-buttons-container {
 	bottom: 0.1em;
 }
