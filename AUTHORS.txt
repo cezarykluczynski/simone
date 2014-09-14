@@ -1,0 +1,4 @@
+Authors ordered by first contribution.
+
+Cezary Kluczyński <cezary.kluczynski@gmail.com>
+Bernhard Essl <bernhardessl@gmail.com>
