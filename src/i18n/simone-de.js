@@ -1,7 +1,7 @@
 /*!
  * Simone - German localization file
  *
- * Copyright 2014 Cezary Kluczyński
+ * Copyright 2014 Bernhard Essl <bernhardessl@gmail.com>
  * Version: @simone-main-version
  * Released under the MIT license.
  *
