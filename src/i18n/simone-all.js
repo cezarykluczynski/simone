@@ -6,7 +6,7 @@ into your project - merge your desired language file
 on the download page instead */
 
 // make recognizable name, so other pages can use this variable
-var availableTaskbarWindowLanguages = [ "en", "pl" ];
+var availableTaskbarWindowLanguages = [ "de", "en", "pl" ];
 
 // some pages might only need the config
 if ( typeof dontLoadLanguages === "undefined" || dontLoadLanguages !== true ) {
