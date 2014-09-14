@@ -1468,6 +1468,45 @@
 			$taskbar.taskbar( "option", "verticalStick", prev );
 			$taskbar.taskbar( "option", "orientation", prev2 );
 		});
+
+		test( "Opening menu on one taskbar remove \".simone-taskbar-with-opened-elements\" on other taskbars", function () {
+			var prev = $taskbar.taskbar( "option", "languageSelect" );
+
+			$taskbar.taskbar( "option", "languageSelect", true );
+
+			$taskbar2.taskbar({
+				languageSelect: true,
+				orientation: "vertical"
+			});
+
+			$taskbar.find( "[data-button-name=languageSelect]" ).trigger( "click" );
+
+			ok(
+				$taskbar.hasClass( "simone-taskbar-with-opened-elements" ),
+				"Open language select on first taskbar. First taskbar have the class."
+			);
+
+			ok(
+				! $taskbar2.hasClass( "simone-taskbar-with-opened-elements" ),
+				"Second taskbar does not have the class."
+			);
+
+			$taskbar2.find( "[data-button-name=languageSelect]" ).trigger( "click" );
+
+			ok(
+				! $taskbar.hasClass( "simone-taskbar-with-opened-elements" ),
+				"Open language select on second taskbar. First taskbar does not have the class."
+			);
+
+			ok(
+				$taskbar2.hasClass( "simone-taskbar-with-opened-elements" ),
+				"Second taskbar does not have the class."
+			);
+
+			// teardown
+			$taskbar2.taskbar( "destroy" );
+			$taskbar.taskbar( "option", "languageSelect", prev );
+		});
 	});
 </script>
 

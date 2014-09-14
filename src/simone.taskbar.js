@@ -2799,6 +2799,8 @@ $.widget( "simone.taskbar", {
 		if ( ! ( options && ! options.blur ) ) {
 			this._blurAllConnectedButtons();
 		}
+
+		this._closeOtherTaskbarsOpenedElements( options );
 	},
 
 	// hides all menus, that includes start menus, language select,
@@ -2855,6 +2857,8 @@ $.widget( "simone.taskbar", {
 		$startButtons.removeClass( this.classes.uiStateActive );
 
 		this._blurAllConnectedButtons();
+
+		this._closeOtherTaskbarsOpenedElements( options );
 	},
 
 	_hideAll: function ( options ) {
@@ -2867,6 +2871,23 @@ $.widget( "simone.taskbar", {
 		}
 
 		this._openedElements( false );
+		this._closeOtherTaskbarsOpenedElements( options );
+	},
+
+	_closeOtherTaskbarsOpenedElements: function ( options ) {
+		var self = this;
+
+		if ( ! options || ! options.own ) {
+			$( "." + this.classes.taskbar )
+				.not( this.$elem )
+				.each( function () {
+					var $taskbar = $( this );
+					var instance = $taskbar
+						.data( self._cnst.dataPrefix + "taskbar" );
+
+					instance._openedElements( false );
+				});
+		}
 	},
 
 	// this function will blur those button that should not be active
