@@ -5,7 +5,7 @@
  * Version: @simone-main-version
  * Released under the MIT license.
  *
- * http://cezarykluczynski.github.io/simone/docs/documentation.html
+ * http://cezarykluczynski.github.io/simone/docs/index.html
  * http://cezarykluczynski.github.io/simone/docs/nonTechnicalContributions.html#translations
  */
 ;(function ( $ ) {
