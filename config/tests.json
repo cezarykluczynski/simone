@@ -52,7 +52,7 @@
 		"warnings": {
 			"warning-interactions-timeouts" : "This tests simulated mouse interactons and relies on timeouts. For this tests to go smoothly, please keep the mouse pointer outside the window. This test might fail on very slow or busy devices.",
 			"warning-timeouts": "This test relies on timeouts and it might fail on very slow or busy devices.",
-			"warning-random-data": "This test takes time and uses random data. Running it multiple times can eventually tigger an error. If that happens, please reaport it providing as much data as possible.",
+			"warning-random-data": "This test takes time and uses random data. Running it multiple times can eventually trigger an error. If that happens, please reaport it providing as much data as possible.",
 			"warning-devtools-required": "This test requires that the Developers tools be opened. Hit F12 (IE9) and refresh page."
 		}
 	}
