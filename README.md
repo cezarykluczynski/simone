@@ -1,5 +1,5 @@
 # Simone
-Simone is JavaScript window manager consisting of two widgets: taskbar and window, providing a desktop-like experience. It's especially useful for single-page applications. It's built on top of the jQuery and jQuery UI.
+Simone is a JavaScript window manager consisting of two widgets: taskbar and window, providing a desktop-like experience. It's especially useful for single-page applications. It's built on top of the jQuery and jQuery UI.
 
 ## Browser compatibility
 IE9+, Chrome, Firefox, Opera 15+, Safari 6+.
