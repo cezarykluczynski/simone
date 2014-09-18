@@ -3,3 +3,4 @@ Authors ordered by first contribution.
 Cezary Kluczyński <cezary.kluczynski@gmail.com>
 Bernhard Essl <bernhardessl@gmail.com>
 Bert Hankes <info@a2hankes.nl>
+Piotr Jacobi <noctovision@gmail.com>
