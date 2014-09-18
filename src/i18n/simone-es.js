@@ -15,7 +15,7 @@ $.simone.taskbar.prototype.options.localization[ langCode ] =
 $.extend( true, $.simone.taskbar.prototype.options.localization[ langCode ], {
 	alwaysOnTop: "Siempre al frente",
 	code: langCode,
-	clockDateFormat: "DD/MM/YY",
+	clockDateFormat: "dd/mm/yy",
 	clockTimeFormat: "HH:mm",
 	clockAmSymbol: "AM",
 	clockPmSymbol: "PM",
