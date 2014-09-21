@@ -2,7 +2,7 @@
 	"title": "Simone",
 	"name": "simone",
 	"description": "Simone is a JavaScript window manager consisting of two widgets: taskbar and window, providing a desktop-like experience. It's especially useful for single-page applications. It's built on top of the jQuery and jQuery UI.",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"licenses": [
 		{
 			"type": "MIT",
