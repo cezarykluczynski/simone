@@ -10,7 +10,7 @@
  */
  ;(function ( $, undefined ) {
 "use strict";
-/*jshint laxbreak:true,-W030*/
+/*jshint laxbreak:true,-W030,maxcomplexity:60,smarttabs:true,-W004*/
 $.widget( "simone.window", $.ui.dialog, {
 	version: "@simone-main-version",
 	options: {
