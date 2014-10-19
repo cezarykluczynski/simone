@@ -6696,11 +6696,7 @@ $.widget( "simone.taskbar", {
 				   "mouseup."    + this._cache.uep
 				+ " mouseenter." + this._cache.uep
 				+ " mouseleave." + this._cache.uep, function () {
-					var $onlyItem = $menu.find( "." + self.classes.uiMenuItem );
-
-					if ( $onlyItem.length > 1 ) {
-						self._setConnectedButtonState.call( this, self );
-					}
+					self._setConnectedButtonState.call( this, self );
 				});
 			} else {
 				// select menu if the group was already created

@@ -1042,6 +1042,29 @@
 
 			$window.window( "close" );
 		});
+
+		test("Window button keeps active state when hovered, with only one window in group.", function () {
+			var $window;
+			var $button;
+
+			// setup
+			$window = $( "<div></div>" )
+				.window({
+					group: "test"
+				});
+
+			$button = $window.window( "button" );
+
+			// test
+			$button
+				.trigger( "mouseenter" )
+				.trigger( "mouseleave" );
+
+			ok( $button.hasClass( "ui-state-active" ), "Class \"ui-state-active\" present after mouseenter and mouseleave triggered on button." );
+
+			// teardown
+			$window.window( "destroy" );
+		});
 	});
 </script>
 
