@@ -3489,6 +3489,13 @@ $.widget( "simone.window", $.ui.dialog, {
 			- parseFloat( this.$window.css( "paddingBottom" ) )
 		);
 
+		if (
+			   this.uiDialogButtonPane.length
+			&& this.uiDialogButtonPane.children().length
+		) {
+			maxHeight -= this.uiDialogButtonPane.outerHeight();
+		}
+
 		this.$window.css( "maxHeight", maxHeight );
 	},
 

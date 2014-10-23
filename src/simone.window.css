@@ -187,3 +187,10 @@
 	padding: 1em 1em 0em;
 }
 /* confirm close window */
+
+.simone-window .ui-dialog-buttonpane {
+	position: absolute;
+	width: calc(100% - 1.9em);
+	bottom: 0px;
+	left: .3em;
+}
