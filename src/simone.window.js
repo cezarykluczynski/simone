@@ -785,6 +785,16 @@ $.widget( "simone.window", $.ui.dialog, {
 			    ),
 			    margins = self._cache.sizes.margins;
 
+			var taskbar = self._getTaskbarInstance();
+
+			if ( taskbar ) {
+				var wc = self._getDimensions.call(
+					taskbar.$windowsContainment, {
+						outer: true
+					}
+				);
+			}
+
 			$.each( [ "top", "left" ], function ( index, edge ) {
 				var scroll = $( window )[ "scroll" + self._ucFirst( edge ) ]();
 
@@ -798,6 +808,10 @@ $.widget( "simone.window", $.ui.dialog, {
 				    	- cc[ dimension ] + margins[ end ],
 				    size      = ui.size[ dimension ],
 				    valDiff;
+
+				// apply property first
+				$this
+					.css( edge, val );
 
 				// recalculate top left overflow
 				if ( val < c[ edge ] + scroll ) {
@@ -820,7 +834,22 @@ $.widget( "simone.window", $.ui.dialog, {
 				     - Math.max( val - c[ edge ], 0 )
 				     - ( c[ end ]- s[ end ] );
 
+				size += scroll;
+
 				size = Math.round( size - Math.max( overflow, 0 ) ) + valDiff;
+
+				// apply property first, so outerHeight()/outerWidth
+				// can by accurate
+				$this
+					.css( dimension, size );
+
+				// account for bottom/right overflow
+				if ( wc ) {
+					var currSize = $this
+						[ "outer" + self._ucFirst( dimension ) ]();
+					var endDiff = Math.min( 0, wc[ end ] - ( currSize + val ) );
+					size += endDiff;
+				}
 
 				$this
 					.css( dimension, size );
