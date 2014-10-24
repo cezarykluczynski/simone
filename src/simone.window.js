@@ -773,10 +773,6 @@ $.widget( "simone.window", $.ui.dialog, {
 			var s = self._getDimensions.call( $this, {
 			    	outer: true
 			    }),
-			    ss = self._getDimensions.call( $this, {
-			    	offset: true,
-			    	outer: true
-			    }),
 			    c = self._cache.sizes.containment,
 			    cc = self._getDimensions.call(
 			    	$( "." + self.classes.taskbarWindowCopy ), {
@@ -801,7 +797,6 @@ $.widget( "simone.window", $.ui.dialog, {
 				var isTop     = edge === "top",
 				    val       = ui.position[ edge ] + scroll,
 				    valPrev   = val,
-				    axis      = isTop ? "Y" : "X",
 				    dimension = isTop ? "height" : "width",
 				    end       = isTop ? "bottom" : "right",
 				    overflow  = (s[ edge ] + s[ dimension ] - scroll )
@@ -865,21 +860,6 @@ $.widget( "simone.window", $.ui.dialog, {
 			var diffs = self._bringIntoView({
 				diffs: true
 			});
-
-			var s = self._getDimensions.call( $this, {
-			    	outer: true
-			    }),
-			    ss = self._getDimensions.call( $this, {
-			    	offset: true,
-			    	outer: true
-			    }),
-			    c = self._cache.sizes.containment,
-			    cc = self._getDimensions.call(
-			    	$( "." + self.classes.taskbarWindowCopy ),
-			    		{
-			    		outer: true
-			    	}
-			    );
 
 			$.each( [ "top", "left" ], function ( index, edge ) {
 				var scroll    = $( window )[ "scroll" + self._ucFirst( edge ) ](),
