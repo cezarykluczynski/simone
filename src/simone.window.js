@@ -252,6 +252,7 @@ $.widget( "simone.window", $.ui.dialog, {
 			timeouts                     : {
 				closeWindowShow          : 0
 			},
+			taskbarsOnClickPrevention    : 0,
 			resizable                    : {
 				hasScrollX               : false,
 				hasScrollY               : false,
@@ -405,6 +406,12 @@ $.widget( "simone.window", $.ui.dialog, {
 		this._cache.initialized = true;
 
 		this._triggerInternal( "afterTaskbarBind" );
+
+		this._preventGlobalWindowClick();
+
+		this._delay( function () {
+			self._revertGlobalWindowClick();
+		});
 
 		// don't trigger "create" if window was not created
 		if ( ! this._cache.destroyed ) {
@@ -4154,10 +4161,34 @@ $.widget( "simone.window", $.ui.dialog, {
 		}
 
 		// number of global clicks to block equals number of taskbar instances
-		var taskbars = taskbar.$windowsContainment
-			.data( this._cnst.dataPrefix + "taskbars" );
+		var current = taskbar.$windowsContainment
+			.data( this._cnst.dataPrefix + "taskbars" ) || 0;
+
+		var prev = taskbar.$windowsContainment
+			.data( this._cnst.dataPrefix + "preventClicks" ) || 0;
+
+		this._cache.taskbarsOnClickPrevention = current;
+
 		taskbar.$windowsContainment
-			.data( this._cnst.dataPrefix + "preventClicks", taskbars );
+			.data( this._cnst.dataPrefix + "preventClicks", current + prev );
+	},
+
+	_revertGlobalWindowClick: function () {
+		var taskbar = this._getTaskbarInstance();
+
+		if ( ! taskbar ) {
+			return;
+		}
+
+		var prev = taskbar.$windowsContainment
+			.data( this._cnst.dataPrefix + "preventClicks" );
+
+		var current = this._cache.taskbarsOnClickPrevention;
+
+		var newClicks = Math.max( prev - current, 0 );
+
+		taskbar.$windowsContainment
+			.data( this._cnst.dataPrefix + "preventClicks", newClicks );
 	},
 
 	_createButtons: function () {

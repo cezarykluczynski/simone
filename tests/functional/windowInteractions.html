@@ -877,6 +877,45 @@
 				}, timeout );
 			});
 		});
+
+		asyncTest( "Window active class is kept when window is opened via click.", function () {
+			// setup
+			var $window;
+			var $button;
+
+			$button = $("<div></div>")
+				.prependTo( "body" )
+				.button()
+				.on( "click", function () {
+					$window = $( "<div></div>" )
+						.window();
+				});
+
+			// test
+			$button.trigger( "click" );
+
+			start();
+
+			ok(
+				$window.parent().hasClass( "simone-window-top" ),
+				"Window is on top after click."
+			);
+
+			stop();
+
+			setTimeout( function () {
+				start();
+
+				ok(
+					$window.parent().hasClass( "simone-window-top" ),
+					"Window is still on top after 250 ms."
+				);
+
+				// teardown
+				$window.window( "destroy" );
+				$button.button( "destroy" ).remove();
+			}, 250 );
+		});
 	});
 </script>
 

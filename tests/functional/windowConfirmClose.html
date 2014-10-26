@@ -17,7 +17,8 @@
 
 		$taskbar.taskbar();
 
-		test( "Windows flow", function ( assert ) {
+		asyncTest( "Windows flow", function ( assert ) {
+			start();
 			var $window = $( "<div></div>" ).appendTo( "body" ).window({
 				confirmClose: {
 					confirm: true
@@ -65,136 +66,149 @@
 			$confirmCloseWindow = $window
 				.window( "confirmCloseWindow" );
 
-			$taskbar.trigger( "click" );
+			stop();
 
-			deepEqual(
-				[
-					$window.parent().hasClass( "simone-window-top"),
-					$confirmCloseWindow.parent().hasClass( "simone-window-top" )
-				],
-				[ false, false ],
-				"Open confirm close window. Click outside of both windows. Windows are not on top."
-			);
+			// timeout is required now, because of window._revertGlobalWindowClick()
+			// that happens on timeout on window creation, so click in taskbar would be
+			// prevented at this points - in real world, it's not possible to click
+			// to open window and then click ~10ms later again outside of window opener
+			setTimeout(function () {
+				start();
 
-			$confirmCloseWindow.window( "option", {
-				durations: {
-					maximize       : false,
-					restore        : false,
-					show           : false,
-					minimize       : false
-				}
-			}).window( "minimize" );
+				$taskbar.trigger( "click" );
 
-			$window.parent().find( ".ui-widget-overlay" ).simulate( "mousedown" );
+				deepEqual(
+					[
+						$window.parent().hasClass( "simone-window-top"),
+						$confirmCloseWindow.parent().hasClass( "simone-window-top" )
+					],
+					[ false, false ],
+					"Open confirm close window. Click outside of both windows. Windows are not on top."
+				);
 
-			deepEqual(
-				[
-					$window.parent().hasClass( "simone-window-top" ),
-					$confirmCloseWindow.parent().hasClass( "simone-window-top" )
-				],
-				[ false, true ],
-				"Minimize confirm close window. Click on window. Confirm close window is on top."
-			);
+				$confirmCloseWindow.window( "option", {
+					durations: {
+						maximize       : false,
+						restore        : false,
+						show           : false,
+						minimize       : false
+					}
+				}).window( "minimize" );
 
-			$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-yes" ).trigger( "click" );
+				$window.parent().find( ".ui-widget-overlay" ).simulate( "mousedown" );
 
-			deepEqual(
-				[ $window.hasClass( ".simone-window-content" ), $confirmCloseWindow.hasClass( ".simone-window-content" ) ],
-				[ false, false ],
-				"Confirm close. Window and confirm close window closed."
-			);
+				deepEqual(
+					[
+						$window.parent().hasClass( "simone-window-top" ),
+						$confirmCloseWindow.parent().hasClass( "simone-window-top" )
+					],
+					[ false, true ],
+					"Minimize confirm close window. Click on window. Confirm close window is on top."
+				);
 
-			$window = $( "<div></div>" ).prependTo( "body" ).window({
-				confirmClose: {
-					confirm: true
-				}
-			});
+				$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-yes" ).trigger( "click" );
 
-			$window.window( "close" );
+				deepEqual(
+					[ $window.hasClass( ".simone-window-content" ), $confirmCloseWindow.hasClass( ".simone-window-content" ) ],
+					[ false, false ],
+					"Confirm close. Window and confirm close window closed."
+				);
 
-			$confirmCloseWindow = $window
-				.window( "confirmCloseWindow" );
+				$window = $( "<div></div>" ).prependTo( "body" ).window({
+					confirmClose: {
+						confirm: true
+					}
+				});
 
-			var debug = false;
+				$window.window( "close" );
 
-			$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
-				if ( ui.message.indexOf( "Trying to change confirmClose option" ) > -1 ) {
-					debug = true;
-				}
-			});
+				$confirmCloseWindow = $window
+					.window( "confirmCloseWindow" );
 
-			$confirmCloseWindow.window( "option", "confirmClose.confirm", true );
+				var debug = false;
 
-			ok( debug, "Set confirm close window to have confirm close window."
-			         + " Debug generated." );
+				$taskbar.taskbar( "option", "debugLogAdd", function ( event, ui ) {
+					if ( ui.message.indexOf( "Trying to change confirmClose option" ) > -1 ) {
+						debug = true;
+					}
+				});
 
-			var $buttonWindow = $taskbar.find( "[data-window-id=" + $window.attr( "id") + "]" );
-			var $buttonConfirmCloseWindow = $taskbar.find( "[data-window-id=" + $confirmCloseWindow.attr( "id") + "]" );
+				$confirmCloseWindow.window( "option", "confirmClose.confirm", true );
 
-			$confirmCloseWindow.window( "close" );
+				ok( debug, "Set confirm close window to have confirm close window."
+				         + " Debug generated." );
 
-			var $confirmCloseWindowConfirmCloseWindow = $confirmCloseWindow.window( "confirmCloseWindow" );
+				var $buttonWindow = $taskbar.find( "[data-window-id=" + $window.attr( "id") + "]" );
+				var $buttonConfirmCloseWindow = $taskbar.find( "[data-window-id=" + $confirmCloseWindow.attr( "id") + "]" );
 
-			equal(
-				$confirmCloseWindowConfirmCloseWindow.length,
-				1,
-				"Open confirm close window on confirm close window. Window found."
-			);
+				$confirmCloseWindow.window( "close" );
 
-			$buttonWindow.trigger( "click" );
+				var $confirmCloseWindowConfirmCloseWindow = $confirmCloseWindow.window( "confirmCloseWindow" );
 
-			ok(
-				$confirmCloseWindowConfirmCloseWindow.parent().hasClass( "simone-window-top" ),
-				"Click on $window button. Second $confirmCloseWindow is on top."
-			);
+				equal(
+					$confirmCloseWindowConfirmCloseWindow.length,
+					1,
+					"Open confirm close window on confirm close window. Window found."
+				);
 
-			$buttonConfirmCloseWindow.trigger( "click" );
+				$buttonWindow.trigger( "click" );
 
-			ok(
-				$confirmCloseWindowConfirmCloseWindow.parent().hasClass( "simone-window-top" ),
-				"Click on $buttonConfirmCloseWindow button. Second $confirmCloseWindow is on top."
-			);
+				ok(
+					$confirmCloseWindowConfirmCloseWindow.parent().hasClass( "simone-window-top" ),
+					"Click on $window button. Second $confirmCloseWindow is on top."
+				);
 
-			$confirmCloseWindow.window( "close" );
+				$buttonConfirmCloseWindow.trigger( "click" );
 
-			$window.window( "close" );
-			$window.window( "close" );
+				ok(
+					$confirmCloseWindowConfirmCloseWindow.parent().hasClass( "simone-window-top" ),
+					"Click on $buttonConfirmCloseWindow button. Second $confirmCloseWindow is on top."
+				);
 
-			$window = $( "<div></div>" ).prependTo( "body" ).window({
-				durations: {
-					maximize       : false,
-					restore        : false,
-					show           : false,
-					minimize       : false
-				},
-				confirmClose: {
-					confirm        : true,
-					modal          : true,
-				}
-			});
+				$confirmCloseWindow.window( "close" );
 
-			$window.window( "close" );
+				$window.window( "close" );
+				$window.window( "close" );
 
-			$confirmCloseWindow = $window
-				.window( "confirmCloseWindow" );
+				$window = $( "<div></div>" ).prependTo( "body" ).window({
+					durations: {
+						maximize       : false,
+						restore        : false,
+						show           : false,
+						minimize       : false
+					},
+					confirmClose: {
+						confirm        : true,
+						modal          : true,
+					}
+				});
 
-			var $overlay = $confirmCloseWindow.window( "modalOverlay" );
+				$window.window( "close" );
 
-			equal(
-				$confirmCloseWindow.data( "simone-window" ).uuid,
-				$overlay.attr( "data-window-uuid" ),
-				"Modal confirm close created."
-			);
+				$confirmCloseWindow = $window
+					.window( "confirmCloseWindow" );
 
-			$overlay.trigger( "click" );
+				var $overlay = $confirmCloseWindow.window( "modalOverlay" );
 
-			equal(
-				$confirmCloseWindow.is( ":visible" ),
-				false,
-				"Overlay click minimizes confirm close."
-			);
+				equal(
+					$confirmCloseWindow.data( "simone-window" ).uuid,
+					$overlay.attr( "data-window-uuid" ),
+					"Modal confirm close created."
+				);
 
-			$confirmCloseWindow.parent().find( ".simone-window-type-confirm-close-yes" ).trigger( "click" );
+				$overlay.trigger( "click" );
+
+				equal(
+					$confirmCloseWindow.is( ":visible" ),
+					false,
+					"Overlay click minimizes confirm close."
+				);
+
+				$confirmCloseWindow
+					.parent()
+					.find( ".simone-window-type-confirm-close-yes" )
+					.trigger( "click" );
+			}, 250 );
 		});
 
 		test( "Title propagation", function () {
