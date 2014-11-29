@@ -403,6 +403,13 @@ $.widget( "simone.window", $.ui.dialog, {
 			self._preventGlobalWindowClick();
 		});
 
+		// revert global click prevention counter
+		this.$elem.on( "mouseup." + this._cache.uep, function () {
+			self._delay( function () {
+				self._revertGlobalWindowClick();
+			});
+		});
+
 		this._cache.initialized = true;
 
 		this._triggerInternal( "afterTaskbarBind" );
