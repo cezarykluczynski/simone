@@ -6491,7 +6491,15 @@ $.widget( "simone.taskbar", {
 							// delete from cache
 							self._removeWindowFromCache( id );
 
-							if ( this._isRealEmptyObject( g[ i ] ) ) {
+							var emptyGroup = true;
+
+							$.each( g[ i ], function ( id, elem ) {
+								if ( typeof( elem ) === "string" ) {
+									emptyGroup = false;
+								}
+							});
+
+							if ( emptyGroup ) {
 								// remove group cause it's now empty
 								var needle = "group:" + i;
 
