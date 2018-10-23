@@ -14,7 +14,6 @@ IE9+, Chrome, Firefox, Opera 15+, Safari 6+.
 * [Demos](http://cezarykluczynski.github.io/simone/docs/demos.html)
 * [Issues](http://cezarykluczynski.github.io/simone/docs/issues.html)
 * [Tests](http://cezarykluczynski.github.io/simone/docs/tests.html)
-* [Donate](http://cezarykluczynski.github.io/simone/docs/donate.html)
 
 Full list of resources can be found on [documentation main page](http://cezarykluczynski.github.io/simone/docs/index.html).
 
